@@ -4,18 +4,12 @@
   "outputDirectory": "public",
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/index.html", "dest": "index.html" },
-    { "src": "/pricing.html", "dest": "index.html" },
-    { "src": "/trial.html", "dest": "oryntech-trial.html" },
-    { "src": "/tutorials.html", "dest": "oryntech-tutorials.html" },
-    { "src": "/admin.html", "dest": "oryntech-admin.html" },
-    { "src": "/editor.html", "dest": "oryntech-editor.html" },
-    { "src": "/trial", "dest": "oryntech-trial.html" },
-    { "src": "/tutorials", "dest": "oryntech-tutorials.html" },
-    { "src": "/admin", "dest": "oryntech-admin.html" },
-    { "src": "/editor", "dest": "oryntech-editor.html" },
-    { "src": "/", "dest": "index.html" },
-    { "src": "/(.*)", "dest": "$1" }
+    { "src": "/admin", "dest": "/admin.html" },
+    { "src": "/trial", "dest": "/trial.html" },
+    { "src": "/tutorials", "dest": "/tutorials.html" },
+    { "src": "/pricing", "dest": "/index.html" },
+    { "src": "/", "dest": "/index.html" }
+
   ],
   "headers": [
     {

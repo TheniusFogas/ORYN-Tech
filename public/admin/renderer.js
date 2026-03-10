@@ -23,17 +23,37 @@ export class PageRenderer {
     const { id, type, props = {} } = section;
     const editAttr = this.editMode ? ` data-section-id="${id}" data-section-type="${type}"` : '';
 
+    // Toolbar pentru Editor
+    let toolbar = '';
+    if (this.editMode) {
+      toolbar = `
+        <div class="cs-toolbar">
+          <button class="cs-tool" title="Mută sus"><span class="material-symbols-rounded">arrow_upward</span></button>
+          <button class="cs-tool" title="Mută jos"><span class="material-symbols-rounded">arrow_downward</span></button>
+          <button class="cs-tool" title="Duplică"><span class="material-symbols-rounded">content_copy</span></button>
+          <button class="cs-tool" title="Șterge" style="color:#f87171"><span class="material-symbols-rounded">delete</span></button>
+        </div>`;
+    }
+
     // Locked sections (animații) — renderează ca placeholder în editor
     if (type === 'galaxy_header' || props.locked) {
       return `<div class="sec sec-locked"${editAttr}>
+        ${toolbar}
         <span class="material-symbols-rounded">lock</span>
         Header Animat — componentă sistem
       </div>`;
     }
 
-    const html = this[`render_${type}`]?.(props, editAttr) || this.renderUnknown(type);
+    let html = this[`render_${type}`]?.(props, editAttr) || this.renderUnknown(type);
+    
+    // Injectăm toolbar-ul în interiorul secțiunii dacă suntem în editMode
+    if (this.editMode && html.includes('data-section-id')) {
+      html = html.replace('>', `>${toolbar}`);
+    }
+
     return html;
   }
+
 
   // ── SPACER ────────────────────────────────────────────
   render_spacer({ height = 48 }, ea = '') {

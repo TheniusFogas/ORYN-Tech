@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ORYN Tech | Admin Hub</title>
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <style>
+:root {
+  --bg: #0d0720;
+  --panel: rgba(21, 12, 46, 0.7);
+  --panel2: #1a1535;
+  --border: rgba(139, 92, 246, 0.2);
+  --text: #ffffff;
+  --dim: #a78bfa;
+  --muted: #8a84aa;
+  --accent: #7c3aed;
+  --accent-h: rgba(124, 58, 237, 0.1);
+  --purple: #7c3aed;
+  --pink: #db2777;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
+body { background:var(--bg); color:var(--text); height:100vh; overflow:hidden; display:flex; flex-direction:column; }
+
+/* ─── TOP BAR ─── */
+.adm-top {
+  height:60px; background:var(--panel); border-bottom:1px solid var(--border);
+  backdrop-filter:blur(10px); display:flex; align-items:center; padding:0 20px; z-index:100;
+}
+.adm-logo { font-family:'Outfit', sans-serif; font-weight:800; font-size:18px; display:flex; align-items:center; gap:8px; }
+.adm-logo span { color:var(--purple); }
+.adm-logo-dot { width:8px; height:8px; background:var(--purple); border-radius:50%; box-shadow:0 0 10px var(--purple); }
+.adm-sep { width:1px; height:24px; background:var(--border); margin:0 20px; }
+.adm-page-select {
+  background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--text);
+  padding:6px 12px; border-radius:8px; font-size:13px; outline:none; cursor:pointer; min-width:160px;
+}
+.adm-device-btns { display:flex; gap:4px; background:rgba(255,255,255,0.05); padding:4px; border-radius:10px; }
+.adm-dev-btn {
+  width:32px; height:32px; border-radius:7px; border:none; background:none;
+  color:var(--muted); cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center;
+}
+.adm-dev-btn.active, .adm-dev-btn:hover { background:rgba(124,58,237,0.2); color:var(--text); }
+.adm-dev-btn .material-symbols-rounded { font-size:18px; }
+
+.adm-spacer { flex:1; }
+.adm-status { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); }
+.adm-status-dot { width:6px; height:6px; background:#10b981; border-radius:50%; box-shadow:0 0 5px #10b981; }
+
+.adm-btn {
+  padding:8px 16px; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer;
+  transition:all .2s; display:flex; align-items:center; gap:6px; border:1px solid transparent;
+}
+.adm-btn-ghost { background:none; color:var(--dim); border-color:transparent; }
+.adm-btn-ghost:hover { background:var(--accent-h); color:var(--text); }
+.adm-btn-primary { background:var(--purple); color:#fff; border-color:var(--purple); }
+.adm-btn-primary:hover { background:#8b5cf6; transform:translateY(-1px); box-shadow:0 4px 12px rgba(124,58,237,0.3); }
+
+/* ─── BODY LAYOUT ─── */
+.adm-body { flex:1; display:grid; grid-template-columns:260px 1fr 300px; overflow:hidden; }
+
+/* ─── LEFT PANEL ─── */
+.adm-left { background:var(--panel); border-right:1px solid var(--border); display:flex; flex-direction:column; }
+.adm-left-tabs { display:flex; border-bottom:1px solid var(--border); padding:0 10px; }
+.adm-ltab {
+  padding:14px 12px; font-size:12px; font-weight:700; color:var(--muted); cursor:pointer;
+  text-transform:uppercase; letter-spacing:1px; position:relative;
+}
+.adm-ltab.active { color:var(--text); }
+.adm-ltab.active::after { content:''; position:absolute; bottom:0; left:12px; right:12px; height:2px; background:var(--purple); border-radius:2px 2px 0 0; }
+
+.adm-left-body { flex:1; overflow-y:auto; padding:16px; }
+.adm-left-body::-webkit-scrollbar { width:4px; }
+.adm-left-body::-webkit-scrollbar-thumb { background:rgba(139,92,246,0.3); border-radius:4px; }
+
+.page-item {
+  display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px;
+  cursor:pointer; transition:all .2s; margin-bottom:4px; border:1px solid transparent;
+}
+.page-item .material-symbols-rounded { font-size:18px; color:var(--dim); }
+.page-item-name { font-size:13px; font-weight:500; flex:1; }
+.page-item-badge { font-size:9px; font-weight:700; background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:4px; text-transform:uppercase; color:var(--muted); }
+.page-item-badge.nav { background:rgba(124,58,237,0.1); color:var(--dim); }
+.page-item:hover { background:rgba(255,255,255,0.03); }
+.page-item.active { background:var(--accent-h); border-color:rgba(124,58,237,0.2); }
+.page-item.active .material-symbols-rounded { color:var(--purple); }
+
+.add-page-btn {
+  width:100%; margin-top:12px; padding:10px; border-radius:10px; border:1px dashed var(--border);
+  background:none; color:var(--dim); font-size:12px; font-weight:600; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:6px; transition:all .2s;
+}
+.add-page-btn:hover { background:var(--accent-h); border-color:var(--purple); color:var(--text); }
+
+.widget-section-title { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin:20px 0 10px; }
+.widget-item {
+  background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:10px;
+  padding:10px 12px; font-size:12px; font-weight:500; margin-bottom:8px; cursor:grab;
+  display:flex; align-items:center; gap:10px; transition:all .2s;
+}
+.widget-item:hover { background:var(--accent-h); transform:translateY(-1px); border-color:rgba(124,58,237,0.3); }
+.widget-item .material-symbols-rounded { font-size:18px; color:var(--purple); }
+
+/* ─── CANVAS ─── */
+.adm-canvas { background:#0a0618; padding:40px; overflow-y:auto; display:flex; justify-content:center; }
+.adm-canvas::-webkit-scrollbar { width:6px; }
+.adm-canvas::-webkit-scrollbar-thumb { background:rgba(139,92,246,0.2); border-radius:10px; }
+
+.canvas-frame {
+  width:100%; max-width:1200px; background:var(--bg); min-height:100%;
+  border-radius:2px; box-shadow:0 20px 80px rgba(0,0,0,0.5);
+  position:relative; transition:all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.canvas-frame.tablet { width:768px; }
+.canvas-frame.mobile { width:375px; }
+
+.canvas-section {
+  position:relative; border:1px solid transparent; transition:all 0.2s;
+}
+.canvas-section:hover { border-color:rgba(124,58,237,0.4); }
+.canvas-section.selected { border-color:var(--purple); box-shadow:0 0 0 1px var(--purple); }
+
+/* Section Toolbar */
+.cs-toolbar {
+  position:absolute; right:10px; top:-20px; background:var(--purple); border-radius:6px;
+  padding:4px; display:flex; gap:2px; opacity:0; pointer-events:none; transition:all 0.2s; z-index:10;
+}
+.canvas-section:hover .cs-toolbar, .canvas-section.selected .cs-toolbar { opacity:1; pointer-events:all; top:-28px; }
+.cs-tool {
+  width:24px; height:24px; border:none; background:none; color:#fff; cursor:pointer;
+  border-radius:4px; display:flex; align-items:center; justify-content:center; transition:background .2s;
+}
+.cs-tool:hover { background:rgba(255,255,255,0.2); }
+.cs-tool .material-symbols-rounded { font-size:14px; }
+
+.cs-add-row {
+  width:100%; height:40px; display:flex; align-items:center; justify-content:center;
+  gap:6px; color:rgba(139,92,246,0.5); font-size:12px; border:1px dashed rgba(139,92,246,0.2);
+  margin-top:20px; cursor:pointer; transition:all .2s; background:none; border-radius:10px;
+}
+.cs-add-row:hover { background:var(--accent-h); color:var(--dim); border-color:var(--purple); }
+
+/* ─── RIGHT PANEL ─── */
+.adm-right { background:var(--panel); border-left:1px solid var(--border); display:flex; flex-direction:column; }
+.adm-right-head { padding:14px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.adm-right-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); }
+.adm-right-body { flex:1; overflow-y:auto; padding:16px; }
+
+/* ─── MODALS & UI ─── */
+.modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:500;
+  display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px);
+  opacity:0; pointer-events:none; transition:opacity .2s;
+}
+.modal-overlay.show { opacity:1; pointer-events:all; }
+.modal { background:var(--panel2); border:1px solid var(--border); border-radius:16px; padding:28px; width:420px; }
+.modal-title { font-size:18px; font-weight:700; margin-bottom:20px; }
+.modal-footer { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; }
+
+.toast {
+  position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(100px);
+  background:rgba(16,185,129,0.2); border:1px solid rgba(16,185,129,0.4); color:#6ee7b7;
+  padding:12px 24px; border-radius:12px; z-index:1000; transition:transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display:flex; align-items:center; gap:8px; font-weight:500; font-size:14px;
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+/* Renderer styles (simplified for editor) */
+.sec-locked { padding:60px 40px; text-align:center; background:rgba(255,255,255,0.02); border:1px dashed var(--border); border-radius:12px; margin:20px; color:var(--muted); font-size:13px; display:flex; flex-direction:column; align-items:center; gap:10px; }
+.sec-locked .material-symbols-rounded { font-size:32px; opacity:0.3; }
+
+/* Leads styles */
+.lead-item { padding:12px 16px; border-bottom:1px solid var(--border); cursor:pointer; transition:all .2s; }
+.lead-item:hover { background:rgba(255,255,255,0.03); }
+
+/* Properties Field Styles */
+.pp-field { margin-bottom:16px; }
+.pp-label { display:block; font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; margin-bottom:6px; }
+.pp-input, .pp-select { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; color:#fff; padding:8px 12px; font-size:13px; outline:none; }
+.pp-input:focus { border-color:var(--purple); }
+  </style>
+</head>
+<body>
+
+<div class="adm-top">
+  <div class="adm-logo"><div class="adm-logo-dot"></div>ORYN<span>Tech</span> Admin</div>
+  <div class="adm-sep"></div>
+  <select class="adm-page-select" id="pageSelect">
+    <option value="loading">Se încarcă...</option>
+  </select>
+  <div class="adm-sep"></div>
+  <div class="adm-device-btns">
+    <button class="adm-dev-btn active" data-device="desktop"><span class="material-symbols-rounded">desktop_windows</span></button>
+    <button class="adm-dev-btn" data-device="tablet"><span class="material-symbols-rounded">tablet</span></button>
+    <button class="adm-dev-btn" data-device="mobile"><span class="material-symbols-rounded">smartphone</span></button>
+  </div>
+  <div class="adm-spacer"></div>
+  <div class="adm-status"><div class="adm-status-dot" id="saveDot"></div><span id="saveStatus">Proiect încărcat</span></div>
+  <div class="adm-sep"></div>
+  <button class="adm-btn adm-btn-ghost" id="previewBtn"><span class="material-symbols-rounded">visibility</span>Preview</button>
+  <button class="adm-btn adm-btn-ghost" id="saveBtn"><span class="material-symbols-rounded">save</span>Salvează</button>
+  <button class="adm-btn adm-btn-primary" id="publishBtn"><span class="material-symbols-rounded">publish</span>Publică</button>
+</div>
+
+<div class="adm-body">
+  <div class="adm-left">
+    <div class="adm-left-tabs">
+      <div class="adm-ltab active" data-tab="pages">Pagini</div>
+      <div class="adm-ltab" data-tab="editor">Editor</div>
+      <div class="adm-ltab" data-tab="widgets">Widgets</div>
+      <div class="adm-ltab" data-tab="leads">Lead-uri</div>
+    </div>
+    <div class="adm-left-body">
+      <!-- Pages Panel -->
+      <div id="pagesPanel" class="panel-content">
+        <div id="pagesList"></div>
+        <button class="add-page-btn" id="addPageBtn"><span class="material-symbols-rounded">add</span>Pagină nouă</button>
+      </div>
+      <!-- Editor/Sections Panel -->
+      <div id="editorPanel" class="panel-content" style="display:none;">
+        <div class="widget-section-title">Structură Pagină</div>
+        <div id="sectionsList"></div>
+      </div>
+      <!-- Widgets Panel -->
+      <div id="widgetsPanel" class="panel-content" style="display:none;">
+        <div id="widgetsList"></div>
+      </div>
+      <!-- Leads Panel -->
+      <div id="leadsPanel" class="panel-content" style="display:none;">
+        <div class="widget-section-title">Lead-uri Noi</div>
+        <div id="leadList"></div>
+        <button class="add-page-btn" style="margin-top:20px;border-style:solid;" id="refreshLeadsBtn"><span class="material-symbols-rounded">refresh</span>Refresh</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="adm-canvas">
+    <div class="canvas-frame" id="canvasFrame">
+      <div id="canvasContent"></div>
+      <button class="cs-add-row" id="addSectionCanvasBtn">
+        <span class="material-symbols-rounded">add_circle</span>Adaugă secțiune
+      </button>
+    </div>
+  </div>
+
+  <div class="adm-right">
+    <div class="adm-right-head">
+      <span class="adm-right-title">Proprietăți</span>
+    </div>
+    <div class="adm-right-body" id="propBody">
+      <div style="padding:40px;text-align:center;opacity:0.3;">
+        <span class="material-symbols-rounded" style="font-size:48px;">touch_app</span>
+        <p style="font-size:12px;margin-top:10px;">Selectează un element<br>pentru a edita</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Pagină Nouă -->
+<div class="modal-overlay" id="addPageModal">
+  <div class="modal">
+    <div class="modal-title">Creează Pagină Nouă</div>
+    <div class="pp-field">
+      <label class="pp-label">Nume Pagină</label>
+      <input type="text" class="pp-input" id="newPageName" placeholder="ex: Servicii AI">
+    </div>
+    <div class="pp-field">
+      <label class="pp-label">URL Slug</label>
+      <input type="text" class="pp-input" id="newPageSlug" placeholder="ex: servicii-ai">
+    </div>
+    <div class="modal-footer">
+      <button class="adm-btn adm-btn-ghost" id="closeAddPageModal">Anulează</button>
+      <button class="adm-btn adm-btn-primary" id="confirmAddPage">Creează</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <span class="material-symbols-rounded">check_circle</span>
+  <span id="toastMsg">Salvat!</span>
+</div>
+
+<script type="module">
+  import { Editor } from './admin/editor.js';
+  import WIDGET_DEFINITIONS from './admin/widgets/definitions.js';
+  import { PropertiesPanel } from './admin/properties.js';
+
+  // ─── INSTANTIATION ───
+  const editor = new Editor({
+    onStateChange: (state) => {
+      renderCanvas();
+      updateSectionsSidebar();
+    },
+    onSelectionChange: (section) => {
+      const id = section ? section.id : null;
+      document.querySelectorAll('#sectionsList .widget-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.sectionId === id);
+      });
+      propPanel.render(section);
+    },
+    onSaveStatus: (status) => {
+      const dot = document.getElementById('saveDot');
+      const text = document.getElementById('saveStatus');
+      if(status === 'dirty' || status === 'unsaved') {
+        dot.style.background = '#f59e0b';
+        dot.style.boxShadow = '0 0 5px #f59e0b';
+        text.textContent = 'Modificări nesalvate';
+      } else {
+        dot.style.background = '#10b981';
+        dot.style.boxShadow = '0 0 5px #10b981';
+        text.textContent = 'Salvat';
+      }
+    }
+  });
+
+  const propPanel = new PropertiesPanel(document.getElementById('propBody'), (id, props) => {
+    editor.updateProps(id, props);
+  });
+  // Connect propPanel to editor state for repeater access
+  propPanel._getSection = (id) => editor.state.sections.find(s => s.id === id);
+
+  // ─── INITIALIZATION ───
+  window.addEventListener('DOMContentLoaded', () => {
+    loadPages();
+    renderWidgetsList();
+    loadLeads();
+    initUIListeners();
+  });
+
+  function initUIListeners() {
+    // Tabs logic
+    document.querySelectorAll('.adm-ltab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.adm-ltab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const target = tab.dataset.tab;
+        ['pagesPanel', 'editorPanel', 'widgetsPanel', 'leadsPanel'].forEach(id => {
+          const el = document.getElementById(id);
+          if(el) el.style.display = id.startsWith(target) ? 'block' : 'none';
+        });
+      });
+    });
+
+    // Device buttons
+    document.querySelectorAll('.adm-dev-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.adm-dev-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const device = btn.dataset.device;
+        const frame = document.getElementById('canvasFrame');
+        frame.className = 'canvas-frame ' + device;
+      });
+    });
+
+    // Dropdown change
+    document.getElementById('pageSelect').addEventListener('change', (e) => selectPage(e.target.value));
+  }
+
+  // ─── PAGES ───
+  async function loadPages() {
+    try {
+      const res = await fetch('/api/pages');
+      const { pages } = await res.json();
+      const list = document.getElementById('pagesList');
+      const select = document.getElementById('pageSelect');
+      
+      const currentSlug = editor.state?.slug;
+      
+      list.innerHTML = pages.map(p => `
+        <div class="page-item ${currentSlug === p.slug ? 'active' : ''}" onclick="selectPage('${p.slug}')" data-slug="${p.slug}">
+          <span class="material-symbols-rounded">article</span>
+          <span class="page-item-name">${p.title}</span>
+          <span class="page-item-badge ${p.slug==='index'?'nav':''}">${p.slug === 'index' ? 'Home' : 'Pag'}</span>
+        </div>
+      `).join('');
+
+      select.innerHTML = pages.map(p => `
+        <option value="${p.slug}">${p.title} ${p.slug==='index'?'(Home)':''}</option>
+      `).join('');
+      
+      if(currentSlug) select.value = currentSlug;
+      else if(pages.length) selectPage(pages[0].slug);
+
+    } catch (err) {
+      console.error('Eroare loadPages:', err);
+    }
+  }
+
+  window.selectPage = async (slug) => {
+    try {
+      const res = await fetch(`/api/pages/${slug}`);
+      if(!res.ok) throw new Error('Nu s-a putut încărca pagina');
+      const data = await res.json();
+      
+      const pageData = {
+        slug: data.slug,
+        title: data.title,
+        sections: data.content?.sections || []
+      };
+      
+      editor.loadPage(pageData);
+      
+      // Sincronizăm UI-ul navigării
+      document.getElementById('pageSelect').value = slug;
+      document.querySelectorAll('.page-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.slug === slug);
+      });
+
+    } catch (err) {
+      console.error('Eroare selectPage:', err);
+      showToast('Eroare la încărcare!');
+    }
+  };
+
+  window.editor = editor; // expunere globală pentru debug/interfață
+
+  // ─── CANVAS RENDERING ───
+  function renderCanvas() {
+    const container = document.getElementById('canvasContent');
+    if(!editor.state) return;
+    container.innerHTML = editor.renderer.renderPage(editor.state);
+
+    // Bind selection clicks
+    container.querySelectorAll('.sec').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = el.dataset.sectionId;
+        editor.select(id);
+      });
+      
+      // Toolbar buttons integration
+      const toolbar = el.querySelector('.cs-toolbar');
+      if(toolbar) {
+        toolbar.querySelectorAll('.cs-tool').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const action = btn.title;
+            const id = el.dataset.sectionId;
+            if(action === 'Șterge') editor.deleteSection(id);
+            if(action === 'Duplică') editor.duplicateSection(id);
+            if(action === 'Mută sus') editor.moveSection(id, 'up');
+            if(action === 'Mută jos') editor.moveSection(id, 'down');
+          });
+        });
+      }
+    });
+  }
+
+  // ─── SIDEBAR FUNCTIONS ───
+  function updateSectionsSidebar() {
+    const list = document.getElementById('sectionsList');
+    if(!editor.state) return;
+    list.innerHTML = editor.state.sections.map(s => `
+      <div class="widget-item ${editor.selected === s.id ? 'active' : ''}" onclick="editor.select('${s.id}')">
+        <span class="material-symbols-rounded">${WIDGET_DEFINITIONS[s.type]?.icon || 'widgets'}</span>
+        <span style="flex:1">${WIDGET_DEFINITIONS[s.type]?.label || s.type}</span>
+      </div>
+    `).join('');
+  }
+
+  function renderWidgetsList() {
+    const list = document.getElementById('widgetsList');
+    if(!list) return;
+    let html = '';
+    const categories = { layout: 'Layout', content: 'Conținut', components: 'Componente' };
+    
+    for(const [catId, catLabel] of Object.entries(categories)) {
+      html += `<div class="widget-section-title">${catLabel}</div>`;
+      for(const [type, def] of Object.entries(WIDGET_DEFINITIONS)) {
+        if(def.category === catId) {
+          html += `
+            <div class="widget-item" draggable="true" ondragstart="event.dataTransfer.setData('type', '${type}')">
+              <span class="material-symbols-rounded">${def.icon}</span>
+              ${def.label}
+            </div>
+          `;
+        }
+      }
+    }
+    list.innerHTML = html;
+  }
+
+  // ─── DRAG & DROP ───
+  const frame = document.getElementById('canvasFrame');
+  frame.addEventListener('dragover', e => e.preventDefault());
+  frame.addEventListener('drop', e => {
+    e.preventDefault();
+    const type = e.dataTransfer.getData('type');
+    if(type) editor.addSection(type);
+  });
+
+  // ─── ACTION BUTTONS ───
+  document.getElementById('saveBtn').addEventListener('click', async () => {
+    if(!editor.state) return;
+    const res = await fetch(`/api/pages/${editor.state.slug}`, {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('oryn_admin_token')}`
+      },
+      body: JSON.stringify(editor.state)
+    });
+    if(res.ok) {
+      editor.dirty = false;
+      editor.onSaveStatus('saved');
+      showToast('Salvat cu succes!');
+    }
+  });
+
+  document.getElementById('previewBtn').addEventListener('click', () => {
+    if(editor.state) window.open(`/${editor.state.slug}`, '_blank');
+  });
+
+  document.getElementById('publishBtn').addEventListener('click', () => {
+    showToast('Pagină publicată live!');
+  });
+
+  // ─── MODAL ADD PAGE ───
+  document.getElementById('addPageBtn').addEventListener('click', () => {
+    document.getElementById('addPageModal').classList.add('show');
+  });
+  document.getElementById('closeAddPageModal').addEventListener('click', () => {
+    document.getElementById('addPageModal').classList.remove('show');
+  });
+  document.getElementById('confirmAddPage').addEventListener('click', async () => {
+    const title = document.getElementById('newPageName').value;
+    const slug = document.getElementById('newPageSlug').value;
+    if(!title || !slug) return;
+    
+    const res = await fetch('/api/pages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, slug, content: { sections: [] } })
+    });
+    
+    if(res.ok) {
+      document.getElementById('addPageModal').classList.remove('show');
+      await loadPages();
+      selectPage(slug);
+      showToast('Pagină creată!');
+    }
+  });
+
+  // ─── LEADS ───
+  async function loadLeads() {
+    const list = document.getElementById('leadList');
+    if(!list) return;
+    list.innerHTML = '<div style="padding:20px;text-align:center;opacity:0.5;">Se încarcă...</div>';
+    try {
+      const res = await fetch('/api/admin/leads', {
+         headers: { 'Authorization': `Bearer ${localStorage.getItem('oryn_admin_token')}` }
+      });
+      const { leads } = await res.json();
+      list.innerHTML = leads.length ? '' : '<div style="padding:20px;text-align:center;opacity:0.5;">Niciun lead.</div>';
+      leads.forEach(l => {
+        list.innerHTML += `
+          <div class="lead-item">
+            <div style="font-size:13px;font-weight:600;">${l.firstname} ${l.lastname||''}</div>
+            <div style="font-size:11px;color:var(--dim);">${l.email}</div>
+            <div style="font-size:10px;margin-top:4px;opacity:0.7;">${new Date(l.created_at).toLocaleDateString()}</div>
+          </div>
+        `;
+      });
+    } catch (e) { list.innerHTML = 'Eroare la încărcare.'; }
+  }
+  document.getElementById('refreshLeadsBtn')?.addEventListener('click', loadLeads);
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // Handle click outside sections to deselect
+  frame.addEventListener('click', (e) => {
+    if(e.target === frame || e.target.id === 'canvasContent') {
+      editor.select(null);
+    }
+  });
+
+
+</script>
+</body>
+</html>

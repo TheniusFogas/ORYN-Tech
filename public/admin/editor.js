@@ -31,6 +31,7 @@ export class Editor {
     this.selected = null;
     this.dirty    = false;
     this._emit();
+    this.onSelectionChange(null);
     this.onSaveStatus('saved');
   }
 
@@ -60,6 +61,7 @@ export class Editor {
     this.selected = newSection.id;
     this._markDirty();
     this._emit();
+    this.onSelectionChange(newSection);
     return newSection.id;
   }
 
