@@ -1,6 +1,7 @@
 {
   "name": "oryntech",
   "version": "1.0.0",
+  "type": "module",
   "description": "ORYNTech AI Automation Platform",
   "scripts": {
     "dev": "vercel dev",
