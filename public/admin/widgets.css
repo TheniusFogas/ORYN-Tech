@@ -1,0 +1,68 @@
+/* public/admin/widgets.css */
+/* Stiluri extrase din index.html pentru randarea fidelă în Editor */
+
+:root {
+  --bg1: #0d0720;
+  --bg2: #150c2e;
+  --purple: #7c3aed;
+  --violet: #6d28d9;
+  --indigo: #4338ca;
+  --pink:   #db2777;
+  --blue:   #2563eb;
+  --cyan:   #0891b2;
+  --glow1:  rgba(124,58,237,0.35);
+  --glow2:  rgba(109,40,217,0.25);
+  --glow3:  rgba(219,39,119,0.18);
+  --text:   #f1eeff;
+  --muted:  #b8b2d8;
+  --dim:    #8a84aa;
+  --hair:   rgba(255,255,255,0.08);
+}
+
+/* WIDGET BASE */
+.sec { position: relative; width: 100%; transition: all 0.2s; }
+.sec-empty { padding: 40px; text-align: center; color: var(--dim); border: 1px dashed var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+
+/* ════ HERO ════ */
+.w-hero { text-align:center; padding: 60px 20px; }
+.eyebrow { display:inline-flex; align-items:center; gap:8px; font-size:10px; font-weight:500; letter-spacing:3.5px; text-transform:uppercase; color:#8a84aa; margin-bottom:18px; }
+.ey-line { width:22px; height:1px; background:rgba(255,255,255,0.15); }
+.hero-title { font-size:clamp(32px, 5vw, 64px); font-weight:700; line-height:1.1; letter-spacing:-1.5px; margin-bottom: 20px; }
+.hero-title .g { background: linear-gradient(120deg, #c084fc, #e879f9, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero-sub { font-size:15px; font-weight:300; color:#b0aacf; line-height:1.7; max-width:520px; margin:0 auto 24px; }
+.cta-btn { display:inline-flex; align-items:center; gap:8px; padding:12px 28px; border-radius:12px; background:linear-gradient(135deg, var(--purple), var(--pink)); color:#fff; font-weight:700; text-decoration:none; box-shadow:0 10px 30px rgba(124,58,237,0.4); }
+
+/* ════ STATS ════ */
+.w-stats .stats { display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:14px 32px; gap: 20px; }
+.st { text-align:center; padding:0 20px; }
+.st-v { font-size:24px; font-weight:600; color:var(--text); line-height:1; margin-bottom:2px; }
+.st-l { font-size:9.5px; color:#8a84aa; letter-spacing:.5px; text-transform:uppercase; }
+
+/* ════ CARDS ════ */
+.feat-grid { display: grid; gap: 20px; }
+.feat-card { position: relative; padding: 28px; border-radius: 22px; overflow: hidden; }
+.feat-card.gl.base { background: linear-gradient(145deg, rgba(26,10,62,0.92) 0%, rgba(20,8,48,0.95) 100%); border: 1px solid rgba(139,92,246,0.25); }
+.fc-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(124,58,237,0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: var(--purple); }
+.fc-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+.fc-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* ════ PRICING ════ */
+.pricing-grid { display: grid; gap: 24px; }
+.price-card { padding: 32px; border-radius: 24px; position: relative; border: 1px solid var(--border); }
+.price-card.gl.base { background: rgba(255,255,255,0.03); }
+.price-card.highlighted { border-color: var(--purple); background: rgba(124,58,237,0.05); }
+.price-badge { position: absolute; top: 12px; right: 12px; background: var(--purple); color: #fff; font-size: 9px; font-weight: 700; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; }
+.price-name { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+.p-amount { display: flex; align-items: baseline; gap: 2px; margin-bottom: 20px; }
+.p-val { font-size: 44px; font-weight: 800; }
+.p-cur { font-size: 18px; color: var(--dim); }
+.p-per { font-size: 13px; color: var(--dim); }
+
+/* ════ FAQ ════ */
+.faq-list { display: flex; flex-direction: column; gap: 10px; }
+.faq-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.faq-q { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 600; }
+.faq-a { padding: 0 20px 20px; font-size: 13.5px; color: var(--muted); line-height: 1.6; display: none; }
+.faq-item.open .faq-a { display: block; }
+.fi-chev { transition: transform 0.3s; }
+.faq-item.open .fi-chev { transform: rotate(180deg); }

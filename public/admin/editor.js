@@ -243,8 +243,11 @@ export class Editor {
           'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
-          title:   this.state.title,
-          content: { sections: this.state.sections },
+          title:         this.state.title,
+          meta_title:    this.state.meta_title,
+          meta_desc:     this.state.meta_desc,
+          bg_color:      this.state.bg_color,
+          content:       { sections: this.state.sections },
         }),
       });
       if (!res.ok) throw new Error('Save failed: ' + res.status);

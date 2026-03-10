@@ -24,7 +24,7 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     const { data, error } = await db
       .from('pages')
-      .select('slug, title, content, meta_title, meta_desc, nav_location, updated_at')
+      .select('slug, title, content, meta_title, meta_desc, nav_location, bg_color, updated_at')
       .eq('slug', slug)
       .single();
 
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
     const user = await requireAuth(req, res);
     if (!user) return;
 
-    const { title, content, meta_title, meta_desc, nav_location } = req.body || {};
+    const { title, content, meta_title, meta_desc, nav_location, bg_color } = req.body || {};
 
     const updateData = {
       updated_by: user.id,
@@ -51,6 +51,7 @@ export default async function handler(req, res) {
     if (meta_title  !== undefined) updateData.meta_title   = meta_title;
     if (meta_desc   !== undefined) updateData.meta_desc    = meta_desc;
     if (nav_location !== undefined) updateData.nav_location = nav_location;
+    if (bg_color    !== undefined) updateData.bg_color     = bg_color;
 
     const { data, error } = await db
       .from('pages')
