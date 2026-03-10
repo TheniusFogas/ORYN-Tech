@@ -2,9 +2,6 @@
   "version": 2,
   "buildCommand": "echo 'no build'",
   "outputDirectory": "public",
-  "functions": {
-    "api/**/*.js": { "runtime": "nodejs18.x" }
-  },
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/editor",  "dest": "/public/oryntech-editor.html" },
