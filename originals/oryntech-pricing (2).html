@@ -631,76 +631,23 @@ body {
 
 /* ─── page top padding ─── */
 .page{padding-top:80px!important;}
-
-/* ─── FOOTER ─── */
-.site-footer{
-  position:relative;z-index:10;
-  background:rgba(13,7,32,0.95);
-  border-top:1px solid rgba(139,92,246,.15);
-  padding:56px 32px 28px;
-  margin-top:80px;
-}
-.footer-grid{
-  display:grid;gap:40px;
-  max-width:1200px;margin:0 auto;
-}
-.footer-grid.cols-1{grid-template-columns:1fr;}
-.footer-grid.cols-2{grid-template-columns:repeat(2,1fr);}
-.footer-grid.cols-3{grid-template-columns:repeat(3,1fr);}
-.footer-grid.cols-4{grid-template-columns:repeat(4,1fr);}
-.footer-grid.cols-5{grid-template-columns:repeat(5,1fr);}
-.footer-grid.cols-6{grid-template-columns:repeat(6,1fr);}
-.footer-col{}
-.footer-col-title{
-  font-size:13px;font-weight:700;letter-spacing:1.5px;
-  text-transform:uppercase;color:var(--text);
-  margin-bottom:16px;opacity:.9;
-}
-.footer-col ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;}
-.footer-col ul li a{
-  font-size:13px;color:var(--muted);text-decoration:none;
-  transition:color .2s;display:flex;align-items:center;gap:6px;
-}
-.footer-col ul li a:hover{color:var(--text);}
-.footer-col ul li a .material-symbols-rounded{font-size:14px;opacity:.6;}
-.footer-brand{margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-.footer-brand-name{font-size:18px;font-weight:700;letter-spacing:1px;color:var(--text);}
-.footer-brand-name span{font-weight:400;}
-.footer-desc{font-size:12.5px;color:var(--dim);line-height:1.7;max-width:260px;}
-.footer-bottom{
-  max-width:1200px;margin:40px auto 0;
-  padding-top:20px;
-  border-top:1px solid rgba(255,255,255,.06);
-  display:flex;align-items:center;justify-content:space-between;
-  flex-wrap:wrap;gap:10px;
-}
-.footer-copy{font-size:11.5px;color:var(--dim);}
-.footer-links{display:flex;gap:20px;}
-.footer-links a{font-size:11.5px;color:var(--dim);text-decoration:none;transition:color .2s;}
-.footer-links a:hover{color:var(--muted);}
-@media(max-width:700px){
-  .footer-grid.cols-3,.footer-grid.cols-4,.footer-grid.cols-5,.footer-grid.cols-6{grid-template-columns:repeat(2,1fr);}
-  .footer-grid.cols-2{grid-template-columns:1fr;}
-  .site-footer{padding:40px 16px 24px;}
-}
-
 </style>
 </head>
 <body>
 
 <header class="headbar">
-  <a href="./pricing.html" class="hb-logo">
+  <a href="http://oryntech.ai" class="hb-logo">
     <div class="globe-wrap">
       <canvas class="globe-canvas" id="logoCanvas" width="72" height="72"></canvas>
     </div>
     <span class="hb-logo-text"><span class="oryn" id="orynSpan"><canvas class="oryn-comet" id="orynComet"></canvas>ORYN</span><span class="tech">Tech</span></span>
   </a>
   <nav class="hb-nav" id="hbNav">
-    <a href="./trial.html">
+    <a href="http://oryntech.ai/trial.html">
       <span class="material-symbols-rounded">rocket_launch</span>
       Try for free
     </a>
-    <a href="./tutorials.html">
+    <a href="http://oryntech.ai/tutorials.html">
       <span class="material-symbols-rounded">play_circle</span>
       Tutoriale
     </a>
@@ -872,47 +819,7 @@ body {
     Questions? <a href="#">Talk to our team</a> — we reply fast.
   </div>
 
-
-<footer class="site-footer">
-  <div class="footer-grid cols-4">
-    <div class="footer-col">
-      <div class="footer-brand">
-        <span class="footer-brand-name">ORYN<span>Tech</span></span>
-      </div>
-      <p class="footer-desc">One platform. One system. More leads. Faster follow-up. More sales.</p>
-    </div>
-    <div class="footer-col">
-      <div class="footer-col-title">Navigare</div>
-      <ul>
-        <li><a href="./pricing.html"><span class="material-symbols-rounded">home</span>Homepage</a></li>
-        <li><a href="./trial.html"><span class="material-symbols-rounded">rocket_launch</span>Try for Free</a></li>
-        <li><a href="./tutorials.html"><span class="material-symbols-rounded">play_circle</span>Tutoriale</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <div class="footer-col-title">Cont</div>
-      <ul>
-        <li><a href="http://client.oryntech.ai" target="_blank"><span class="material-symbols-rounded">lock_open</span>Login Clienți</a></li>
-        <li><a href="./trial.html"><span class="material-symbols-rounded">person_add</span>Înregistrare</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <div class="footer-col-title">Contact</div>
-      <ul>
-        <li><a href="mailto:contact@oryntech.ai"><span class="material-symbols-rounded">mail</span>contact@oryntech.ai</a></li>
-        <li><a href="#"><span class="material-symbols-rounded">chat</span>WhatsApp</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span class="footer-copy">© 2025 ORYNTECH. Toate drepturile rezervate.</span>
-    <div class="footer-links">
-      <a href="#">Termeni</a>
-      <a href="#">Confidențialitate</a>
-      <a href="#">Cookies</a>
-    </div>
-  </div>
-</footer></div>
+</div>
 
 <script>
 document.querySelectorAll('.fi-row').forEach(row => {
