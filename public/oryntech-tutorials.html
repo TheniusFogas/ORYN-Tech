@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Tutoriale — ORYNTech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <style>
+:root {
+  --bg1:#0d0720;--bg2:#150c2e;--purple:#7c3aed;--violet:#6d28d9;
+  --indigo:#4338ca;--pink:#db2777;--blue:#2563eb;--cyan:#0891b2;
+  --glow1:rgba(124,58,237,0.35);--glow2:rgba(109,40,217,0.25);--glow3:rgba(219,39,119,0.18);
+  --text:#f1eeff;--muted:#b8b2d8;--dim:#8a84aa;--hair:rgba(255,255,255,0.08);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--bg1);color:var(--text);min-height:100vh;}
+
+.headbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:56px;
+  background:rgba(13,7,32,0.82);
+  border-bottom:1px solid rgba(139,92,246,.18);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:0 2px 32px rgba(124,58,237,.1);
+}
+.hb-logo{
+  text-decoration:none;color:var(--text);display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.hb-logo-text{font-family:'Outfit',sans-serif;font-size:22px;color:#fff;line-height:1;position:relative;}
+.hb-logo-text .oryn{font-weight:700;letter-spacing:2px;text-transform:uppercase;position:relative;}
+.hb-logo-text .tech{font-weight:500;letter-spacing:1.2px;}
+/* Comet canvas sits behind ORYN text */
+.oryn-comet{
+  position:absolute;inset:0;
+  pointer-events:none;
+  width:100%;height:100%;
+}
+/* ─── GLOBE LOGO ─── */
+.globe-wrap{
+  position:relative;width:48px;height:48px;flex-shrink:0;
+}
+.globe-canvas{
+  position:absolute;inset:0;width:44px;height:44px;display:block;
+}
+.hb-nav{display:flex;align-items:center;gap:4px;}
+.hb-nav a{
+  font-size:12px;font-weight:500;color:#b0aacf;text-decoration:none;
+  padding:6px 14px;border-radius:8px;
+  transition:color .2s,background .2s;letter-spacing:.3px;
+  display:flex;align-items:center;gap:5px;
+}
+.hb-nav a .material-symbols-rounded{font-size:14px;}
+.hb-nav a:hover{color:var(--text);background:rgba(139,92,246,.12);}
+.hb-nav a.active{color:var(--text);background:rgba(139,92,246,.12);}
+.hb-login{
+  font-size:11.5px;font-weight:600;letter-spacing:.5px;color:var(--text);
+  text-decoration:none;padding:7px 16px;border-radius:9px;
+  border:1px solid rgba(139,92,246,.35);
+  background:rgba(124,58,237,.12);
+  transition:all .2s;display:flex;align-items:center;gap:5px;flex-shrink:0;
+}
+.hb-login .material-symbols-rounded{font-size:14px;color:rgba(167,139,250,.8);}
+.hb-login:hover{background:rgba(124,58,237,.25);border-color:rgba(167,139,250,.6);box-shadow:0 0 20px rgba(124,58,237,.2);}
+.hb-mobile-btn{display:none;background:none;border:none;cursor:pointer;color:#b0aacf;padding:4px;}
+.hb-mobile-btn .material-symbols-rounded{font-size:22px;}
+.page{padding-top:80px!important;}
+@media(max-width:700px){
+  .headbar{padding:0 16px;}
+  .hb-nav{display:none;position:fixed;top:56px;left:0;right:0;
+    flex-direction:column;align-items:stretch;gap:2px;
+    background:rgba(13,7,32,.97);border-bottom:1px solid rgba(139,92,246,.2);
+    padding:10px 12px 14px;backdrop-filter:blur(20px);}
+  .hb-nav.open{display:flex;}
+  .hb-nav a{font-size:13px;padding:10px 14px;}
+  .hb-mobile-btn{display:flex;align-items:center;}
+}
+
+
+/* ─── ANIMATIONS ─── */
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes gradFlow{0%{background-position:0%}100%{background-position:200%}}
+@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+
+/* ─── LAYOUT ─── */
+.page{padding-top:80px;min-height:100vh;position:relative;z-index:1;}
+.tut-wrap{max-width:1280px;margin:0 auto;padding:0 32px;}
+
+/* ─── HERO ─── */
+.tut-hero{
+  padding:56px 0 40px;
+  display:flex;align-items:center;justify-content:space-between;gap:32px;
+  flex-wrap:wrap;
+}
+.tut-hero-left{}
+.tut-eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(167,139,250,.8);margin-bottom:14px;
+}
+.tut-hero h1{
+  font-size:clamp(32px,4vw,52px);font-weight:800;
+  line-height:1.1;letter-spacing:-1.5px;
+  background:linear-gradient(135deg,#f1eeff 0%,#c4b5fd 50%,#a78bfa 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:14px;
+}
+.tut-hero-sub{font-size:16px;color:var(--muted);line-height:1.6;max-width:480px;}
+.tut-stats{display:flex;gap:28px;margin-top:28px;flex-wrap:wrap;}
+.tut-stat{display:flex;flex-direction:column;gap:2px;}
+.tut-stat-n{font-size:22px;font-weight:700;color:var(--text);}
+.tut-stat-l{font-size:11.5px;color:var(--dim);letter-spacing:.3px;}
+.tut-hero-search{
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.search-box{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(139,92,246,.25);
+  border-radius:12px;padding:10px 16px;
+  width:280px;
+}
+.search-box input{
+  background:none;border:none;outline:none;
+  color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;
+  width:100%;
+}
+.search-box input::placeholder{color:var(--dim);}
+.search-box .material-symbols-rounded{color:var(--dim);font-size:18px;}
+
+/* ─── FEATURED ─── */
+.featured-section{margin-bottom:48px;}
+.section-label{
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(167,139,250,.7);margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;
+}
+.section-label::after{content:'';flex:1;height:1px;background:rgba(139,92,246,.15);}
+.featured-card{
+  position:relative;overflow:hidden;border-radius:20px;
+  background:linear-gradient(135deg,rgba(109,40,217,.18) 0%,rgba(219,39,119,.12) 100%);
+  border:1px solid rgba(139,92,246,.25);
+  padding:40px;
+  display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;
+}
+.featured-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(124,58,237,.12),transparent);
+  pointer-events:none;
+}
+.feat-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(219,39,119,.2));
+  border:1px solid rgba(167,139,250,.3);
+  border-radius:20px;padding:4px 12px;
+  font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  color:rgba(192,132,252,.9);margin-bottom:14px;
+}
+.feat-title{font-size:26px;font-weight:700;line-height:1.2;margin-bottom:10px;letter-spacing:-.5px;}
+.feat-desc{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:20px;max-width:520px;}
+.feat-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.feat-meta-item{
+  display:flex;align-items:center;gap:5px;
+  font-size:12px;color:var(--dim);
+}
+.feat-meta-item .material-symbols-rounded{font-size:14px;}
+.feat-play{
+  width:80px;height:80px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#7c3aed,#db2777);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:transform .2s,box-shadow .2s;
+  box-shadow:0 0 32px rgba(124,58,237,.4);
+}
+.feat-play:hover{transform:scale(1.08);box-shadow:0 0 48px rgba(124,58,237,.6);}
+.feat-play .material-symbols-rounded{font-size:36px;color:#fff;}
+
+/* ─── CATEGORIES FILTER ─── */
+.cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px;}
+.cat-btn{
+  display:flex;align-items:center;gap:5px;
+  padding:7px 14px;border-radius:20px;
+  font-size:12px;font-weight:500;font-family:'Outfit',sans-serif;
+  border:1px solid rgba(139,92,246,.2);
+  background:rgba(255,255,255,.04);color:var(--muted);
+  cursor:pointer;transition:all .2s;
+}
+.cat-btn.active{
+  background:rgba(124,58,237,.2);
+  border-color:rgba(124,58,237,.5);
+  color:var(--text);
+}
+.cat-btn:hover:not(.active){background:rgba(255,255,255,.07);color:var(--text);}
+.cat-btn .material-symbols-rounded{font-size:14px;}
+.cat-count{
+  background:rgba(139,92,246,.25);border-radius:10px;
+  padding:1px 6px;font-size:10px;font-weight:600;color:rgba(192,132,252,.8);
+}
+
+/* ─── MAIN LAYOUT ─── */
+.tut-body{display:grid;grid-template-columns:240px 1fr;gap:32px;align-items:start;}
+
+/* ─── SIDEBAR ─── */
+.tut-sidebar{
+  position:sticky;top:88px;
+  background:rgba(21,12,46,.7);
+  border:1px solid rgba(139,92,246,.15);
+  border-radius:16px;padding:20px;
+}
+.sidebar-section{margin-bottom:24px;}
+.sidebar-section:last-child{margin-bottom:0;}
+.sidebar-title{
+  font-size:10.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--dim);margin-bottom:12px;
+}
+.sidebar-links{display:flex;flex-direction:column;gap:2px;}
+.sidebar-link{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 10px;border-radius:9px;
+  font-size:12.5px;color:var(--muted);
+  cursor:pointer;transition:all .15s;
+  border:1px solid transparent;
+}
+.sidebar-link:hover{background:rgba(139,92,246,.1);color:var(--text);}
+.sidebar-link.active{
+  background:rgba(124,58,237,.15);
+  border-color:rgba(124,58,237,.25);color:var(--text);
+}
+.sidebar-link .material-symbols-rounded{font-size:15px;opacity:.7;}
+.sidebar-link .sl-count{
+  margin-left:auto;font-size:10px;font-weight:600;
+  background:rgba(139,92,246,.2);
+  border-radius:8px;padding:1px 6px;color:var(--dim);
+}
+.progress-ring{margin-top:16px;}
+.pr-label{font-size:11px;color:var(--dim);margin-bottom:8px;display:flex;justify-content:space-between;}
+.pr-bar{height:4px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;}
+.pr-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#7c3aed,#db2777);width:35%;}
+
+/* ─── COURSE GRID ─── */
+.course-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;
+}
+.course-card{
+  background:rgba(21,12,46,.6);
+  border:1px solid rgba(139,92,246,.15);
+  border-radius:16px;overflow:hidden;
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+  cursor:pointer;
+}
+.course-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 40px rgba(124,58,237,.18);
+  border-color:rgba(139,92,246,.35);
+}
+.cc-thumb{
+  position:relative;width:100%;aspect-ratio:16/9;
+  background:linear-gradient(135deg,rgba(109,40,217,.3),rgba(219,39,119,.2));
+  overflow:hidden;
+}
+.cc-thumb-icon{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+}
+.cc-thumb-icon .material-symbols-rounded{
+  font-size:52px;
+  background:linear-gradient(135deg,rgba(192,132,252,.6),rgba(236,72,153,.4));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.cc-play-overlay{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.3);opacity:0;transition:opacity .2s;
+}
+.course-card:hover .cc-play-overlay{opacity:1;}
+.cc-play-btn{
+  width:48px;height:48px;border-radius:50%;
+  background:linear-gradient(135deg,#7c3aed,#db2777);
+  display:flex;align-items:center;justify-content:center;
+}
+.cc-play-btn .material-symbols-rounded{font-size:22px;color:#fff;}
+.cc-level{
+  position:absolute;top:10px;left:10px;
+  font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  padding:3px 9px;border-radius:10px;
+}
+.cc-level.beginner{background:rgba(5,150,105,.3);color:#6ee7b7;border:1px solid rgba(5,150,105,.4);}
+.cc-level.intermediate{background:rgba(124,58,237,.3);color:#c4b5fd;border:1px solid rgba(124,58,237,.4);}
+.cc-level.advanced{background:rgba(219,39,119,.3);color:#fbcfe8;border:1px solid rgba(219,39,119,.4);}
+.cc-new{
+  position:absolute;top:10px;right:10px;
+  font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  padding:3px 9px;border-radius:10px;
+  background:linear-gradient(135deg,#7c3aed,#db2777);color:#fff;
+}
+.cc-duration{
+  position:absolute;bottom:8px;right:10px;
+  font-size:10.5px;font-weight:600;color:rgba(255,255,255,.85);
+  background:rgba(0,0,0,.55);border-radius:6px;padding:2px 7px;
+  display:flex;align-items:center;gap:3px;
+}
+.cc-duration .material-symbols-rounded{font-size:12px;}
+.cc-body{padding:18px;}
+.cc-cat{
+  font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
+  color:rgba(167,139,250,.7);margin-bottom:7px;
+}
+.cc-title{
+  font-size:15px;font-weight:600;line-height:1.4;margin-bottom:8px;
+  color:var(--text);
+}
+.cc-desc{font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:14px;}
+.cc-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:12px;border-top:1px solid rgba(255,255,255,.06);
+}
+.cc-meta{display:flex;align-items:center;gap:10px;}
+.cc-meta-item{
+  display:flex;align-items:center;gap:3px;
+  font-size:11px;color:var(--dim);
+}
+.cc-meta-item .material-symbols-rounded{font-size:13px;}
+.cc-btn{
+  display:flex;align-items:center;gap:4px;
+  font-size:11.5px;font-weight:600;font-family:'Outfit',sans-serif;
+  color:rgba(192,132,252,.9);
+  background:rgba(124,58,237,.12);
+  border:1px solid rgba(124,58,237,.25);
+  border-radius:8px;padding:5px 11px;cursor:pointer;
+  transition:all .2s;
+}
+.cc-btn:hover{background:rgba(124,58,237,.25);border-color:rgba(124,58,237,.5);}
+.cc-btn .material-symbols-rounded{font-size:13px;}
+.cc-progress{margin-top:10px;}
+.cc-prog-bar{height:3px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;}
+.cc-prog-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#7c3aed,#db2777);}
+.cc-prog-label{font-size:10px;color:var(--dim);margin-top:4px;}
+
+/* ─── PATH SECTION ─── */
+.path-section{margin:48px 0;}
+.path-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;}
+.path-card{
+  background:rgba(21,12,46,.5);
+  border:1px solid rgba(139,92,246,.15);
+  border-radius:14px;padding:24px;
+  text-align:center;cursor:pointer;
+  transition:all .2s;
+}
+.path-card:hover{border-color:rgba(124,58,237,.4);background:rgba(124,58,237,.08);}
+.path-icon{
+  width:52px;height:52px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(219,39,119,.15));
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;
+}
+.path-icon .material-symbols-rounded{font-size:26px;color:rgba(192,132,252,.85);}
+.path-name{font-size:14px;font-weight:600;margin-bottom:5px;}
+.path-count{font-size:11.5px;color:var(--dim);}
+
+/* ─── PAGINATION ─── */
+.pagination{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  margin:40px 0;
+}
+.pg-btn{
+  width:36px;height:36px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(139,92,246,.15);
+  color:var(--muted);font-family:'Outfit',sans-serif;font-size:13px;
+  cursor:pointer;transition:all .2s;
+}
+.pg-btn.active{background:rgba(124,58,237,.2);border-color:rgba(124,58,237,.4);color:var(--text);}
+.pg-btn:hover:not(.active){background:rgba(255,255,255,.08);color:var(--text);}
+.pg-btn .material-symbols-rounded{font-size:16px;}
+
+
+/* ─── FOOTER ─── */
+.site-footer{
+  position:relative;z-index:10;
+  background:rgba(13,7,32,0.95);
+  border-top:1px solid rgba(139,92,246,.15);
+  padding:56px 32px 28px;
+  margin-top:80px;
+}
+.footer-grid{
+  display:grid;gap:40px;
+  max-width:1200px;margin:0 auto;
+}
+.footer-grid.cols-1{grid-template-columns:1fr;}
+.footer-grid.cols-2{grid-template-columns:repeat(2,1fr);}
+.footer-grid.cols-3{grid-template-columns:repeat(3,1fr);}
+.footer-grid.cols-4{grid-template-columns:repeat(4,1fr);}
+.footer-grid.cols-5{grid-template-columns:repeat(5,1fr);}
+.footer-grid.cols-6{grid-template-columns:repeat(6,1fr);}
+.footer-col{}
+.footer-col-title{
+  font-size:13px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--text);
+  margin-bottom:16px;opacity:.9;
+}
+.footer-col ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;}
+.footer-col ul li a{
+  font-size:13px;color:var(--muted);text-decoration:none;
+  transition:color .2s;display:flex;align-items:center;gap:6px;
+}
+.footer-col ul li a:hover{color:var(--text);}
+.footer-col ul li a .material-symbols-rounded{font-size:14px;opacity:.6;}
+.footer-brand{margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.footer-brand-name{font-size:18px;font-weight:700;letter-spacing:1px;color:var(--text);}
+.footer-brand-name span{font-weight:400;}
+.footer-desc{font-size:12.5px;color:var(--dim);line-height:1.7;max-width:260px;}
+.footer-bottom{
+  max-width:1200px;margin:40px auto 0;
+  padding-top:20px;
+  border-top:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+}
+.footer-copy{font-size:11.5px;color:var(--dim);}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{font-size:11.5px;color:var(--dim);text-decoration:none;transition:color .2s;}
+.footer-links a:hover{color:var(--muted);}
+@media(max-width:700px){
+  .footer-grid.cols-3,.footer-grid.cols-4,.footer-grid.cols-5,.footer-grid.cols-6{grid-template-columns:repeat(2,1fr);}
+  .footer-grid.cols-2{grid-template-columns:1fr;}
+  .site-footer{padding:40px 16px 24px;}
+}
+
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  .tut-body{grid-template-columns:1fr;}
+  .tut-sidebar{position:static;}
+  .featured-card{grid-template-columns:1fr;}
+  .feat-play{display:none;}
+}
+@media(max-width:600px){
+  .tut-wrap{padding:0 16px;}
+  .tut-hero{padding:32px 0 24px;}
+  .course-grid{grid-template-columns:1fr;}
+  .search-box{width:100%;}
+}
+  </style>
+</head>
+<body>
+<canvas id="galaxyCanvas" style="position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
+
+<header class="headbar">
+  <a href="./index.html" class="hb-logo">
+    <div class="globe-wrap">
+      <canvas class="globe-canvas" id="logoCanvas" width="72" height="72"></canvas>
+    </div>
+    <span class="hb-logo-text"><span class="oryn" id="orynSpan"><canvas class="oryn-comet" id="orynComet"></canvas>ORYN</span><span class="tech">Tech</span></span>
+  </a>
+  <nav class="hb-nav" id="hbNav">
+    <a href="./trial.html">
+      <span class="material-symbols-rounded">rocket_launch</span>
+      Try for free
+    </a>
+    <a href="./tutorials.html" class="active">
+      <span class="material-symbols-rounded">play_circle</span>
+      Tutoriale
+    </a>
+  </nav>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <a href="http://client.oryntech.ai" class="hb-login" target="_blank">
+      <span class="material-symbols-rounded">lock_open</span>
+      Login Clienți
+    </a>
+    <button class="hb-mobile-btn" id="hbToggle" aria-label="Menu">
+      <span class="material-symbols-rounded" id="hbIcon">menu</span>
+    </button>
+  </div>
+</header>
+
+<div class="page">
+<div class="tut-wrap">
+
+  <!-- HERO -->
+  <section class="tut-hero">
+    <div class="tut-hero-left">
+      <div class="tut-eyebrow">
+        <span class="material-symbols-rounded" style="font-size:13px">school</span>
+        Learning Hub
+      </div>
+      <h1>Învață. Automatizează.<br>Scalează.</h1>
+      <p class="tut-hero-sub">Tutoriale pas-cu-pas pentru a stăpâni platforma ORYN și a-ți automatiza business-ul complet.</p>
+      <div class="tut-stats">
+        <div class="tut-stat"><span class="tut-stat-n">24</span><span class="tut-stat-l">Tutoriale</span></div>
+        <div class="tut-stat"><span class="tut-stat-n">8h+</span><span class="tut-stat-l">Conținut video</span></div>
+        <div class="tut-stat"><span class="tut-stat-n">6</span><span class="tut-stat-l">Module</span></div>
+        <div class="tut-stat"><span class="tut-stat-n">Free</span><span class="tut-stat-l">Acces total</span></div>
+      </div>
+    </div>
+    <div class="tut-hero-search">
+      <div class="search-box">
+        <span class="material-symbols-rounded">search</span>
+        <input type="text" placeholder="Caută tutoriale...">
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED -->
+  <section class="featured-section">
+    <div class="section-label">Tutorial recomandat</div>
+    <div class="featured-card">
+      <div>
+        <div class="feat-badge">
+          <span class="material-symbols-rounded" style="font-size:12px">star</span>
+          Cel mai popular
+        </div>
+        <h2 class="feat-title">Configurarea completă a sistemului ORYN în 60 de minute</h2>
+        <p class="feat-desc">De la zero la un sistem complet automatizat — CRM, pipelines, AI agents, follow-up automat și calendar booking. Totul configurat pas cu pas.</p>
+        <div class="feat-meta">
+          <div class="feat-meta-item"><span class="material-symbols-rounded">schedule</span> 58 min</div>
+          <div class="feat-meta-item"><span class="material-symbols-rounded">signal_cellular_alt</span> Toate nivelurile</div>
+          <div class="feat-meta-item"><span class="material-symbols-rounded">visibility</span> 1.2k vizualizări</div>
+          <div class="feat-meta-item" style="color:rgba(192,132,252,.8)"><span class="material-symbols-rounded">new_releases</span> Actualizat recent</div>
+        </div>
+      </div>
+      <div class="feat-play">
+        <span class="material-symbols-rounded">play_arrow</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEARNING PATHS -->
+  <section class="path-section">
+    <div class="section-label">Parcursuri de învățare</div>
+    <div class="path-cards">
+      <div class="path-card">
+        <div class="path-icon"><span class="material-symbols-rounded">rocket_launch</span></div>
+        <div class="path-name">Începători</div>
+        <div class="path-count">6 tutoriale · 2h 30min</div>
+      </div>
+      <div class="path-card">
+        <div class="path-icon"><span class="material-symbols-rounded">smart_toy</span></div>
+        <div class="path-name">AI Automation</div>
+        <div class="path-count">5 tutoriale · 2h 15min</div>
+      </div>
+      <div class="path-card">
+        <div class="path-icon"><span class="material-symbols-rounded">funnel</span></div>
+        <div class="path-name">Funnels & Lead Capture</div>
+        <div class="path-count">4 tutoriale · 1h 45min</div>
+      </div>
+      <div class="path-card">
+        <div class="path-icon"><span class="material-symbols-rounded">calendar_month</span></div>
+        <div class="path-name">Calendar & Booking</div>
+        <div class="path-count">3 tutoriale · 1h 10min</div>
+      </div>
+      <div class="path-card">
+        <div class="path-icon"><span class="material-symbols-rounded">mail</span></div>
+        <div class="path-name">Email & SMS</div>
+        <div class="path-count">4 tutoriale · 1h 20min</div>
+      </div>
+      <div class="path-card">
+        <div class="path-icon"><span class="material-symbols-rounded">star</span></div>
+        <div class="path-name">Reputație & Recenzii</div>
+        <div class="path-count">2 tutoriale · 45min</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <div class="tut-body">
+
+    <!-- SIDEBAR -->
+    <aside class="tut-sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Categorii</div>
+        <div class="sidebar-links">
+          <div class="sidebar-link active"><span class="material-symbols-rounded">apps</span>Toate<span class="sl-count">24</span></div>
+          <div class="sidebar-link"><span class="material-symbols-rounded">rocket_launch</span>Getting Started<span class="sl-count">6</span></div>
+          <div class="sidebar-link"><span class="material-symbols-rounded">smart_toy</span>AI Agents<span class="sl-count">5</span></div>
+          <div class="sidebar-link"><span class="material-symbols-rounded">account_tree</span>Automatizări<span class="sl-count">4</span></div>
+          <div class="sidebar-link"><span class="material-symbols-rounded">funnel</span>Funnels<span class="sl-count">4</span></div>
+          <div class="sidebar-link"><span class="material-symbols-rounded">mail</span>Email & SMS<span class="sl-count">3</span></div>
+          <div class="sidebar-link"><span class="material-symbols-rounded">star</span>Reputație<span class="sl-count">2</span></div>
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Nivel</div>
+        <div class="sidebar-links">
+          <div class="sidebar-link"><span class="material-symbols-rounded">circle</span>Începător</div>
+          <div class="sidebar-link"><span class="material-symbols-rounded">change_history</span>Intermediar</div>
+          <div class="sidebar-link"><span class="material-symbols-rounded">square</span>Avansat</div>
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Progresul tău</div>
+        <div class="progress-ring">
+          <div class="pr-label"><span>8 / 24 completate</span><span style="color:rgba(192,132,252,.8)">33%</span></div>
+          <div class="pr-bar"><div class="pr-fill" style="width:33%"></div></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- COURSE GRID -->
+    <div>
+      <div class="cats">
+        <button class="cat-btn active"><span class="material-symbols-rounded">apps</span>Toate<span class="cat-count">24</span></button>
+        <button class="cat-btn"><span class="material-symbols-rounded">rocket_launch</span>Getting Started</button>
+        <button class="cat-btn"><span class="material-symbols-rounded">smart_toy</span>AI Agents</button>
+        <button class="cat-btn"><span class="material-symbols-rounded">account_tree</span>Automatizări</button>
+        <button class="cat-btn"><span class="material-symbols-rounded">funnel</span>Funnels</button>
+      </div>
+
+      <div class="course-grid" id="courseGrid">
+
+        <!-- Card 1 -->
+        <div class="course-card">
+          <div class="cc-thumb">
+            <div class="cc-thumb-icon"><span class="material-symbols-rounded">play_circle</span></div>
+            <div class="cc-play-overlay"><div class="cc-play-btn"><span class="material-symbols-rounded">play_arrow</span></div></div>
+            <div class="cc-level beginner">Începător</div>
+            <div class="cc-new">Nou</div>
+            <div class="cc-duration"><span class="material-symbols-rounded">schedule</span>12 min</div>
+          </div>
+          <div class="cc-body">
+            <div class="cc-cat">Getting Started</div>
+            <div class="cc-title">Primul tău cont ORYN — setup în 5 pași</div>
+            <div class="cc-desc">Creează contul, configurează profilul și pregătește platforma pentru business-ul tău.</div>
+            <div class="cc-footer">
+              <div class="cc-meta">
+                <div class="cc-meta-item"><span class="material-symbols-rounded">visibility</span>842</div>
+                <div class="cc-meta-item"><span class="material-symbols-rounded">thumb_up</span>98%</div>
+              </div>
+              <button class="cc-btn"><span class="material-symbols-rounded">play_arrow</span>Start</button>
+            </div>
+            <div class="cc-progress"><div class="cc-prog-bar"><div class="cc-prog-fill" style="width:100%"></div></div><div class="cc-prog-label">Completat ✓</div></div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="course-card">
+          <div class="cc-thumb">
+            <div class="cc-thumb-icon"><span class="material-symbols-rounded">account_tree</span></div>
+            <div class="cc-play-overlay"><div class="cc-play-btn"><span class="material-symbols-rounded">play_arrow</span></div></div>
+            <div class="cc-level intermediate">Intermediar</div>
+            <div class="cc-duration"><span class="material-symbols-rounded">schedule</span>28 min</div>
+          </div>
+          <div class="cc-body">
+            <div class="cc-cat">Automatizări</div>
+            <div class="cc-title">Workflow-uri de follow-up automat pentru lead-uri noi</div>
+            <div class="cc-desc">Construiește un workflow complet care răspunde instant la orice lead nou din orice sursă.</div>
+            <div class="cc-footer">
+              <div class="cc-meta">
+                <div class="cc-meta-item"><span class="material-symbols-rounded">visibility</span>634</div>
+                <div class="cc-meta-item"><span class="material-symbols-rounded">thumb_up</span>97%</div>
+              </div>
+              <button class="cc-btn"><span class="material-symbols-rounded">play_arrow</span>Start</button>
+            </div>
+            <div class="cc-progress"><div class="cc-prog-bar"><div class="cc-prog-fill" style="width:65%"></div></div><div class="cc-prog-label">65% completat</div></div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="course-card">
+          <div class="cc-thumb">
+            <div class="cc-thumb-icon"><span class="material-symbols-rounded">smart_toy</span></div>
+            <div class="cc-play-overlay"><div class="cc-play-btn"><span class="material-symbols-rounded">play_arrow</span></div></div>
+            <div class="cc-level intermediate">Intermediar</div>
+            <div class="cc-new">Nou</div>
+            <div class="cc-duration"><span class="material-symbols-rounded">schedule</span>35 min</div>
+          </div>
+          <div class="cc-body">
+            <div class="cc-cat">AI Agents</div>
+            <div class="cc-title">Configurarea AI Conversational Agent pentru WhatsApp</div>
+            <div class="cc-desc">Setează un agent AI care răspunde automat pe WhatsApp 24/7, califică lead-urile și rezervă întâlniri.</div>
+            <div class="cc-footer">
+              <div class="cc-meta">
+                <div class="cc-meta-item"><span class="material-symbols-rounded">visibility</span>1.1k</div>
+                <div class="cc-meta-item"><span class="material-symbols-rounded">thumb_up</span>99%</div>
+              </div>
+              <button class="cc-btn"><span class="material-symbols-rounded">play_arrow</span>Start</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="course-card">
+          <div class="cc-thumb">
+            <div class="cc-thumb-icon"><span class="material-symbols-rounded">funnel</span></div>
+            <div class="cc-play-overlay"><div class="cc-play-btn"><span class="material-symbols-rounded">play_arrow</span></div></div>
+            <div class="cc-level beginner">Începător</div>
+            <div class="cc-duration"><span class="material-symbols-rounded">schedule</span>22 min</div>
+          </div>
+          <div class="cc-body">
+            <div class="cc-cat">Funnels</div>
+            <div class="cc-title">Landing page de captură lead-uri în 20 de minute</div>
+            <div class="cc-desc">Construiește o pagină de captură profesională conectată direct la CRM și la workflow-urile de follow-up.</div>
+            <div class="cc-footer">
+              <div class="cc-meta">
+                <div class="cc-meta-item"><span class="material-symbols-rounded">visibility</span>788</div>
+                <div class="cc-meta-item"><span class="material-symbols-rounded">thumb_up</span>96%</div>
+              </div>
+              <button class="cc-btn"><span class="material-symbols-rounded">play_arrow</span>Start</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="course-card">
+          <div class="cc-thumb">
+            <div class="cc-thumb-icon"><span class="material-symbols-rounded">record_voice_over</span></div>
+            <div class="cc-play-overlay"><div class="cc-play-btn"><span class="material-symbols-rounded">play_arrow</span></div></div>
+            <div class="cc-level advanced">Avansat</div>
+            <div class="cc-duration"><span class="material-symbols-rounded">schedule</span>45 min</div>
+          </div>
+          <div class="cc-body">
+            <div class="cc-cat">AI Agents</div>
+            <div class="cc-title">AI Voice Agent — răspunde la telefon în locul tău</div>
+            <div class="cc-desc">Configurează un agent vocal AI care preia apeluri, califică clienți și programează întâlniri automat.</div>
+            <div class="cc-footer">
+              <div class="cc-meta">
+                <div class="cc-meta-item"><span class="material-symbols-rounded">visibility</span>923</div>
+                <div class="cc-meta-item"><span class="material-symbols-rounded">thumb_up</span>98%</div>
+              </div>
+              <button class="cc-btn"><span class="material-symbols-rounded">play_arrow</span>Start</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="course-card">
+          <div class="cc-thumb">
+            <div class="cc-thumb-icon"><span class="material-symbols-rounded">star</span></div>
+            <div class="cc-play-overlay"><div class="cc-play-btn"><span class="material-symbols-rounded">play_arrow</span></div></div>
+            <div class="cc-level beginner">Începător</div>
+            <div class="cc-duration"><span class="material-symbols-rounded">schedule</span>18 min</div>
+          </div>
+          <div class="cc-body">
+            <div class="cc-cat">Reputație</div>
+            <div class="cc-title">Automatizează colectarea recenziilor Google</div>
+            <div class="cc-desc">Trimite automat cereri de recenzie după fiecare serviciu finalizat și gestionează răspunsurile.</div>
+            <div class="cc-footer">
+              <div class="cc-meta">
+                <div class="cc-meta-item"><span class="material-symbols-rounded">visibility</span>567</div>
+                <div class="cc-meta-item"><span class="material-symbols-rounded">thumb_up</span>97%</div>
+              </div>
+              <button class="cc-btn"><span class="material-symbols-rounded">play_arrow</span>Start</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="course-card">
+          <div class="cc-thumb">
+            <div class="cc-thumb-icon"><span class="material-symbols-rounded">calendar_month</span></div>
+            <div class="cc-play-overlay"><div class="cc-play-btn"><span class="material-symbols-rounded">play_arrow</span></div></div>
+            <div class="cc-level beginner">Începător</div>
+            <div class="cc-duration"><span class="material-symbols-rounded">schedule</span>20 min</div>
+          </div>
+          <div class="cc-body">
+            <div class="cc-cat">Calendar & Booking</div>
+            <div class="cc-title">Setup calendar și rezervări online cu confirmare automată</div>
+            <div class="cc-desc">Configurează sistemul de booking cu notificări SMS și email, remindere și follow-up post-întâlnire.</div>
+            <div class="cc-footer">
+              <div class="cc-meta">
+                <div class="cc-meta-item"><span class="material-symbols-rounded">visibility</span>701</div>
+                <div class="cc-meta-item"><span class="material-symbols-rounded">thumb_up</span>95%</div>
+              </div>
+              <button class="cc-btn"><span class="material-symbols-rounded">play_arrow</span>Start</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 8 -->
+        <div class="course-card">
+          <div class="cc-thumb">
+            <div class="cc-thumb-icon"><span class="material-symbols-rounded">mail</span></div>
+            <div class="cc-play-overlay"><div class="cc-play-btn"><span class="material-symbols-rounded">play_arrow</span></div></div>
+            <div class="cc-level intermediate">Intermediar</div>
+            <div class="cc-duration"><span class="material-symbols-rounded">schedule</span>32 min</div>
+          </div>
+          <div class="cc-body">
+            <div class="cc-cat">Email & SMS</div>
+            <div class="cc-title">Campanie de reactivare clienți inactivi prin SMS + Email</div>
+            <div class="cc-desc">Secvență automată de 5 pași care reactivează clienții care nu au mai cumpărat în ultimele 90 de zile.</div>
+            <div class="cc-footer">
+              <div class="cc-meta">
+                <div class="cc-meta-item"><span class="material-symbols-rounded">visibility</span>489</div>
+                <div class="cc-meta-item"><span class="material-symbols-rounded">thumb_up</span>96%</div>
+              </div>
+              <button class="cc-btn"><span class="material-symbols-rounded">play_arrow</span>Start</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 9 -->
+        <div class="course-card">
+          <div class="cc-thumb">
+            <div class="cc-thumb-icon"><span class="material-symbols-rounded">phone_missed</span></div>
+            <div class="cc-play-overlay"><div class="cc-play-btn"><span class="material-symbols-rounded">play_arrow</span></div></div>
+            <div class="cc-level beginner">Începător</div>
+            <div class="cc-new">Nou</div>
+            <div class="cc-duration"><span class="material-symbols-rounded">schedule</span>14 min</div>
+          </div>
+          <div class="cc-body">
+            <div class="cc-cat">Automatizări</div>
+            <div class="cc-title">Missed Call Text Back — niciun apel pierdut fără urmărire</div>
+            <div class="cc-desc">Activează răspunsul automat prin SMS la orice apel pierdut și recuperează lead-uri în câteva secunde.</div>
+            <div class="cc-footer">
+              <div class="cc-meta">
+                <div class="cc-meta-item"><span class="material-symbols-rounded">visibility</span>1.3k</div>
+                <div class="cc-meta-item"><span class="material-symbols-rounded">thumb_up</span>99%</div>
+              </div>
+              <button class="cc-btn"><span class="material-symbols-rounded">play_arrow</span>Start</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /course-grid -->
+
+      <div class="pagination">
+        <div class="pg-btn"><span class="material-symbols-rounded">chevron_left</span></div>
+        <div class="pg-btn active">1</div>
+        <div class="pg-btn">2</div>
+        <div class="pg-btn">3</div>
+        <div class="pg-btn"><span class="material-symbols-rounded">chevron_right</span></div>
+      </div>
+    </div>
+  </div><!-- /tut-body -->
+
+</div><!-- /tut-wrap -->
+
+<footer class="site-footer">
+  <div class="footer-grid cols-4">
+    <div class="footer-col">
+      <div class="footer-brand">
+        <span class="footer-brand-name">ORYN<span>Tech</span></span>
+      </div>
+      <p class="footer-desc">One platform. One system. More leads. Faster follow-up. More sales.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Navigare</div>
+      <ul>
+        <li><a href="./index.html"><span class="material-symbols-rounded">home</span>Homepage</a></li>
+        <li><a href="./trial.html"><span class="material-symbols-rounded">rocket_launch</span>Try for Free</a></li>
+        <li><a href="./tutorials.html"><span class="material-symbols-rounded">play_circle</span>Tutoriale</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Cont</div>
+      <ul>
+        <li><a href="http://client.oryntech.ai" target="_blank"><span class="material-symbols-rounded">lock_open</span>Login Clienți</a></li>
+        <li><a href="./trial.html"><span class="material-symbols-rounded">person_add</span>Înregistrare</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Contact</div>
+      <ul>
+        <li><a href="/cdn-cgi/l/email-protection#23404c4d57424057634c515a4d5746404b0d424a"><span class="material-symbols-rounded">mail</span><span class="__cf_email__" data-cfemail="b0d3dfdec4d1d3c4f0dfc2c9dec4d5d3d89ed1d9">[email&#160;protected]</span></a></li>
+        <li><a href="#"><span class="material-symbols-rounded">chat</span>WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 ORYNTECH. Toate drepturile rezervate.</span>
+    <div class="footer-links">
+      <a href="#">Termeni</a>
+      <a href="#">Confidențialitate</a>
+      <a href="#">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /page -->
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+(function(){
+  const cv=document.getElementById('gc'),ctx=cv.getContext('2d');
+  let W=window.innerWidth,H=window.innerHeight;
+  const mouse={x:.5,y:.5};
+  function safeRG(x0,y0,r0,x1,y1,r1){
+    if(!isFinite(x0)||!isFinite(y0)||!isFinite(x1)||!isFinite(y1)||r1<=0||!isFinite(r1))return null;
+    return ctx.createRadialGradient(x0,y0,Math.max(0,r0),x1,y1,r1);
+  }
+  function safeLG(x0,y0,x1,y1){
+    if(!isFinite(x0)||!isFinite(y0)||!isFinite(x1)||!isFinite(y1))return null;
+    if(Math.abs(x1-x0)<.001&&Math.abs(y1-y0)<.001)return null;
+    return ctx.createLinearGradient(x0,y0,x1,y1);
+  }
+  const L=[
+    {count:180,minS:.3,maxS:.8,minA:.25,maxA:.65,speed:.018,color:[210,200,255]},
+    {count:90,minS:.5,maxS:1.1,minA:.2,maxA:.55,speed:.032,color:[180,160,255]},
+    {count:40,minS:.8,maxS:1.6,minA:.15,maxA:.45,speed:.05,color:[240,200,255]},
+  ];
+  const N=[
+    {nx:.15,ny:.25,rx:.28,ry:.18,a:.13,sp:.025,c1:'80,40,180',c2:'130,60,200'},
+    {nx:.72,ny:.55,rx:.32,ry:.22,a:.11,sp:.018,c1:'180,40,110',c2:'200,70,150'},
+    {nx:.45,ny:.8,rx:.25,ry:.16,a:.09,sp:.03,c1:'40,80,200',c2:'80,120,220'},
+    {nx:.85,ny:.15,rx:.2,ry:.14,a:.08,sp:.022,c1:'100,50,220',c2:'140,90,240'},
+  ];
+  const D=[
+    {x:.1,y:.3,ex:.6,ey:.15,w:.06,a:.07,sp:.015,c:'160,120,255'},
+    {x:.5,y:.6,ex:.9,ey:.4,w:.05,a:.06,sp:.02,c:'220,100,180'},
+    {x:.0,y:.7,ex:.4,ey:.9,w:.04,a:.05,sp:.012,c:'100,140,255'},
+  ];
+  const CON=[
+    {pts:[[.1,.2],[.18,.12],[.25,.18],[.22,.28]],edges:[[0,1],[1,2],[2,3],[3,0]],sp:.014},
+    {pts:[[.7,.1],[.78,.18],[.72,.26],[.82,.22]],edges:[[0,1],[1,2],[2,3],[1,3]],sp:.019},
+    {pts:[[.55,.7],[.62,.62],[.7,.68],[.65,.78]],edges:[[0,1],[1,2],[2,3],[0,3]],sp:.016},
+  ];
+  const SH=[];
+  const rnd=(a,b)=>a+(b-a)*Math.random();
+  setInterval(()=>{if(W>0&&H>0&&Math.random()<.4)SH.push({x:rnd(0,.6)*W,y:rnd(0,.3)*H,vx:rnd(3,7),vy:rnd(1.5,3.5),len:rnd(80,160),life:1});},2200);
+  function initStars(){L.forEach(l=>{l.s=[];for(let i=0;i<l.count;i++)l.s.push({bx:Math.random(),by:Math.random(),s:rnd(l.minS,l.maxS),a:rnd(l.minA,l.maxA),to:Math.random()*Math.PI*2,ts:rnd(.3,1.8)});});}
+  function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
+  let t=0;
+  function frame(){
+    if(!W||!H){requestAnimationFrame(frame);return;}
+    t+=.016;ctx.clearRect(0,0,W,H);ctx.fillStyle='#0b0618';ctx.fillRect(0,0,W,H);
+    const vg=safeRG(W/2,H/2,0,W/2,H/2,Math.max(W,H)*.75);
+    if(vg){vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(.6,'rgba(0,0,0,.1)');vg.addColorStop(1,'rgba(0,0,0,.72)');ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);}
+    const mx=mouse.x,my=mouse.y;
+    N.forEach(n=>{
+      const px=(mx-.5)*n.sp*W,py=(my-.5)*n.sp*H;
+      const cx=n.nx*W+px,cy=n.ny*H+py,rx=n.rx*W,ry=n.ry*H;
+      if(!rx||!ry)return;
+      const g=safeRG(cx,cy,0,cx,cy,Math.max(rx,ry));if(!g)return;
+      g.addColorStop(0,`rgba(${n.c2},${n.a})`);g.addColorStop(.4,`rgba(${n.c1},${n.a*.5})`);g.addColorStop(1,`rgba(${n.c1},0)`);
+      ctx.save();ctx.scale(1,ry/rx);ctx.beginPath();ctx.arc(cx,cy*(rx/ry),rx,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();ctx.restore();
+    });
+    D.forEach(d=>{
+      const px=(mx-.5)*d.sp*W,py=(my-.5)*d.sp*H;
+      const x0=d.x*W+px,y0=d.y*H+py,x1=d.ex*W+px,y1=d.ey*H+py,w=d.w*H;
+      const dx=x1-x0,dy=y1-y0,len=Math.hypot(dx,dy);if(len<.001)return;
+      const g=safeLG(x0,y0,x1,y1);if(!g)return;
+      g.addColorStop(0,`rgba(${d.c},0)`);g.addColorStop(.3,`rgba(${d.c},${d.a})`);g.addColorStop(.7,`rgba(${d.c},${d.a})`);g.addColorStop(1,`rgba(${d.c},0)`);
+      const nx=-dy/len*w*.5,ny=dx/len*w*.5;
+      ctx.beginPath();ctx.moveTo(x0+nx,y0+ny);ctx.lineTo(x1+nx,y1+ny);ctx.lineTo(x1-nx,y1-ny);ctx.lineTo(x0-nx,y0-ny);ctx.closePath();ctx.fillStyle=g;ctx.fill();
+    });
+    CON.forEach((con,ci)=>{
+      const px=(mx-.5)*con.sp*W,py=(my-.5)*con.sp*H;
+      const pts=con.pts.map(p=>({x:p[0]*W+px,y:p[1]*H+py}));
+      ctx.save();
+      con.edges.forEach(([a,b])=>{
+        const p1=pts[a],p2=pts[b];
+        const g=safeLG(p1.x,p1.y,p2.x,p2.y);if(!g)return;
+        g.addColorStop(0,'rgba(180,160,255,0)');g.addColorStop(.5,'rgba(210,190,255,.28)');g.addColorStop(1,'rgba(180,160,255,0)');
+        ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.strokeStyle=g;ctx.lineWidth=.7;ctx.stroke();
+      });
+      ctx.restore();
+      pts.forEach((p,i)=>{
+        const tw=.6+.4*Math.sin(t*1.2+ci*1.7+i*.9),alpha=.55*tw,sz=1.3*tw;
+        const g=safeRG(p.x,p.y,0,p.x,p.y,sz*5);if(!g)return;
+        g.addColorStop(0,`rgba(210,190,255,${alpha*.5})`);g.addColorStop(1,'rgba(180,150,255,0)');
+        ctx.beginPath();ctx.arc(p.x,p.y,sz*5,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+        ctx.beginPath();ctx.arc(p.x,p.y,sz,0,Math.PI*2);ctx.fillStyle=`rgba(230,215,255,${alpha})`;ctx.fill();
+      });
+    });
+    L.forEach(l=>{
+      const[r2,g2,b]=l.color;
+      l.s.forEach(s=>{
+        const px=(mx-.5)*l.speed*W,py=(my-.5)*l.speed*H;
+        const x=((s.bx*W+px)%W+W)%W,y=((s.by*H+py)%H+H)%H;
+        const tw=.5+.5*Math.sin(t*s.ts+s.to),alpha=s.a*(.5+.5*tw),sz=s.s*(.85+.15*tw);
+        if(s.s>1.2){
+          const g=safeRG(x,y,0,x,y,sz*3.5);
+          if(g){g.addColorStop(0,`rgba(${r2},${g2},${b},${alpha*.6})`);g.addColorStop(1,`rgba(${r2},${g2},${b},0)`);ctx.beginPath();ctx.arc(x,y,sz*3.5,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();}
+        }
+        ctx.beginPath();ctx.arc(x,y,sz,0,Math.PI*2);ctx.fillStyle=`rgba(${r2},${g2},${b},${alpha})`;ctx.fill();
+      });
+    });
+    for(let i=SH.length-1;i>=0;i--){
+      const s=SH[i];s.x+=s.vx;s.y+=s.vy;s.life-=.018;
+      if(s.life<=0){SH.splice(i,1);continue;}
+      const spd=Math.hypot(s.vx,s.vy);if(spd<.001)continue;
+      const hx=s.x-s.vx*(s.len/spd),hy=s.y-s.vy*(s.len/spd);
+      const g=safeLG(hx,hy,s.x,s.y);if(!g)continue;
+      g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(1,`rgba(220,200,255,${s.life*.7})`);
+      ctx.beginPath();ctx.moveTo(hx,hy);ctx.lineTo(s.x,s.y);ctx.strokeStyle=g;ctx.lineWidth=1;ctx.stroke();
+    }
+    ctx.globalAlpha=1;requestAnimationFrame(frame);
+  }
+  let tx=.5,ty=.5;
+  window.addEventListener('mousemove',e=>{if(W&&H){tx=e.clientX/W;ty=e.clientY/H;}});
+  function lm(){mouse.x+=(tx-mouse.x)*.04;mouse.y+=(ty-mouse.y)*.04;requestAnimationFrame(lm);}
+  window.addEventListener('resize',resize);
+  resize();initStars();lm();frame();
+})();
+
+
+/* ─── LOGO GLOBE CANVAS ─── */
+document.addEventListener("DOMContentLoaded", function() { (function(){
+  const cv = document.getElementById('logoCanvas');
+  if(!cv) return;
+
+  /* ── Sharp canvas at any zoom/DPR ──
+     We listen for changes and resize accordingly.
+     imageRendering: pixelated would actually hurt — we want crisp AA.
+     The trick: always use actual devicePixelRatio, and also handle
+     window resize (which changes effective DPR on some browsers). */
+  const SIZE = 44; // CSS px — fixed display size
+  let DPR = 1;
+
+  function setupCanvas() {
+    DPR = Math.min(window.devicePixelRatio || 1, 4); // support up to 4x (hi-DPI zoom)
+    cv.width  = Math.round(SIZE * DPR);
+    cv.height = Math.round(SIZE * DPR);
+    cv.style.width  = SIZE + 'px';
+    cv.style.height = SIZE + 'px';
+    // Disable any CSS smoothing
+    cv.style.imageRendering = 'crisp-edges';
+  }
+  setupCanvas();
+  // Re-setup if zoom changes (fires on resize + zoom in Chrome/Firefox)
+  window.addEventListener('resize', setupCanvas);
+
+  const ctx = cv.getContext('2d', { alpha: true });
+
+  const CX = SIZE/2, CY = SIZE/2, R = 11.2;
+
+  /* ── Nodes ── phi=polar[0..PI], th=azimuth[0..2PI]
+     11 nodes, well spread: top band, mid, lower, south */
+  const NODES = [
+    [0.5, 0.3],  [0.55,2.1],  [0.6, 4.0],
+    [1.05,0.9],  [1.0, 2.6],  [1.1, 4.5],  [1.0,5.8],
+    [1.6, 1.5],  [1.55,3.3],  [1.7, 5.1],
+    [2.2, 2.2],
+  ];
+  const EDGES = [
+    [0,3],[0,1],[1,4],[1,3],[2,5],[2,6],
+    [3,4],[3,7],[4,5],[4,8],[5,6],[5,9],
+    [6,9],[7,8],[7,10],[8,9],[8,10],[9,10]
+  ];
+  const SPIN = 0.07; // globe spin speed (rad/s)
+  const TILT = 0.40; // globe X-axis tilt (rad)
+
+  /* Project spherical (phi,th) → canvas {x,y,z}
+     z: +1=front, -1=back  */
+  function proj(phi, th) {
+    const gx = Math.sin(phi)*Math.sin(th);
+    const gy = Math.cos(phi);
+    const gz = Math.sin(phi)*Math.cos(th);
+    const sy =  gy*Math.cos(TILT) - gz*Math.sin(TILT);
+    const sz =  gy*Math.sin(TILT) + gz*Math.cos(TILT);
+    return { x: CX+gx*R, y: CY-sy*R, z: sz };
+  }
+
+  /* Great-circle arc via slerp */
+  function greatArc(phi1,th1, phi2,th2, steps) {
+    const v1=[Math.sin(phi1)*Math.sin(th1), Math.cos(phi1), Math.sin(phi1)*Math.cos(th1)];
+    const v2=[Math.sin(phi2)*Math.sin(th2), Math.cos(phi2), Math.sin(phi2)*Math.cos(th2)];
+    const dot=Math.max(-1,Math.min(1, v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2]));
+    const omega=Math.acos(dot);
+    const pts=[];
+    for(let i=0;i<=steps;i++){
+      const t=i/steps;
+      let vx,vy,vz;
+      if(omega<0.001){vx=v1[0];vy=v1[1];vz=v1[2];}
+      else{
+        const sa=Math.sin((1-t)*omega)/Math.sin(omega);
+        const sb=Math.sin(t*omega)/Math.sin(omega);
+        vx=sa*v1[0]+sb*v2[0]; vy=sa*v1[1]+sb*v2[1]; vz=sa*v1[2]+sb*v2[2];
+      }
+      const sy=vy*Math.cos(TILT)-vz*Math.sin(TILT);
+      const sz=vy*Math.sin(TILT)+vz*Math.cos(TILT);
+      pts.push({x:CX+vx*R, y:CY-sy*R, z:sz});
+    }
+    return pts;
+  }
+
+  const pulses=EDGES.map((_,i)=>({t:-(i/EDGES.length), spd:0.14+Math.random()*0.22}));
+
+  /* ── Orbit with TRUE perspective ──
+
+     The rocket travels on a tilted ellipse in 3D.
+     We define the orbit plane in 3D and project with the same
+     perspective rules as the globe nodes.
+
+     Orbit plane: tilted ~40° from horizontal, diagonal left-bottom → right-top.
+
+     In orbit-local coords:
+       angle=0   → rightmost point (3 o'clock)
+       angle=PI/2 → "into screen" (behind globe)
+       angle=PI  → leftmost (9 o'clock)
+       angle=3PI/2 → "out of screen" (front of globe)
+
+     We map local orbit coords to 3D world, apply globe TILT, get screen xy + depth z.
+
+     Orbit axes in world space:
+       U = orbit "horizontal" direction
+       V = orbit "depth" direction (into/out of screen)
+     The ellipse: pos = cos(a)*U*OA + sin(a)*V*OB
+     OA > R so rocket clears the globe visually.
+     OB controls how far in/out of screen it goes.
+
+     We choose:
+       U = normalize(cos(OT), -sin(OT)*sinTILT,  sin(OT)*cosTILT)  — diagonal in screen
+       V = (0, cosTILT, sinTILT)  — straight into/out of screen after tilt
+     This gives a clean diagonal ellipse with correct depth.
+  */
+  const OA = R+6.5,  OB = R*1.1;   // OB large → deep perspective travel
+  const cosTILT=Math.cos(TILT), sinTILT=Math.sin(TILT);
+
+  /* Orbit axes — explicitly screen-space:
+     U = screen right(+x) AND screen up(-y) → normalized diagonal stânga-jos→dreapta-sus
+     In canvas coords: right = +x, DOWN = +y, so UP = -y.
+     U screen = (1, -1) normalized = (0.707, -0.707)
+     We need to map screen-U back to world 3D for the projection.
+     Simpler: just use screenX and screenY directly.
+     
+     Orbit is a 2D ellipse in SCREEN space, tilted 45° so:
+       major axis along screen (right, up) = (+1,-1)/sqrt2
+       minor axis = depth (in/out of screen) = world Z after tilt
+     
+     Rocket screen position:
+       sx = CX + cos(a)*OA * cos45  + depth_offset_x (≈0 for V)
+       sy = CY + cos(a)*OA * (-sin45) + sin(a)*OB_screen_y
+     
+     Actually cleanest: define orbit entirely in SCREEN x,y + depth:
+       screenX = CX + cos(a)*OA*cos(PI/4)          = CX + cos(a)*OA*0.707
+       screenY = CY + cos(a)*OA*(-sin(PI/4))        = CY - cos(a)*OA*0.707  [UP = -y]
+       depth   = sin(a)*OB  (+1=front, -1=back)
+  */
+  const OA_DIAG = OA * 0.707; // projected onto each screen axis (45°)
+  const PHASE_OFFSET = Math.PI; // angle=PI → cos=-1 → stânga-jos start
+
+  let orbitAngle = PHASE_OFFSET;
+  let smoothH = 0;
+
+  /* Comet tail ring buffer */
+  const TAIL = 28;
+  const tailX=new Float32Array(TAIL).fill(CX);
+  const tailY=new Float32Array(TAIL).fill(CY);
+  const tailA=new Float32Array(TAIL).fill(0); // opacity at each point
+  let tPtr=0, tFill=0;
+
+  function pushTail(x,y,op){
+    tailX[tPtr]=x; tailY[tPtr]=y; tailA[tPtr]=op;
+    tPtr=(tPtr+1)%TAIL; if(tFill<TAIL) tFill++;
+  }
+
+  function drawTail() {
+    if(tFill<3) return;
+    ctx.save();
+    ctx.lineCap='round';
+    for(let i=1;i<Math.min(tFill,TAIL)-1;i++){
+      const a=(tPtr-i+TAIL)%TAIL;
+      const b=(tPtr-i-1+TAIL)%TAIL;
+      const t=i/(TAIL-1);
+      const headOp=tailA[(tPtr-1+TAIL)%TAIL];
+      const segAlpha=(1-t)*headOp*0.55;
+      if(segAlpha<0.01) continue;
+      const w=Math.max(0.2,(1-t)*2.0);
+      ctx.beginPath();
+      ctx.moveTo(tailX[b],tailY[b]);
+      ctx.lineTo(tailX[a],tailY[a]);
+      ctx.strokeStyle=`rgba(220,170,255,${segAlpha})`;
+      ctx.lineWidth=w;
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function rocketState(dt) {
+    orbitAngle += dt * 0.9; // ~7s per orbit
+
+    const a  = orbitAngle;
+    const ca = Math.cos(a), sa = Math.sin(a);
+
+    /* Screen-space orbit:
+       Major axis = diagonal (right,up) on screen → x+, y-
+       Minor axis = depth (in/out of screen)
+       angle=0   → rightmost point  (CX+OA_DIAG, CY-OA_DIAG) = top-right
+       angle=PI  → leftmost point   (CX-OA_DIAG, CY+OA_DIAG) = bottom-left ← START
+       angle=PI/2→ deepest (behind globe)
+       angle=3PI/2→ front (closest)
+       Going from PI→2PI→PI: bottom-left → behind → top-right → front → bottom-left
+    */
+    const screenX = CX + ca * OA_DIAG;
+    const screenY = CY - ca * OA_DIAG; // -y = up on screen
+
+    // Depth: NEGATED so rocket stays FRONT during BL→TR arc (sin flipped)
+    // sa=0 at BL/TR edges, sa=-1 at center-front → depth=+OB → closest ✓
+    const depth    = -sa * OB;
+    const isBehind = depth < -OB * 0.05;
+
+    // Perspective: normDepth 0=far-behind → 1=front
+    const normDepth = (depth + OB) / (2 * OB);
+    const scale     = 0.32 + normDepth * 0.68;
+    const opacity   = isBehind
+      ? Math.max(0, normDepth * 0.35)
+      : Math.max(0.08, normDepth * 0.95 + 0.05);
+
+    /* Heading: tangent of orbit in screen space
+       d/da screenX = -sa * OA_DIAG
+       d/da screenY = +sa * OA_DIAG  (since screenY = CY - ca*OA_DIAG → d = sa*OA_DIAG ... wait)
+       d/da (CY - ca*OA_DIAG) = sa*OA_DIAG  → positive when sa>0
+       So tangent vector = (-sa*OA_DIAG, sa*OA_DIAG) — but this gives only ±45°.
+       Rocket points along travel direction: atan2(dy, dx) + PI/2 (nose = forward)
+    */
+    const tdx = -sa * OA_DIAG;
+    const tdy =  sa * OA_DIAG; // screen Y increases downward, so +sa = downward when sa>0
+    // Actually when going from bottom-left(a=PI) → top-right(a=2PI=0):
+    // a goes PI→2PI, sa goes 0→0 (negative in between), ca goes -1→+1
+    // tdx = -sa*K: sa negative between PI..2PI → tdx positive → going right ✓
+    // tdy = sa*K: negative → going up (screen -y) ✓
+    const rawH = Math.atan2(tdy, tdx) + Math.PI/2;
+
+    let diff = rawH - smoothH;
+    while(diff >  Math.PI) diff -= 2*Math.PI;
+    while(diff < -Math.PI) diff += 2*Math.PI;
+    smoothH += diff * 0.08;
+
+    return {x:screenX, y:screenY, h:smoothH, isBehind, opacity, scale, depth, normDepth};
+  }
+
+  function drawRocket(rk) {
+    const sz=4.0*rk.scale;
+    const op=rk.opacity;
+    if(op<0.03||sz<0.3) return;
+
+    // Glow
+    ctx.save();
+    ctx.globalAlpha=op*0.45;
+    ctx.translate(rk.x,rk.y);
+    const gg=ctx.createRadialGradient(0,0,0,0,0,sz*1.8);
+    gg.addColorStop(0,'rgba(240,171,252,0.5)');
+    gg.addColorStop(1,'rgba(124,58,237,0)');
+    ctx.beginPath(); ctx.arc(0,0,sz*1.8,0,Math.PI*2);
+    ctx.fillStyle=gg; ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    ctx.globalAlpha=op;
+    ctx.translate(rk.x,rk.y);
+    ctx.rotate(rk.h);
+
+    // Flame
+    if(!rk.isBehind && op>0.3){
+      const fg=ctx.createLinearGradient(0,sz*0.4,0,sz*1.8);
+      fg.addColorStop(0,`rgba(251,191,36,${op*0.85})`);
+      fg.addColorStop(0.5,`rgba(248,100,100,${op*0.5})`);
+      fg.addColorStop(1,'rgba(139,92,246,0)');
+      ctx.beginPath();
+      ctx.moveTo(-sz*0.18,sz*0.4);
+      ctx.bezierCurveTo(-sz*0.28,sz*0.88,sz*0.28,sz*0.88,sz*0.18,sz*0.4);
+      ctx.bezierCurveTo(sz*0.08,sz*1.7,-sz*0.08,sz*1.7,-sz*0.18,sz*0.4);
+      ctx.fillStyle=fg; ctx.fill();
+    }
+
+    // Body
+    const bg=ctx.createLinearGradient(0,-sz,0,sz*0.6);
+    bg.addColorStop(0,`rgba(240,171,252,${op*0.72})`);
+    bg.addColorStop(1,`rgba(109,40,217,${op*0.52})`);
+    ctx.beginPath();
+    ctx.moveTo(0,-sz);
+    ctx.bezierCurveTo(sz*0.46,-sz*0.2,sz*0.46,sz*0.34,sz*0.24,sz*0.56);
+    ctx.lineTo(-sz*0.24,sz*0.56);
+    ctx.bezierCurveTo(-sz*0.46,sz*0.34,-sz*0.46,-sz*0.2,0,-sz);
+    ctx.fillStyle=bg; ctx.fill();
+
+    // Fins
+    ctx.beginPath();
+    ctx.moveTo(sz*0.22,sz*0.32); ctx.lineTo(sz*0.54,sz*0.64); ctx.lineTo(sz*0.24,sz*0.56);
+    ctx.fillStyle=`rgba(168,85,247,${op*0.46})`; ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-sz*0.22,sz*0.32); ctx.lineTo(-sz*0.54,sz*0.64); ctx.lineTo(-sz*0.24,sz*0.56);
+    ctx.fillStyle=`rgba(168,85,247,${op*0.46})`; ctx.fill();
+
+    // Window
+    const wg=ctx.createRadialGradient(-sz*0.05,-sz*0.04,0,0,0,sz*0.22);
+    wg.addColorStop(0,`rgba(255,255,255,${op*0.3})`);
+    wg.addColorStop(1,`rgba(192,132,252,${op*0.07})`);
+    ctx.beginPath(); ctx.arc(0,sz*0.06,sz*0.22,0,Math.PI*2);
+    ctx.fillStyle=wg; ctx.fill();
+
+    ctx.restore();
+  }
+
+  let lastTS=null;
+  function draw(ts){
+    const dt=lastTS===null?0.016:Math.min((ts-lastTS)/1000,0.05);
+    lastTS=ts;
+
+    // Re-apply scale in case DPR changed (zoom)
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    ctx.clearRect(0,0,SIZE,SIZE);
+
+    const spin=orbitAngle*SPIN; // globe spin coupled to orbit time
+    const pn=NODES.map(([phi,th])=>proj(phi,th+spin));
+    const rk=rocketState(dt);
+    pushTail(rk.x,rk.y,rk.opacity);
+
+    // 1) Halo
+    const halo=ctx.createRadialGradient(CX,CY,R*0.3,CX,CY,R*1.65);
+    halo.addColorStop(0,'rgba(109,40,217,0.22)');
+    halo.addColorStop(0.55,'rgba(139,92,246,0.09)');
+    halo.addColorStop(1,'rgba(109,40,217,0)');
+    ctx.beginPath(); ctx.arc(CX,CY,R*1.65,0,Math.PI*2);
+    ctx.fillStyle=halo; ctx.fill();
+
+    // 2) Globe glass
+    const gf=ctx.createRadialGradient(CX-3,CY-3.5,0.5,CX,CY,R);
+    gf.addColorStop(0,'rgba(192,132,252,0.16)');
+    gf.addColorStop(0.55,'rgba(109,40,217,0.08)');
+    gf.addColorStop(1,'rgba(55,48,163,0.04)');
+    ctx.beginPath(); ctx.arc(CX,CY,R,0,Math.PI*2);
+    ctx.fillStyle=gf; ctx.fill();
+
+    // 3) Rocket behind (ghost) + tail
+    if(rk.isBehind){ drawTail(); drawRocket(rk); }
+
+    // 4) Constellation lines + shooting stars
+    EDGES.forEach(([ai,bi],ei)=>{
+      const na=NODES[ai], nb=NODES[bi];
+      const za=pn[ai].z, zb=pn[bi].z;
+      const avgZ=(za+zb)*0.5;
+      if(avgZ<-0.12) return;
+      const vis=Math.max(0,Math.min(1,(avgZ+0.12)/0.88));
+
+      const pts=greatArc(na[0],na[1]+spin,nb[0],nb[1]+spin,8);
+
+      // Line
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x,pts[0].y);
+      for(let k=1;k<pts.length;k++) ctx.lineTo(pts[k].x,pts[k].y);
+      ctx.strokeStyle=`rgba(167,139,250,${vis*0.70})`;
+      ctx.lineWidth=0.55; ctx.stroke();
+
+      // Shooting star
+      const p=pulses[ei];
+      p.t+=p.spd*dt;
+      if(p.t>1.18){p.t=-0.06; p.spd=0.12+Math.random()*0.24;}
+      const pt=Math.max(0,Math.min(1,p.t));
+      if(pt<=0||pt>=1) return;
+
+      const fi=pt*(pts.length-1);
+      const i0=Math.floor(fi),i1=Math.min(i0+1,pts.length-1);
+      const fr=fi-i0;
+      const hx=pts[i0].x+(pts[i1].x-pts[i0].x)*fr;
+      const hy=pts[i0].y+(pts[i1].y-pts[i0].y)*fr;
+      const hz=pts[i0].z+(pts[i1].z-pts[i0].z)*fr;
+      const df=Math.max(0.1,(hz+0.5)/1.3);
+      const ti=Math.max(0,i0-2);
+      const tx=pts[ti].x,ty=pts[ti].y;
+      if(Math.abs(hx-tx)<0.001&&Math.abs(hy-ty)<0.001) return;
+
+      const lg=ctx.createLinearGradient(tx,ty,hx,hy);
+      lg.addColorStop(0,'rgba(216,180,254,0)');
+      lg.addColorStop(1,`rgba(248,215,255,${vis*df*1.65})`);
+      ctx.beginPath(); ctx.moveTo(tx,ty); ctx.lineTo(hx,hy);
+      ctx.strokeStyle=lg; ctx.lineWidth=0.8; ctx.stroke();
+
+      const dg=ctx.createRadialGradient(hx,hy,0,hx,hy,1.8);
+      dg.addColorStop(0,`rgba(255,235,255,${vis*df*1.45})`);
+      dg.addColorStop(1,'rgba(200,150,255,0)');
+      ctx.beginPath(); ctx.arc(hx,hy,1.8,0,Math.PI*2);
+      ctx.fillStyle=dg; ctx.fill();
+    });
+
+    // 5) Nodes
+    pn.forEach(n=>{
+      if(n.z<-0.18) return;
+      const a=Math.max(0,Math.min(1,(n.z+0.18)/1.0))*0.85;
+      const ng=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,2.1);
+      ng.addColorStop(0,`rgba(216,180,254,${a*0.72})`);
+      ng.addColorStop(1,'rgba(139,92,246,0)');
+      ctx.beginPath(); ctx.arc(n.x,n.y,2.1,0,Math.PI*2); ctx.fillStyle=ng; ctx.fill();
+      ctx.beginPath(); ctx.arc(n.x,n.y,0.68,0,Math.PI*2);
+      ctx.fillStyle=`rgba(240,210,255,${a})`; ctx.fill();
+    });
+
+    // 6) Glass sheen
+    const sh=ctx.createRadialGradient(CX-3.5,CY-3.5,0.2,CX-1,CY-1,R*0.85);
+    sh.addColorStop(0,'rgba(255,255,255,0.10)');
+    sh.addColorStop(0.4,'rgba(255,255,255,0.03)');
+    sh.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.beginPath(); ctx.arc(CX,CY,R,0,Math.PI*2); ctx.fillStyle=sh; ctx.fill();
+
+    // 7) Rocket front + tail
+    if(!rk.isBehind){ drawTail(); drawRocket(rk); }
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})(); });
+
+
+/* ─── ORYN COMET TEXT EFFECT ─── */
+document.addEventListener("DOMContentLoaded", function() { (function(){
+  document.fonts.ready.then(init);
+
+  function init(){
+    const span = document.getElementById('orynSpan');
+    const cv   = document.getElementById('orynComet');
+    if(!span||!cv) return;
+
+    const DPR = Math.min(window.devicePixelRatio||1, 3);
+    let W, H, FS;
+
+    function resize(){
+      W  = span.offsetWidth  || 64;
+      H  = span.offsetHeight || 24;
+      FS = parseFloat(getComputedStyle(span).fontSize) || 22;
+      cv.width  = Math.round(W*DPR);
+      cv.height = Math.round(H*DPR);
+      cv.style.width  = W+'px';
+      cv.style.height = H+'px';
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const ctx = cv.getContext('2d');
+
+    /* ── Sample real glyph outline via offscreen render ── */
+    function buildGlyphPath(){
+      const SCALE = 4;
+      const OW = Math.ceil(W*SCALE), OH = Math.ceil(H*SCALE);
+      const oc = document.createElement('canvas');
+      oc.width=OW; oc.height=OH;
+      const ox=oc.getContext('2d');
+      ox.clearRect(0,0,OW,OH);
+      ox.font=`700 ${FS*SCALE}px Outfit,sans-serif`;
+      ox.fillStyle='#fff';
+      ox.textBaseline='middle';
+      ox.fillText('ORYN', 0, OH/2);
+
+      const id=ox.getImageData(0,0,OW,OH);
+      const d=id.data;
+      const filled=(x,y)=>{
+        if(x<0||y<0||x>=OW||y>=OH) return false;
+        return d[(y*OW+x)*4+3]>30;
+      };
+
+      // Collect top and bottom edge per column
+      const topPts=[], botPts=[];
+      for(let x=0;x<OW;x++){
+        let top=-1, bot=-1;
+        for(let y=0;y<OH;y++){ if(filled(x,y)){top=y;break;} }
+        for(let y=OH-1;y>=0;y--){ if(filled(x,y)){bot=y;break;} }
+        if(top>=0){
+          topPts.push({x:x/SCALE, y:top/SCALE});
+          botPts.push({x:x/SCALE, y:bot/SCALE});
+        }
+      }
+      if(topPts.length===0) return null;
+
+      // Smooth outline: top L→R, bottom R→L, closed
+      const outline=[...topPts, ...[...botPts].reverse(), topPts[0]];
+
+      // Subsample to ~200 evenly-spaced points — removes column-by-column jitter
+      const total = outline.length;
+      const TARGET = 200;
+      const step = total / TARGET;
+      const simplified = [];
+      for(let i=0;i<TARGET;i++){
+        const idx = Math.round(i*step) % total;
+        simplified.push(outline[idx]);
+      }
+      simplified.push(simplified[0]); // close
+      return simplified;
+    }
+
+    /* Catmull-Rom → dense smooth path */
+    function catmull(pts, stepsPerSeg){
+      const out=[], n=pts.length;
+      for(let i=0;i<n-1;i++){
+        const p0=pts[Math.max(0,i-1)];
+        const p1=pts[i];
+        const p2=pts[i+1];
+        const p3=pts[Math.min(n-1,i+2)];
+        for(let j=0;j<stepsPerSeg;j++){
+          const t=j/stepsPerSeg, t2=t*t, t3=t2*t;
+          const x=0.5*((-p0.x+3*p1.x-3*p2.x+p3.x)*t3+(2*p0.x-5*p1.x+4*p2.x-p3.x)*t2+(-p0.x+p2.x)*t+2*p1.x);
+          const y=0.5*((-p0.y+3*p1.y-3*p2.y+p3.y)*t3+(2*p0.y-5*p1.y+4*p2.y-p3.y)*t2+(-p0.y+p2.y)*t+2*p1.y);
+          out.push({x,y});
+        }
+      }
+      out.push(pts[n-1]);
+      return out;
+    }
+
+    /* Arc-length reparametrize so comet moves at constant SPEED not constant index */
+    function arcLength(pts){
+      const lens=[0];
+      for(let i=1;i<pts.length;i++){
+        const dx=pts[i].x-pts[i-1].x, dy=pts[i].y-pts[i-1].y;
+        lens.push(lens[i-1]+Math.sqrt(dx*dx+dy*dy));
+      }
+      return lens;
+    }
+
+    function resampleByArcLength(pts, targetCount){
+      const lens=arcLength(pts);
+      const total=lens[lens.length-1];
+      const out=[];
+      for(let k=0;k<targetCount;k++){
+        const target=(k/targetCount)*total;
+        // binary search
+        let lo=0, hi=lens.length-1;
+        while(hi-lo>1){ let mid=(lo+hi)>>1; if(lens[mid]<=target) lo=mid; else hi=mid; }
+        const t=(target-lens[lo])/(lens[hi]-lens[lo]||1);
+        out.push({
+          x:pts[lo].x+(pts[hi].x-pts[lo].x)*t,
+          y:pts[lo].y+(pts[hi].y-pts[lo].y)*t
+        });
+      }
+      out.push(out[0]); // close
+      return out;
+    }
+
+    let path = null;
+    function buildPath(){
+      const raw = buildGlyphPath();
+      if(!raw) return;
+      const smooth = catmull(raw, 5);       // smooth out sharp corners
+      path = resampleByArcLength(smooth, 600); // 600 evenly-spaced points
+    }
+    buildPath();
+
+    /* ── Comet — long tail, constant speed ── */
+    // Tail: store last N path-indices, draw segments between them
+    const TAIL_LEN = 120;  // long tail — covers ~20% of path
+    const tailX = new Float32Array(TAIL_LEN);
+    const tailY = new Float32Array(TAIL_LEN);
+    let tPtr = 0, tFill = 0;
+
+    function pushTail(x,y){
+      tailX[tPtr]=x; tailY[tPtr]=y;
+      tPtr=(tPtr+1)%TAIL_LEN;
+      if(tFill<TAIL_LEN) tFill++;
+    }
+
+    // State
+    let pathIdx  = 0;       // current index into path[] (integer steps)
+    let phase    = 'run';   // 'run' | 'pause'
+    let pauseT   = 0;
+    const STEP_PER_SEC = 28; // path-points per second — slow, smooth
+    const PAUSE_DUR    = 2.5;
+
+    function reset(){
+      tFill=0; tPtr=0; pathIdx=0; phase='run';
+      buildPath();
+    }
+
+    let lastTS=null;
+    function draw(ts){
+      const dt = lastTS===null ? 0.016 : Math.min((ts-lastTS)/1000, 0.05);
+      lastTS = ts;
+
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+      ctx.clearRect(0,0,W,H);
+
+      if(phase==='pause'){
+        pauseT -= dt;
+        if(pauseT<=0) reset();
+        requestAnimationFrame(draw);
+        return;
+      }
+
+      if(!path || path.length<2){ requestAnimationFrame(draw); return; }
+
+      // Advance index
+      pathIdx += STEP_PER_SEC * dt;
+
+      if(pathIdx >= path.length - 1){
+        phase='pause'; pauseT=PAUSE_DUR;
+        requestAnimationFrame(draw);
+        return;
+      }
+
+      const i0  = Math.floor(pathIdx);
+      const fr  = pathIdx - i0;
+      const i1  = Math.min(i0+1, path.length-1);
+      const px  = path[i0].x + (path[i1].x-path[i0].x)*fr;
+      const py  = path[i0].y + (path[i1].y-path[i0].y)*fr;
+      pushTail(px, py);
+
+      /* ── Draw tail ──
+         Segments from head backward. Each segment:
+         - thinner + more transparent toward tip
+         - shadowBlur increases toward tip (blurry fade)
+         - color: white → warm white → transparent yellow-white
+      */
+      ctx.save();
+      ctx.lineCap  = 'round';
+      ctx.lineJoin = 'round';
+
+      const tailCount = Math.min(tFill, TAIL_LEN);
+      for(let ti=1; ti<tailCount; ti++){
+        const idxA = (tPtr - ti     + TAIL_LEN) % TAIL_LEN;
+        const idxB = (tPtr - ti - 1 + TAIL_LEN) % TAIL_LEN;
+        const tf   = ti / TAIL_LEN;
+
+        const alpha = Math.pow(1-tf, 1.6) * 0.39;
+        const lw    = Math.pow(1-tf, 0.7) * 2.2 + 0.12;
+
+        if(alpha < 0.006) break;
+
+        ctx.shadowColor = 'rgba(255,248,200,' + (alpha*0.5) + ')';
+        ctx.shadowBlur  = tf * 9;
+
+        const cr = 255;
+        const cg = Math.round(248 + tf*4);
+        const cb2 = Math.round(230 - tf*80);
+        ctx.beginPath();
+        ctx.moveTo(tailX[idxB], tailY[idxB]);
+        ctx.lineTo(tailX[idxA], tailY[idxA]);
+        ctx.strokeStyle = 'rgba(' + cr + ',' + cg + ',' + cb2 + ',' + alpha + ')';
+        ctx.lineWidth   = lw;
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      /* ── Head ── */
+      ctx.save();
+      ctx.shadowColor = 'rgba(255,252,200,0.7)';
+      ctx.shadowBlur  = 5;
+
+      const halo = ctx.createRadialGradient(px,py,0,px,py,4.5);
+      halo.addColorStop(0,'rgba(255,255,230,0.11)');
+      halo.addColorStop(1,'rgba(255,240,160,0)');
+      ctx.beginPath(); ctx.arc(px,py,4.5,0,Math.PI*2);
+      ctx.fillStyle=halo; ctx.fill();
+
+      const core = ctx.createRadialGradient(px,py,0,px,py,1.5);
+      core.addColorStop(0,'rgba(255,255,255,0.5)');
+      core.addColorStop(0.45,'rgba(255,252,210,0.45)');
+      core.addColorStop(1,'rgba(255,235,140,0)');
+      ctx.beginPath(); ctx.arc(px,py,1.5,0,Math.PI*2);
+      ctx.fillStyle=core; ctx.fill();
+      ctx.restore();
+
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  }
+})(); });
+
+
+/* ─── HEADBAR MOBILE TOGGLE ─── */
+document.getElementById('hbToggle').addEventListener('click',()=>{
+  const nav=document.getElementById('hbNav');
+  const icon=document.getElementById('hbIcon');
+  nav.classList.toggle('open');
+  icon.textContent=nav.classList.contains('open')?'close':'menu';
+});
+
+
+// Category filter
+document.querySelectorAll('.cat-btn, .sidebar-link').forEach(btn

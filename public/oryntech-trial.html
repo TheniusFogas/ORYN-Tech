@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORYNTECH — 14 Zile Gratuit</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,400,1,0" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg1:#0d0720; --bg2:#150c2e;
+  --purple:#7c3aed; --violet:#6d28d9; --pink:#db2777; --blue:#2563eb;
+  --glow1:rgba(124,58,237,0.35); --glow2:rgba(109,40,217,0.25); --glow3:rgba(219,39,119,0.18);
+  --text:#f1eeff; --muted:#b8b2d8; --dim:#8a84aa; --hair:rgba(255,255,255,0.08);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--bg1);color:var(--text);min-height:100vh;overflow-x:hidden;}
+canvas#gc{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+.page{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:52px 20px 72px;}
+
+/* ─── HEADBAR ─── */
+.headbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:56px;
+  background:rgba(13,7,32,0.82);
+  border-bottom:1px solid rgba(139,92,246,.18);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:0 2px 32px rgba(124,58,237,.1);
+}
+.hb-logo{
+  text-decoration:none;color:var(--text);display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.hb-logo-text{font-family:'Outfit',sans-serif;font-size:22px;color:#fff;line-height:1;position:relative;}
+.hb-logo-text .oryn{font-weight:700;letter-spacing:2px;text-transform:uppercase;position:relative;}
+.hb-logo-text .tech{font-weight:500;letter-spacing:1.2px;}
+/* Comet canvas sits behind ORYN text */
+.oryn-comet{
+  position:absolute;inset:0;
+  pointer-events:none;
+  width:100%;height:100%;
+}
+/* ─── GLOBE LOGO ─── */
+.globe-wrap{
+  position:relative;width:48px;height:48px;flex-shrink:0;
+}
+.globe-canvas{
+  position:absolute;inset:0;width:44px;height:44px;display:block;
+}
+.hb-nav{display:flex;align-items:center;gap:4px;}
+.hb-nav a{
+  font-size:12px;font-weight:500;color:#b0aacf;text-decoration:none;
+  padding:6px 14px;border-radius:8px;
+  transition:color .2s,background .2s;letter-spacing:.3px;
+  display:flex;align-items:center;gap:5px;
+}
+.hb-nav a .material-symbols-rounded{font-size:14px;}
+.hb-nav a:hover{color:var(--text);background:rgba(139,92,246,.12);}
+.hb-nav a.active{color:var(--text);background:rgba(139,92,246,.12);}
+.hb-login{
+  font-size:11.5px;font-weight:600;letter-spacing:.5px;color:var(--text);
+  text-decoration:none;padding:7px 16px;border-radius:9px;
+  border:1px solid rgba(139,92,246,.35);
+  background:rgba(124,58,237,.12);
+  transition:all .2s;display:flex;align-items:center;gap:5px;flex-shrink:0;
+}
+.hb-login .material-symbols-rounded{font-size:14px;color:rgba(167,139,250,.8);}
+.hb-login:hover{background:rgba(124,58,237,.25);border-color:rgba(167,139,250,.6);box-shadow:0 0 20px rgba(124,58,237,.2);}
+.hb-mobile-btn{display:none;background:none;border:none;cursor:pointer;color:#b0aacf;padding:4px;}
+.hb-mobile-btn .material-symbols-rounded{font-size:22px;}
+.page{padding-top:80px!important;}
+@media(max-width:700px){
+  .headbar{padding:0 16px;}
+  .hb-nav{display:none;position:fixed;top:56px;left:0;right:0;
+    flex-direction:column;align-items:stretch;gap:2px;
+    background:rgba(13,7,32,.97);border-bottom:1px solid rgba(139,92,246,.2);
+    padding:10px 12px 14px;backdrop-filter:blur(20px);}
+  .hb-nav.open{display:flex;}
+  .hb-nav a{font-size:13px;padding:10px 14px;}
+  .hb-mobile-btn{display:flex;align-items:center;}
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes gradFlow{0%{background-position:0%}100%{background-position:200%}}
+@keyframes btnGrad{0%{background-position:0%}100%{background-position:300%}}
+@keyframes bf{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(12px,-16px) scale(1.06)}70%{transform:translate(-10px,10px) scale(.95)}}
+@keyframes cardPulse{
+  0%,100%{box-shadow:inset 0 1px 0 rgba(216,180,254,.18),0 0 80px rgba(124,58,237,.2),0 22px 70px rgba(0,0,0,.5);}
+  50%{box-shadow:inset 0 1px 0 rgba(216,180,254,.3),0 0 130px rgba(124,58,237,.45),0 0 70px rgba(219,39,119,.2),0 22px 70px rgba(0,0,0,.5);}
+}
+@keyframes outlinePulse{
+  0%,100%{border-color:rgba(216,180,254,.22);outline:1.5px solid rgba(167,139,250,0);outline-offset:0px;}
+  50%{border-color:rgba(216,180,254,.75);outline:1.5px solid rgba(167,139,250,.3);outline-offset:3px;}
+}
+@keyframes shineSweep{0%,100%{opacity:.6;transform:scaleX(.7)}50%{opacity:1;transform:scaleX(1)}}
+@keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+
+/* ─── HERO ─── */
+.hero{text-align:center;margin-bottom:32px;opacity:0;animation:rise .9s cubic-bezier(.16,1,.3,1) forwards .1s;}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;color:#8a84aa;margin-bottom:16px;}
+.ey-line{width:22px;height:1px;background:rgba(255,255,255,.15);}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:#a855f7;box-shadow:0 0 8px rgba(168,85,247,.8);animation:dotPulse 2s ease-in-out infinite;display:inline-block;}
+
+.hl-1{display:block;font-size:clamp(28px,5vw,58px);font-weight:600;line-height:1;letter-spacing:-1.5px;color:var(--text);}
+.hl-2{display:block;font-size:clamp(28px,5vw,58px);font-weight:800;line-height:1;letter-spacing:-1.5px;margin-bottom:14px;
+  background:linear-gradient(120deg,#c084fc 0%,#e879f9 30%,#818cf8 60%,#60a5fa 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200% auto;animation:gradFlow 5s linear infinite;}
+.hero-sub{font-size:14.5px;font-weight:300;color:#b0aacf;line-height:1.7;max-width:500px;margin:0 auto 16px;}
+.hero-sub strong{color:var(--text);font-weight:600;}
+
+.bdgs{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;margin-bottom:22px;}
+.bdg{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:100px;font-size:10.5px;font-weight:500;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#b0aacf;backdrop-filter:blur(10px);}
+
+/* CTA BUTTON */
+.cta-btn{display:inline-block;padding:13px 34px;border-radius:11px;border:none;
+  font-family:'Outfit',sans-serif;font-size:13.5px;font-weight:700;letter-spacing:.3px;
+  text-decoration:none;cursor:pointer;
+  background:linear-gradient(135deg,#7c3aed 0%,#a855f7 35%,#db2777 70%,#7c3aed 100%);
+  background-size:300% auto;color:#fff;
+  box-shadow:0 6px 30px rgba(124,58,237,.5),0 2px 12px rgba(219,39,119,.25),inset 0 1px 0 rgba(255,255,255,.2);
+  animation:btnGrad 4s linear infinite;
+  transition:transform .22s cubic-bezier(.16,1,.3,1),box-shadow .22s;position:relative;overflow:hidden;}
+.cta-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);transition:left .4s ease;}
+.cta-btn:hover::before{left:100%;}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 10px 44px rgba(124,58,237,.65),0 4px 18px rgba(219,39,119,.3),inset 0 1px 0 rgba(255,255,255,.25);}
+.cta-note{display:block;font-size:10px;margin-top:8px;font-style:italic;font-weight:300;color:#8a84aa;}
+
+/* ─── STATS ─── */
+.stats{display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-radius:14px;padding:12px 28px;margin-bottom:44px;flex-wrap:wrap;
+  box-shadow:0 0 40px rgba(124,58,237,.12),inset 0 1px 0 rgba(255,255,255,.08);
+  opacity:0;animation:rise .7s cubic-bezier(.16,1,.3,1) forwards .3s;}
+.st{text-align:center;padding:6px 20px;}
+.st+.st{border-left:1px solid rgba(255,255,255,.08);}
+.st-v{font-size:24px;font-weight:600;line-height:1;margin-bottom:2px;
+  background:linear-gradient(120deg,#c084fc,#e879f9);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.st-l{font-size:9px;color:#8a84aa;letter-spacing:.5px;text-transform:uppercase;}
+
+/* ─── SHARED SECTION STYLES ─── */
+.sec{margin-bottom:44px;opacity:0;animation:rise .75s cubic-bezier(.16,1,.3,1) forwards var(--d,.5s);}
+.eyebrow-sm{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#8a84aa;margin-bottom:10px;}
+.sec-h{font-size:clamp(22px,3.5vw,38px);font-weight:700;letter-spacing:-1px;line-height:1.1;margin-bottom:8px;color:var(--text);}
+.sec-h .g{background:linear-gradient(120deg,#c084fc 0%,#e879f9 40%,#818cf8 80%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  background-size:200% auto;animation:gradFlow 5s linear infinite;}
+.sec-sub{font-size:13px;font-weight:300;color:#b0aacf;line-height:1.65;max-width:500px;margin-bottom:24px;}
+
+/* ─── DIVIDER ─── */
+.div{height:1px;margin:18px 0;background:linear-gradient(90deg,transparent,rgba(139,92,246,.25),transparent);}
+.slbl{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:12px;color:#8a84aa;}
+
+/* ─── PROBLEMS ─── */
+.prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+@media(max-width:620px){.prob-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:400px){.prob-grid{grid-template-columns:1fr;}}
+
+.prob-item{background:rgba(255,255,255,.04);border:1px solid rgba(139,92,246,.14);
+  border-radius:12px;padding:16px 14px;transition:all .3s cubic-bezier(.16,1,.3,1);position:relative;overflow:hidden;}
+.prob-item::before{content:'';position:absolute;inset:0;border-radius:12px;
+  background:linear-gradient(135deg,rgba(124,58,237,.06),transparent);opacity:0;transition:opacity .3s;}
+.prob-item:hover{transform:translateY(-3px);border-color:rgba(219,39,119,.35);box-shadow:0 6px 24px rgba(219,39,119,.1);}
+.prob-item:hover::before{opacity:1;}
+.prob-ms{font-size:18px;color:rgba(219,39,119,.65);display:block;margin-bottom:8px;}
+.prob-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.3;}
+.prob-desc{font-size:10.5px;color:#8a84aa;line-height:1.55;}
+
+/* ─── BRIDGE ─── */
+.bridge{border-radius:18px;position:relative;overflow:hidden;margin-bottom:44px;text-align:center;padding:40px 28px;
+  background:linear-gradient(145deg,rgba(15,6,38,.96) 0%,rgba(10,4,26,.98) 100%);
+  opacity:0;animation:rise .75s cubic-bezier(.16,1,.3,1) forwards .55s;}
+.bridge .gl-rim{position:absolute;inset:0;border-radius:18px;pointer-events:none;
+  border:1px solid rgba(216,180,254,.35);animation:cardPulse 3s ease-in-out infinite;}
+.bridge .shine{position:absolute;top:0;left:8%;right:8%;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(216,180,254,.6),rgba(240,171,252,.4),rgba(216,180,254,.6),transparent);}
+.bcb1{position:absolute;width:240px;height:240px;top:-70px;right:-50px;
+  background:radial-gradient(circle,rgba(219,39,119,.18) 0%,rgba(124,58,237,.1) 45%,transparent 70%);
+  filter:blur(48px);border-radius:50%;animation:bf 9s ease-in-out infinite;pointer-events:none;}
+.bcb2{position:absolute;width:180px;height:180px;bottom:-40px;left:-40px;
+  background:radial-gradient(circle,rgba(37,99,235,.15) 0%,transparent 70%);
+  filter:blur(40px);border-radius:50%;animation:bf 9s ease-in-out infinite reverse;pointer-events:none;}
+.bridge-in{position:relative;z-index:10;}
+.bridge-in h2{font-size:clamp(18px,3vw,32px);font-weight:700;letter-spacing:-.5px;line-height:1.2;margin-bottom:10px;
+  background:linear-gradient(120deg,#e0c4ff 0%,#f0aaff 40%,#a5b4fc 80%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.bridge-in p{font-size:13px;font-weight:300;color:#b0aacf;line-height:1.65;max-width:440px;margin:0 auto;}
+
+/* ─── BEFORE / AFTER ─── */
+.ba-wrap{display:grid;grid-template-columns:1fr 1fr;gap:2px;border-radius:14px;overflow:hidden;
+  border:1px solid rgba(139,92,246,.18);}
+.ba-col{display:flex;flex-direction:column;gap:0;}
+.ba-header{padding:10px 16px;font-size:9.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  display:flex;align-items:center;gap:7px;border-bottom:1px solid rgba(255,255,255,.06);}
+.ba-col.before .ba-header{background:rgba(219,39,119,.1);color:rgba(240,120,140,.9);}
+.ba-col.after .ba-header{background:rgba(124,58,237,.12);
+  background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(219,39,119,.1));
+  color:rgba(216,180,254,.95);}
+.ba-row{padding:12px 16px;font-size:12px;color:#c8c2e8;line-height:1.5;font-weight:400;
+  border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:flex-start;gap:8px;}
+.ba-row:last-child{border-bottom:none;}
+.ba-col.after .ba-row{color:#ddd8f8;}
+.ba-ms{font-size:14px;flex-shrink:0;margin-top:1px;}
+.ba-col.before .ba-ms{color:rgba(219,39,119,.6);}
+.ba-col.after .ba-ms{color:rgba(167,139,250,.7);}
+@media(max-width:560px){.ba-wrap{grid-template-columns:1fr;}}
+
+/* ─── TRIAL LIST (feature list style matching pricing page) ─── */
+.flist{list-style:none;display:flex;flex-direction:column;}
+.fi{border-bottom:1px solid rgba(255,255,255,.06);}
+.fi:last-child{border-bottom:none;}
+.fi-row{display:flex;align-items:center;gap:9px;padding:9px 0;cursor:pointer;user-select:none;transition:padding .15s;}
+.fi-row:hover{padding-left:3px;}
+.fi-ms{flex-shrink:0;font-size:17px;line-height:1;color:rgba(167,139,250,.65);}
+.fi-name{flex:1;font-size:12.5px;font-weight:500;color:var(--text);line-height:1.3;}
+.fi-sub{font-size:10.5px;font-weight:300;color:#8a84aa;margin-top:1px;}
+.fi-chev{flex-shrink:0;font-size:14px;color:#8a84aa;transition:transform .25s cubic-bezier(.16,1,.3,1);}
+.fi.open .fi-chev{transform:rotate(180deg);}
+.drop-body{font-size:11px;font-weight:400;line-height:1.58;color:#c0bae0;
+  background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.16);
+  border-radius:8px;padding:0 10px;margin-bottom:4px;
+  overflow:hidden;max-height:0;opacity:0;
+  transition:max-height .3s cubic-bezier(.16,1,.3,1),opacity .25s ease,padding .3s ease;}
+.fi.open .drop-body{max-height:80px;opacity:1;padding:7px 10px;}
+
+/* ─── FORM CARD ─── */
+.form-card{border-radius:22px;position:relative;overflow:hidden;margin-bottom:18px;
+  opacity:0;animation:rise .8s cubic-bezier(.16,1,.3,1) forwards .75s;}
+.gl.base{position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  background:linear-gradient(145deg,rgba(15,6,38,.97) 0%,rgba(10,4,26,.99) 100%);}
+.gl.frost{position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  background:linear-gradient(145deg,rgba(219,39,119,.07) 0%,rgba(124,58,237,.11) 40%,rgba(37,99,235,.05) 80%);
+  backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);}
+.gl.rim{position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  border:1px solid rgba(216,180,254,.4);animation:cardPulse 3s ease-in-out infinite,outlinePulse 2s ease-in-out infinite;}
+.gl.shine{position:absolute;top:0;left:8%;right:8%;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(216,180,254,.6),rgba(240,171,252,.4),rgba(216,180,254,.6),transparent);
+  animation:shineSweep 3s ease-in-out infinite;}
+.cblob{position:absolute;border-radius:50%;pointer-events:none;animation:bf 9s ease-in-out infinite;}
+.c1{width:280px;height:280px;top:-80px;right:-60px;background:radial-gradient(circle,rgba(219,39,119,.18) 0%,rgba(124,58,237,.1) 45%,transparent 70%);filter:blur(52px);}
+.c2{width:200px;height:200px;bottom:-50px;left:-45px;background:radial-gradient(circle,rgba(37,99,235,.16) 0%,transparent 70%);filter:blur(42px);animation-delay:-4s;}
+.c3{width:140px;height:140px;top:35%;left:8%;background:radial-gradient(circle,rgba(124,58,237,.18) 0%,transparent 70%);filter:blur(32px);animation-delay:-7s;}
+.c4{width:100px;height:100px;bottom:20%;right:12%;background:radial-gradient(circle,rgba(8,145,178,.12) 0%,transparent 70%);filter:blur(26px);animation-delay:-2s;}
+
+.cc{position:relative;z-index:10;padding:30px 28px 26px;}
+
+.pop-tag{display:inline-flex;align-items:center;gap:5px;
+  border-radius:100px;padding:4px 13px;margin-bottom:12px;
+  font-size:9.5px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  background:linear-gradient(135deg,#7c3aed 0%,#a855f7 35%,#db2777 70%,#7c3aed 100%);
+  background-size:300% auto;color:rgba(255,255,255,.92);
+  box-shadow:0 2px 14px rgba(124,58,237,.4),0 1px 6px rgba(219,39,119,.2);
+  animation:btnGrad 4s linear infinite;}
+
+.form-title{font-size:clamp(24px,4vw,40px);font-weight:700;letter-spacing:-1px;line-height:1.05;margin-bottom:10px;}
+.form-title .g{background:linear-gradient(120deg,#e0c4ff 0%,#f0aaff 40%,#a5b4fc 80%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.form-desc{font-size:12.5px;font-weight:300;color:#b0aacf;line-height:1.65;margin-bottom:20px;max-width:440px;}
+
+.limits-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px;}
+.lim-badge{display:inline-flex;align-items:center;gap:5px;
+  background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.22);
+  border-radius:100px;padding:4px 11px;
+  font-size:10px;font-weight:500;color:#c0badf;}
+.lim-badge strong{color:var(--text);font-weight:600;}
+
+/* ─── FIELDS ─── */
+form{display:flex;flex-direction:column;gap:10px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
+.field{display:flex;flex-direction:column;gap:4px;}
+.field label{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#8a84aa;}
+.field input,.field select{
+  background:rgba(255,255,255,.05);border:1px solid rgba(139,92,246,.22);color:var(--text);
+  padding:11px 13px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:400;
+  outline:none;border-radius:9px;transition:border-color .2s,box-shadow .2s;
+  -webkit-appearance:none;appearance:none;}
+.field input:focus,.field select:focus{border-color:rgba(167,139,250,.6);box-shadow:0 0 0 3px rgba(124,58,237,.12);}
+.field input::placeholder{color:#4a4568;}
+.field select option{background:#150c2e;color:var(--text);}
+.sel-wrap{position:relative;}
+.sel-wrap::after{content:'expand_more';font-family:'Material Symbols Rounded';font-size:15px;
+  position:absolute;right:11px;top:50%;transform:translateY(-50%);color:#8a84aa;pointer-events:none;}
+
+.btn-submit{width:100%;padding:14px;border-radius:11px;border:none;
+  font-family:'Outfit',sans-serif;font-size:13.5px;font-weight:700;letter-spacing:.3px;cursor:pointer;
+  background:linear-gradient(135deg,#7c3aed 0%,#a855f7 35%,#db2777 70%,#7c3aed 100%);
+  background-size:300% auto;color:#fff;
+  box-shadow:0 6px 30px rgba(124,58,237,.5),0 2px 12px rgba(219,39,119,.25),inset 0 1px 0 rgba(255,255,255,.2);
+  animation:btnGrad 4s linear infinite;
+  transition:transform .22s cubic-bezier(.16,1,.3,1),box-shadow .22s;
+  position:relative;overflow:hidden;margin-top:4px;}
+.btn-submit::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);transition:left .4s ease;}
+.btn-submit:hover::before{left:100%;}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 10px 44px rgba(124,58,237,.65),0 4px 18px rgba(219,39,119,.3);}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none;animation:none;}
+.cta-n{text-align:center;font-size:10px;margin-top:7px;font-style:italic;font-weight:300;color:#8a84aa;}
+
+/* ─── SUCCESS ─── */
+.success-state{display:none;text-align:center;padding:36px 16px;}
+.success-icon{font-size:2.6rem;display:block;margin-bottom:12px;}
+.success-title{font-size:2.2rem;font-weight:700;margin-bottom:8px;
+  background:linear-gradient(120deg,#c084fc 0%,#e879f9 40%,#818cf8 80%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.success-desc{font-size:12.5px;color:#8a84aa;line-height:1.7;}
+
+/* ─── FAQ ─── */
+.faq-card{background:rgba(255,255,255,.04);border:1px solid rgba(139,92,246,.15);
+  border-radius:14px;overflow:hidden;margin-bottom:44px;
+  opacity:0;animation:rise .75s cubic-bezier(.16,1,.3,1) forwards .95s;}
+.faq-item{border-bottom:1px solid rgba(255,255,255,.06);}
+.faq-item:last-child{border-bottom:none;}
+.faq-q{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;font-size:12.5px;font-weight:500;color:var(--text);
+  cursor:pointer;user-select:none;gap:14px;transition:background .2s;}
+.faq-q:hover{background:rgba(124,58,237,.08);}
+.faq-chev{font-size:17px;color:#8a84aa;transition:transform .25s cubic-bezier(.16,1,.3,1);flex-shrink:0;}
+.faq-item.open .faq-chev{transform:rotate(180deg);}
+.faq-a{font-size:11.5px;font-weight:300;color:#b0aacf;line-height:1.65;
+  max-height:0;overflow:hidden;padding:0 20px;
+  transition:max-height .35s cubic-bezier(.16,1,.3,1),padding .3s,opacity .3s;opacity:0;}
+.faq-item.open .faq-a{max-height:140px;padding:0 20px 14px;opacity:1;}
+
+/* ─── BOTTOM CTA ─── */
+.btm-cta{text-align:center;margin-bottom:52px;opacity:0;animation:rise .75s cubic-bezier(.16,1,.3,1) forwards 1.05s;}
+.btm-cta h2{font-size:clamp(24px,4vw,46px);font-weight:700;letter-spacing:-1px;line-height:1.1;margin-bottom:10px;}
+.btm-cta h2 .g{background:linear-gradient(120deg,#c084fc 0%,#e879f9 40%,#818cf8 80%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  background-size:200% auto;animation:gradFlow 5s linear infinite;}
+.btm-cta p{font-size:13px;font-weight:300;color:#b0aacf;margin-bottom:20px;line-height:1.65;}
+
+/* ─── FOOTER ─── */
+.footer{text-align:center;margin-top:36px;font-size:11.5px;font-weight:300;color:#8a84aa;line-height:1.7;
+  opacity:0;animation:rise .7s ease forwards 1.1s;}
+.footer a{color:rgba(167,139,250,.8);text-decoration:none;font-weight:500;}
+.footer strong{color:var(--muted);font-weight:500;}
+
+@media(max-width:640px){
+  .st{padding:6px 12px;}.st+.st{border-left:none;border-top:1px solid rgba(255,255,255,.07);}
+  .stats{flex-direction:column;}.cc{padding:22px 18px 18px;}
+}
+
+/* ─── FOOTER ─── */
+.site-footer{
+  position:relative;z-index:10;
+  background:rgba(13,7,32,0.95);
+  border-top:1px solid rgba(139,92,246,.15);
+  padding:56px 32px 28px;
+  margin-top:80px;
+}
+.footer-grid{
+  display:grid;gap:40px;
+  max-width:1200px;margin:0 auto;
+}
+.footer-grid.cols-1{grid-template-columns:1fr;}
+.footer-grid.cols-2{grid-template-columns:repeat(2,1fr);}
+.footer-grid.cols-3{grid-template-columns:repeat(3,1fr);}
+.footer-grid.cols-4{grid-template-columns:repeat(4,1fr);}
+.footer-grid.cols-5{grid-template-columns:repeat(5,1fr);}
+.footer-grid.cols-6{grid-template-columns:repeat(6,1fr);}
+.footer-col{}
+.footer-col-title{
+  font-size:13px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--text);
+  margin-bottom:16px;opacity:.9;
+}
+.footer-col ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;}
+.footer-col ul li a{
+  font-size:13px;color:var(--muted);text-decoration:none;
+  transition:color .2s;display:flex;align-items:center;gap:6px;
+}
+.footer-col ul li a:hover{color:var(--text);}
+.footer-col ul li a .material-symbols-rounded{font-size:14px;opacity:.6;}
+.footer-brand{margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.footer-brand-name{font-size:18px;font-weight:700;letter-spacing:1px;color:var(--text);}
+.footer-brand-name span{font-weight:400;}
+.footer-desc{font-size:12.5px;color:var(--dim);line-height:1.7;max-width:260px;}
+.footer-bottom{
+  max-width:1200px;margin:40px auto 0;
+  padding-top:20px;
+  border-top:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+}
+.footer-copy{font-size:11.5px;color:var(--dim);}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{font-size:11.5px;color:var(--dim);text-decoration:none;transition:color .2s;}
+.footer-links a:hover{color:var(--muted);}
+@media(max-width:700px){
+  .footer-grid.cols-3,.footer-grid.cols-4,.footer-grid.cols-5,.footer-grid.cols-6{grid-template-columns:repeat(2,1fr);}
+  .footer-grid.cols-2{grid-template-columns:1fr;}
+  .site-footer{padding:40px 16px 24px;}
+}
+
+</style>
+</head>
+<body>
+
+<canvas id="gc"></canvas>
+
+<!-- ══ HEADBAR ══ -->
+<header class="headbar">
+  <a href="./index.html" class="hb-logo">
+    <div class="globe-wrap">
+      <canvas class="globe-canvas" id="logoCanvas" width="72" height="72"></canvas>
+    </div>
+    <span class="hb-logo-text"><span class="oryn" id="orynSpan"><canvas class="oryn-comet" id="orynComet"></canvas>ORYN</span><span class="tech">Tech</span></span>
+  </a>
+  <nav class="hb-nav" id="hbNav">
+    <a href="./trial.html" class="active">
+      <span class="material-symbols-rounded">rocket_launch</span>
+      Try for free
+    </a>
+    <a href="./tutorials.html">
+      <span class="material-symbols-rounded">play_circle</span>
+      Tutoriale
+    </a>
+  </nav>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <a href="http://client.oryntech.ai" class="hb-login" target="_blank">
+      <span class="material-symbols-rounded">lock_open</span>
+      Login Clienți
+    </a>
+    <button class="hb-mobile-btn" id="hbToggle" aria-label="Menu">
+      <span class="material-symbols-rounded" id="hbIcon">menu</span>
+    </button>
+  </div>
+</header>
+
+<div class="page">
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="eyebrow"><span class="ey-line"></span>ORYNTECH — AI Automation Agency<span class="ey-line"></span></div>
+  <span class="hl-1">Business-ul tău pe</span>
+  <span class="hl-2">Pilot Automat.</span>
+  <p class="hero-sub">
+    Lead-uri pierdute. Răspunsuri întârziate. Follow-up niciodată.<br>
+    <strong>Concurența ta se automatizează deja.</strong>
+  </p>
+  <div class="bdgs">
+    <div class="bdg"><span class="pulse-dot"></span> Acces imediat</div>
+    <div class="bdg">🤖 AI activ 24/7</div>
+    <div class="bdg">🔒 Fără card</div>
+    <div class="bdg">⚡ 14 zile gratuit</div>
+  </div>
+  <a href="#trial" class="cta-btn">Vreau Acces Gratuit →</a>
+  <span class="cta-note">Fără surprize. Fără taxe ascunse.</span>
+</div>
+
+<!-- ══ STATS ══ -->
+<div class="stats">
+  <div class="st"><div class="st-v">80%</div><div class="st-l">Reducere no-show</div></div>
+  <div class="st"><div class="st-v">&lt;60s</div><div class="st-l">Răspuns lead-uri</div></div>
+  <div class="st"><div class="st-v">30+</div><div class="st-l">Tool-uri AI</div></div>
+  <div class="st"><div class="st-v">24/7</div><div class="st-l">Sistem activ</div></div>
+  <div class="st"><div class="st-v">0</div><div class="st-l">Lead-uri pierdute</div></div>
+</div>
+
+<!-- ══ PROBLEMS ══ -->
+<div class="sec" style="--d:.4s">
+  <div class="eyebrow-sm"><span class="ey-line"></span> Recunoști situația? <span class="ey-line"></span></div>
+  <h2 class="sec-h">Problemele care te <span class="g">costă bani în fiecare zi</span></h2>
+  <p class="sec-sub">Fiecare minut fără automatizare e un lead pierdut la concurență.</p>
+  <div class="prob-grid">
+    <div class="prob-item">
+      <span class="material-symbols-rounded prob-ms">call_missed</span>
+      <div class="prob-title">Lead-uri pierdute la telefon</div>
+      <div class="prob-desc">N-ai răspuns. Au sunat la concurență. S-a dus.</div>
+    </div>
+    <div class="prob-item">
+      <span class="material-symbols-rounded prob-ms">update</span>
+      <div class="prob-title">Follow-up inconsistent</div>
+      <div class="prob-desc">Uiți, nu ai timp, lead-urile se răcesc. Banii rămân pe masă.</div>
+    </div>
+    <div class="prob-item">
+      <span class="material-symbols-rounded prob-ms">forum</span>
+      <div class="prob-title">Haos în inbox-uri</div>
+      <div class="prob-desc">WhatsApp, email, Instagram — mesaje pierdute în 5 locuri.</div>
+    </div>
+    <div class="prob-item">
+      <span class="material-symbols-rounded prob-ms">event_busy</span>
+      <div class="prob-title">No-show-uri repetate</div>
+      <div class="prob-desc">Clienții nu apar. Fără reminder. Timp și bani pierduți.</div>
+    </div>
+    <div class="prob-item">
+      <span class="material-symbols-rounded prob-ms">loop</span>
+      <div class="prob-title">Task-uri repetitive</div>
+      <div class="prob-desc">Aceleași mesaje trimise manual de 10 ori pe zi. Tu ești automatizarea.</div>
+    </div>
+    <div class="prob-item">
+      <span class="material-symbols-rounded prob-ms">visibility_off</span>
+      <div class="prob-title">Zero vizibilitate</div>
+      <div class="prob-desc">Lead-urile intră, banii nu ies. Nu știi unde se pierd.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BRIDGE ══ -->
+<div class="bridge">
+  <div class="gl-rim"></div><div class="shine"></div>
+  <div class="bcb1"></div><div class="bcb2"></div>
+  <div class="bridge-in">
+    <h2>Există un sistem care rezolvă toate astea.<br>Fără angajați în plus. Fără haos.</h2>
+    <p>Un singur sistem centralizat: răspunde, urmărește, programează și convertește — automat, 24/7.<br>Testează gratuit 14 zile.</p>
+  </div>
+</div>
+
+<!-- ══ BEFORE / AFTER ══ -->
+<div class="sec" style="--d:.5s">
+  <div class="eyebrow-sm"><span class="ey-line"></span> Înainte vs. după <span class="ey-line"></span></div>
+  <h2 class="sec-h">Ce se schimbă <span class="g">din ziua 1</span></h2>
+  <div class="ba-wrap">
+    <div class="ba-col before">
+      <div class="ba-header">
+        <span class="material-symbols-rounded" style="font-size:14px;">close</span>
+        Fără sistem
+      </div>
+      <div class="ba-row"><span class="material-symbols-rounded ba-ms">sms_failed</span>Lead-urile nu răspund, nu mai suni</div>
+      <div class="ba-row"><span class="material-symbols-rounded ba-ms">alarm_off</span>Follow-up doar când îți amintești</div>
+      <div class="ba-row"><span class="material-symbols-rounded ba-ms">event_busy</span>Calendar plin de no-show-uri</div>
+      <div class="ba-row"><span class="material-symbols-rounded ba-ms">bar_chart</span>Nu știi ce funcționează</div>
+      <div class="ba-row"><span class="material-symbols-rounded ba-ms">support_agent</span>Tu răspunzi manual la orice</div>
+    </div>
+    <div class="ba-col after">
+      <div class="ba-header">
+        <span class="material-symbols-rounded" style="font-size:14px;">check</span>
+        Cu ORYNTECH
+      </div>
+      <div class="ba-row"><span class="material-symbols-rounded ba-ms">smart_toy</span>AI răspunde în secunde, tu închizi vânzările</div>
+      <div class="ba-row"><span class="material-symbols-rounded ba-ms">bolt</span>Secvențe automate: nu dorm, nu uită, nu obosesc</div>
+      <div class="ba-row"><span class="material-symbols-rounded ba-ms">notifications_active</span>Reminder automat — no-show-uri -80%</div>
+      <div class="ba-row"><span class="material-symbols-rounded ba-ms">analytics</span>Dashboard live: lead-uri, conversii, venituri</div>
+      <div class="ba-row"><span class="material-symbols-rounded ba-ms">rocket_launch</span>Sistemul rulează. Tu te concentrezi pe creștere.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CE PRIMEȘTI ══ -->
+<div class="sec" style="--d:.6s">
+  <div class="eyebrow-sm"><span class="ey-line"></span> Ce primești în trial <span class="ey-line"></span></div>
+  <h2 class="sec-h">AI + Automatizări active. <span class="g">Gratuit 14 zile.</span></h2>
+  <p class="sec-sub">Toate instrumentele pornite din prima zi — nu demo, nu restricții de funcții:</p>
+
+  <div class="slbl">🤖 AI Activ</div>
+  <ul class="flist">
+    <li class="fi">
+      <div class="fi-row">
+        <span class="fi-ms material-symbols-rounded">smart_toy</span>
+        <div style="flex:1"><div class="fi-name">AI Conversational Agent</div><div class="fi-sub">Răspunde la lead-uri 24/7 pe orice canal. Niciodată obosit.</div></div>
+        <span class="fi-chev material-symbols-rounded">expand_more</span>
+      </div>
+      <div class="drop-body">AI-ul tău personal care discută cu prospecții, califică lead-urile și preia interacțiunile — pe SMS, email, Messenger, Web Chat — în timp real.</div>
+    </li>
+    <li class="fi">
+      <div class="fi-row">
+        <span class="fi-ms material-symbols-rounded">call_missed</span>
+        <div style="flex:1"><div class="fi-name">Missed Call → AI Text-Back</div><div class="fi-sub">Fiecare apel pierdut declanșează un SMS automat instant.</div></div>
+        <span class="fi-chev material-symbols-rounded">expand_more</span>
+      </div>
+      <div class="drop-body">Înainte ca lead-ul să sune la concurență, AI-ul trimite deja un mesaj. Zero lead-uri pierdute la voicemail.</div>
+    </li>
+    <li class="fi">
+      <div class="fi-row">
+        <span class="fi-ms material-symbols-rounded">psychology</span>
+        <div style="flex:1"><div class="fi-name">AI Lead Qualifier</div><div class="fi-sub">Filtrează automat cine e gata să cumpere.</div></div>
+        <span class="fi-chev material-symbols-rounded">expand_more</span>
+      </div>
+      <div class="drop-body">Formulare și quiz-uri cu logică AI. Tu vorbești doar cu prospecții calificați — nu mai pierzi ore cu oameni care nu cumpără.</div>
+    </li>
+  </ul>
+
+  <div class="div"></div>
+  <div class="slbl">⚡ Automatizări</div>
+  <ul class="flist">
+    <li class="fi">
+      <div class="fi-row">
+        <span class="fi-ms material-symbols-rounded">rocket_launch</span>
+        <div style="flex:1"><div class="fi-name">Business pe Autopilot</div><div class="fi-sub">Lead nou → AI texte, emailuri, follow-up în secunde. Zero muncă manuală.</div></div>
+        <span class="fi-chev material-symbols-rounded">expand_more</span>
+      </div>
+      <div class="drop-body">Setezi o singură dată. AI execută la nesfârșit. Fiecare lead nou intră automat într-o secvență de nurturing personalizată.</div>
+    </li>
+    <li class="fi">
+      <div class="fi-row">
+        <span class="fi-ms material-symbols-rounded">calendar_month</span>
+        <div style="flex:1"><div class="fi-name">Booking + Reminder Automat</div><div class="fi-sub">Calendarul se completează singur. No-show-urile scad cu 80%.</div></div>
+        <span class="fi-chev material-symbols-rounded">expand_more</span>
+      </div>
+      <div class="drop-body">Clienții aleg un slot, AI confirmă și trimite remindere automate. Tu te prezinți la întâlniri — atât.</div>
+    </li>
+    <li class="fi">
+      <div class="fi-row">
+        <span class="fi-ms material-symbols-rounded">mark_email_read</span>
+        <div style="flex:1"><div class="fi-name">Email + SMS Campaigns</div><div class="fi-sub">Nurturing automat care transformă lead-uri reci în clienți.</div></div>
+        <span class="fi-chev material-symbols-rounded">expand_more</span>
+      </div>
+      <div class="drop-body">Secvențe pre-construite care rulează singure. Trimiți o dată, AI convertește pentru totdeauna.</div>
+    </li>
+    <li class="fi">
+      <div class="fi-row">
+        <span class="fi-ms material-symbols-rounded">bolt</span>
+        <div style="flex:1"><div class="fi-name">AI Auto-Response Rules</div><div class="fi-sub">Când X se întâmplă, AI face Y instant. Business-ul nu se oprește niciodată.</div></div>
+        <span class="fi-chev material-symbols-rounded">expand_more</span>
+      </div>
+      <div class="drop-body">Trigger-uri automate pentru orice scenariu. Indiferent că ești în vacanță sau la întâlniri, sistemul răspunde.</div>
+    </li>
+  </ul>
+
+  <div class="div"></div>
+  <div class="slbl">📊 Vizibilitate + Vânzări</div>
+  <ul class="flist">
+    <li class="fi">
+      <div class="fi-row">
+        <span class="fi-ms material-symbols-rounded">manage_accounts</span>
+        <div style="flex:1"><div class="fi-name">CRM + Pipeline Automat</div><div class="fi-sub">Fiecare lead urmărit. Nicio oportunitate pierdută.</div></div>
+        <span class="fi-chev material-symbols-rounded">expand_more</span>
+      </div>
+      <div class="drop-body">Pipeline-ul se actualizează singur pe baza acțiunilor lead-urilor. Știi exact unde e fiecare client în funnel.</div>
+    </li>
+    <li class="fi">
+      <div class="fi-row">
+        <span class="fi-ms material-symbols-rounded">bar_chart</span>
+        <div style="flex:1"><div class="fi-name">Revenue Dashboard Live</div><div class="fi-sub">Scalezi ce funcționează. Tai ce nu aduce bani.</div></div>
+        <span class="fi-chev material-symbols-rounded">expand_more</span>
+      </div>
+      <div class="drop-body">Vizibilitate completă: surse de lead-uri, rate de conversie, venituri pe canal. Decizii bazate pe date reale.</div>
+    </li>
+    <li class="fi">
+      <div class="fi-row">
+        <span class="fi-ms material-symbols-rounded">star_rate</span>
+        <div style="flex:1"><div class="fi-name">AI Review Machine</div><div class="fi-sub">Recenzii Google generate automat de la clienți fericiți.</div></div>
+        <span class="fi-chev material-symbols-rounded">expand_more</span>
+      </div>
+      <div class="drop-body">90% din cumpărători citesc recenzii. AI-ul cere automat feedback după fiecare interacțiune pozitivă. Reputația crește singură.</div>
+    </li>
+  </ul>
+</div>
+
+<!-- ══ FORM ══ -->
+<div class="form-card" id="trial">
+  <div class="gl base"></div><div class="gl frost"></div>
+  <div class="gl rim"></div><div class="gl shine"></div>
+  <div class="cblob c1"></div><div class="cblob c2"></div>
+  <div class="cblob c3"></div><div class="cblob c4"></div>
+  <div class="cc">
+    <div class="pop-tag">✦ Acces gratuit — 14 zile</div>
+    <div class="form-title">Începe <span class="g">gratuit.</span> Fără card.</div>
+    <p class="form-desc">Completează formularul și primești acces imediat. Dacă vrei mai mult după trial — upgrade oricând.</p>
+
+    <div class="limits-row">
+      <div class="lim-badge">⚡ <strong>500</strong> contacte</div>
+      <div class="lim-badge">📨 <strong>500</strong> emailuri/lună</div>
+      <div class="lim-badge">💬 <strong>100</strong> SMS/lună</div>
+      <div class="lim-badge">🤖 AI activat</div>
+    </div>
+
+    <div class="div"></div>
+    <div class="slbl">Date de contact</div>
+
+    <div id="fc">
+      <form id="trialForm" novalidate>
+        <div class="form-row">
+          <div class="field"><label for="fn">Prenume</label><input type="text" id="fn" placeholder="Ion" required></div>
+          <div class="field"><label for="ln">Nume</label><input type="text" id="ln" placeholder="Popescu" required></div>
+        </div>
+        <div class="field"><label for="em">Email</label><input type="email" id="em" placeholder="ion@business.ro" required></div>
+        <div class="field"><label for="ph">Telefon</label><input type="tel" id="ph" placeholder="+40 7XX XXX XXX" required></div>
+
+        <div class="div"></div>
+        <div class="slbl">Business</div>
+
+        <div class="field"><label for="biz">Numele business-ului</label><input type="text" id="biz" placeholder="Firma SRL" required></div>
+        <div class="form-row">
+          <div class="field"><label for="ni">Domeniu</label>
+            <div class="sel-wrap"><select id="ni" required>
+              <option value="" disabled selected>Selectează...</option>
+              <option>Clinică / Sănătate</option><option>Salon / Beauty</option>
+              <option>Imobiliare</option><option>Servicii locale</option>
+              <option>Comerț / E-commerce</option><option>Agenție marketing</option>
+              <option>Fitness / Sport</option><option>Educație / Coaching</option>
+              <option>Construcții / Renovări</option><option>Alt domeniu</option>
+            </select></div>
+          </div>
+          <div class="field"><label for="le">Lead-uri / lună</label>
+            <div class="sel-wrap"><select id="le">
+              <option value="" disabled selected>Câte lead-uri?</option>
+              <option>Sub 50</option><option>50 – 200</option>
+              <option>200 – 500</option><option>500+</option>
+            </select></div>
+          </div>
+        </div>
+
+        <div class="div"></div>
+        <div class="slbl">Situația ta acum</div>
+
+        <div class="field"><label for="pb">Cea mai mare problemă</label>
+          <div class="sel-wrap"><select id="pb">
+            <option value="" disabled selected>Ce te doare cel mai tare?</option>
+            <option>Pierd lead-uri pentru că nu răspund rapid</option>
+            <option>Follow-up inconsistent sau inexistent</option>
+            <option>Programări ratate / no-show-uri</option>
+            <option>Prea mult haos operațional</option>
+            <option>Nu am vizibilitate asupra vânzărilor</option>
+            <option>Depind prea mult de muncă manuală</option>
+            <option>Toate de mai sus</option>
+          </select></div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="sb">Vreau Acces Gratuit — 14 Zile →</button>
+        <p class="cta-n">🔒 Datele tale sunt în siguranță. Zero spam. Niciodată.</p>
+      </form>
+    </div>
+
+    <div class="success-state" id="ss">
+      <span class="success-icon">✅</span>
+      <div class="success-title">Ai intrat în sistem!</div>
+      <p class="success-desc">Verifică email-ul — accesul vine în câteva minute.<br>Echipa ORYNTECH răspunde rapid.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FAQ ══ -->
+<div class="sec" style="--d:.85s">
+  <div class="eyebrow-sm"><span class="ey-line"></span> Întrebări frecvente <span class="ey-line"></span></div>
+  <h2 class="sec-h" style="margin-bottom:20px">Răspunsuri <span class="g">rapide</span></h2>
+</div>
+<div class="faq-card">
+  <div class="faq-item">
+    <div class="faq-q">Chiar nu trebuie card pentru trial? <span class="material-symbols-rounded faq-chev">expand_more</span></div>
+    <div class="faq-a">Corect. Nicio taxă, nicio surpriză. 14 zile test real — dacă vrei să continui, atunci vorbim de upgrade.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Ce limite are trial-ul? <span class="material-symbols-rounded faq-chev">expand_more</span></div>
+    <div class="faq-a">500 contacte, 500 emailuri/lună, 100 SMS/lună. Toate funcțiile AI sunt active — doar volumele sunt limitate. Suficient să testezi dacă sistemul funcționează pentru tine.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Trebuie să știu tehnologie? <span class="material-symbols-rounded faq-chev">expand_more</span></div>
+    <div class="faq-a">Nu. Totul e vizual, drag-and-drop. Dacă vrei setup complet gata de lucru — avem planuri cu implementare Done-For-You.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Ce se întâmplă după 14 zile? <span class="material-symbols-rounded faq-chev">expand_more</span></div>
+    <div class="faq-a">Te contactăm cu o ofertă pentru business-ul tău specific. Fără presiune. Dacă nu continui — nicio problemă, fără costuri.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Funcționează pentru domeniul meu? <span class="material-symbols-rounded faq-chev">expand_more</span></div>
+    <div class="faq-a">Da. Clinici, saloane, imobiliare, servicii locale, e-commerce, coaching, agenții. Dacă ai lead-uri și clienți — sistemul funcționează.</div>
+  </div>
+</div>
+
+<!-- ══ BOTTOM CTA ══ -->
+<div class="btm-cta">
+  <h2>Nu mai pierde<br><span class="g">niciun lead.</span></h2>
+  <p>14 zile gratuit. Fără card. Sistem activ din prima zi.</p>
+  <a href="#trial" class="cta-btn">Încearcă Gratuit Acum →</a>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<div class="footer">
+  Powered by <strong>ORYNTECH</strong> — AI Automation Agency.<br>
+  Întrebări? <a href="#">Vorbește cu echipa</a> — răspundem rapid.
+</div>
+
+</div><!-- /page -->
+
+<footer class="site-footer">
+  <div class="footer-grid cols-4">
+    <div class="footer-col">
+      <div class="footer-brand">
+        <span class="footer-brand-name">ORYN<span>Tech</span></span>
+      </div>
+      <p class="footer-desc">One platform. One system. More leads. Faster follow-up. More sales.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Navigare</div>
+      <ul>
+        <li><a href="./index.html"><span class="material-symbols-rounded">home</span>Homepage</a></li>
+        <li><a href="./trial.html"><span class="material-symbols-rounded">rocket_launch</span>Try for Free</a></li>
+        <li><a href="./tutorials.html"><span class="material-symbols-rounded">play_circle</span>Tutoriale</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Cont</div>
+      <ul>
+        <li><a href="http://client.oryntech.ai" target="_blank"><span class="material-symbols-rounded">lock_open</span>Login Clienți</a></li>
+        <li><a href="./trial.html"><span class="material-symbols-rounded">person_add</span>Înregistrare</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Contact</div>
+      <ul>
+        <li><a href="/cdn-cgi/l/email-protection#50333f3e24313324103f22293e243533387e3139"><span class="material-symbols-rounded">mail</span><span class="__cf_email__" data-cfemail="86e5e9e8f2e7e5f2c6e9f4ffe8f2e3e5eea8e7ef">[email&#160;protected]</span></a></li>
+        <li><a href="#"><span class="material-symbols-rounded">chat</span>WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 ORYNTECH. Toate drepturile rezervate.</span>
+    <div class="footer-links">
+      <a href="#">Termeni</a>
+      <a href="#">Confidențialitate</a>
+      <a href="#">Cookies</a>
+    </div>
+  </div>
+</footer>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ─── GALAXY CANVAS ─── */
+(function(){
+  const cv=document.getElementById('gc'),ctx=cv.getContext('2d');
+  let W=window.innerWidth,H=window.innerHeight;
+  const mouse={x:.5,y:.5};
+  function safeRG(x0,y0,r0,x1,y1,r1){
+    if(!isFinite(x0)||!isFinite(y0)||!isFinite(x1)||!isFinite(y1)||r1<=0||!isFinite(r1))return null;
+    return ctx.createRadialGradient(x0,y0,Math.max(0,r0),x1,y1,r1);
+  }
+  function safeLG(x0,y0,x1,y1){
+    if(!isFinite(x0)||!isFinite(y0)||!isFinite(x1)||!isFinite(y1))return null;
+    if(Math.abs(x1-x0)<.001&&Math.abs(y1-y0)<.001)return null;
+    return ctx.createLinearGradient(x0,y0,x1,y1);
+  }
+  const L=[
+    {count:180,minS:.3,maxS:.8,minA:.25,maxA:.65,speed:.018,color:[210,200,255]},
+    {count:90,minS:.5,maxS:1.1,minA:.2,maxA:.55,speed:.032,color:[180,160,255]},
+    {count:40,minS:.8,maxS:1.6,minA:.15,maxA:.45,speed:.05,color:[240,200,255]},
+  ];
+  const N=[
+    {nx:.15,ny:.25,rx:.28,ry:.18,a:.13,sp:.025,c1:'80,40,180',c2:'130,60,200'},
+    {nx:.72,ny:.55,rx:.32,ry:.22,a:.11,sp:.018,c1:'180,40,110',c2:'200,70,150'},
+    {nx:.45,ny:.8,rx:.25,ry:.16,a:.09,sp:.03,c1:'40,80,200',c2:'80,120,220'},
+    {nx:.85,ny:.15,rx:.2,ry:.14,a:.08,sp:.022,c1:'100,50,220',c2:'140,90,240'},
+  ];
+  const D=[
+    {x:.1,y:.3,ex:.6,ey:.15,w:.06,a:.07,sp:.015,c:'160,120,255'},
+    {x:.5,y:.6,ex:.9,ey:.4,w:.05,a:.06,sp:.02,c:'220,100,180'},
+    {x:.0,y:.7,ex:.4,ey:.9,w:.04,a:.05,sp:.012,c:'100,140,255'},
+  ];
+  const CON=[
+    {pts:[[.1,.2],[.18,.12],[.25,.18],[.22,.28]],edges:[[0,1],[1,2],[2,3],[3,0]],sp:.014},
+    {pts:[[.7,.1],[.78,.18],[.72,.26],[.82,.22]],edges:[[0,1],[1,2],[2,3],[1,3]],sp:.019},
+    {pts:[[.55,.7],[.62,.62],[.7,.68],[.65,.78]],edges:[[0,1],[1,2],[2,3],[0,3]],sp:.016},
+  ];
+  const SH=[];
+  const rnd=(a,b)=>a+(b-a)*Math.random();
+  setInterval(()=>{if(W>0&&H>0&&Math.random()<.4)SH.push({x:rnd(0,.6)*W,y:rnd(0,.3)*H,vx:rnd(3,7),vy:rnd(1.5,3.5),len:rnd(80,160),life:1});},2200);
+  function initStars(){L.forEach(l=>{l.s=[];for(let i=0;i<l.count;i++)l.s.push({bx:Math.random(),by:Math.random(),s:rnd(l.minS,l.maxS),a:rnd(l.minA,l.maxA),to:Math.random()*Math.PI*2,ts:rnd(.3,1.8)});});}
+  function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
+  let t=0;
+  function frame(){
+    if(!W||!H){requestAnimationFrame(frame);return;}
+    t+=.016;ctx.clearRect(0,0,W,H);ctx.fillStyle='#0b0618';ctx.fillRect(0,0,W,H);
+    const vg=safeRG(W/2,H/2,0,W/2,H/2,Math.max(W,H)*.75);
+    if(vg){vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(.6,'rgba(0,0,0,.1)');vg.addColorStop(1,'rgba(0,0,0,.72)');ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);}
+    const mx=mouse.x,my=mouse.y;
+    N.forEach(n=>{
+      const px=(mx-.5)*n.sp*W,py=(my-.5)*n.sp*H;
+      const cx=n.nx*W+px,cy=n.ny*H+py,rx=n.rx*W,ry=n.ry*H;
+      if(!rx||!ry)return;
+      const g=safeRG(cx,cy,0,cx,cy,Math.max(rx,ry));if(!g)return;
+      g.addColorStop(0,`rgba(${n.c2},${n.a})`);g.addColorStop(.4,`rgba(${n.c1},${n.a*.5})`);g.addColorStop(1,`rgba(${n.c1},0)`);
+      ctx.save();ctx.scale(1,ry/rx);ctx.beginPath();ctx.arc(cx,cy*(rx/ry),rx,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();ctx.restore();
+    });
+    D.forEach(d=>{
+      const px=(mx-.5)*d.sp*W,py=(my-.5)*d.sp*H;
+      const x0=d.x*W+px,y0=d.y*H+py,x1=d.ex*W+px,y1=d.ey*H+py,w=d.w*H;
+      const dx=x1-x0,dy=y1-y0,len=Math.hypot(dx,dy);if(len<.001)return;
+      const g=safeLG(x0,y0,x1,y1);if(!g)return;
+      g.addColorStop(0,`rgba(${d.c},0)`);g.addColorStop(.3,`rgba(${d.c},${d.a})`);g.addColorStop(.7,`rgba(${d.c},${d.a})`);g.addColorStop(1,`rgba(${d.c},0)`);
+      const nx=-dy/len*w*.5,ny=dx/len*w*.5;
+      ctx.beginPath();ctx.moveTo(x0+nx,y0+ny);ctx.lineTo(x1+nx,y1+ny);ctx.lineTo(x1-nx,y1-ny);ctx.lineTo(x0-nx,y0-ny);ctx.closePath();ctx.fillStyle=g;ctx.fill();
+    });
+    CON.forEach((con,ci)=>{
+      const px=(mx-.5)*con.sp*W,py=(my-.5)*con.sp*H;
+      const pts=con.pts.map(p=>({x:p[0]*W+px,y:p[1]*H+py}));
+      ctx.save();
+      con.edges.forEach(([a,b])=>{
+        const p1=pts[a],p2=pts[b];
+        const g=safeLG(p1.x,p1.y,p2.x,p2.y);if(!g)return;
+        g.addColorStop(0,'rgba(180,160,255,0)');g.addColorStop(.5,'rgba(210,190,255,.28)');g.addColorStop(1,'rgba(180,160,255,0)');
+        ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.strokeStyle=g;ctx.lineWidth=.7;ctx.stroke();
+      });
+      ctx.restore();
+      pts.forEach((p,i)=>{
+        const tw=.6+.4*Math.sin(t*1.2+ci*1.7+i*.9),alpha=.55*tw,sz=1.3*tw;
+        const g=safeRG(p.x,p.y,0,p.x,p.y,sz*5);if(!g)return;
+        g.addColorStop(0,`rgba(210,190,255,${alpha*.5})`);g.addColorStop(1,'rgba(180,150,255,0)');
+        ctx.beginPath();ctx.arc(p.x,p.y,sz*5,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+        ctx.beginPath();ctx.arc(p.x,p.y,sz,0,Math.PI*2);ctx.fillStyle=`rgba(230,215,255,${alpha})`;ctx.fill();
+      });
+    });
+    L.forEach(l=>{
+      const[r2,g2,b]=l.color;
+      l.s.forEach(s=>{
+        const px=(mx-.5)*l.speed*W,py=(my-.5)*l.speed*H;
+        const x=((s.bx*W+px)%W+W)%W,y=((s.by*H+py)%H+H)%H;
+        const tw=.5+.5*Math.sin(t*s.ts+s.to),alpha=s.a*(.5+.5*tw),sz=s.s*(.85+.15*tw);
+        if(s.s>1.2){
+          const g=safeRG(x,y,0,x,y,sz*3.5);
+          if(g){g.addColorStop(0,`rgba(${r2},${g2},${b},${alpha*.6})`);g.addColorStop(1,`rgba(${r2},${g2},${b},0)`);ctx.beginPath();ctx.arc(x,y,sz*3.5,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();}
+        }
+        ctx.beginPath();ctx.arc(x,y,sz,0,Math.PI*2);ctx.fillStyle=`rgba(${r2},${g2},${b},${alpha})`;ctx.fill();
+      });
+    });
+    for(let i=SH.length-1;i>=0;i--){
+      const s=SH[i];s.x+=s.vx;s.y+=s.vy;s.life-=.018;
+      if(s.life<=0){SH.splice(i,1);continue;}
+      const spd=Math.hypot(s.vx,s.vy);if(spd<.001)continue;
+      const hx=s.x-s.vx*(s.len/spd),hy=s.y-s.vy*(s.len/spd);
+      const g=safeLG(hx,hy,s.x,s.y);if(!g)continue;
+      g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(1,`rgba(220,200,255,${s.life*.7})`);
+      ctx.beginPath();ctx.moveTo(hx,hy);ctx.lineTo(s.x,s.y);ctx.strokeStyle=g;ctx.lineWidth=1;ctx.stroke();
+    }
+    ctx.globalAlpha=1;requestAnimationFrame(frame);
+  }
+  let tx=.5,ty=.5;
+  window.addEventListener('mousemove',e=>{if(W&&H){tx=e.clientX/W;ty=e.clientY/H;}});
+  function lm(){mouse.x+=(tx-mouse.x)*.04;mouse.y+=(ty-mouse.y)*.04;requestAnimationFrame(lm);}
+  window.addEventListener('resize',resize);
+  resize();initStars();lm();frame();
+})();
+
+/* ─── LOGO GLOBE CANVAS ─── */
+document.addEventListener("DOMContentLoaded", function() { (function(){
+  const cv = document.getElementById('logoCanvas');
+  if(!cv) return;
+
+  /* ── Sharp canvas at any zoom/DPR ──
+     We listen for changes and resize accordingly.
+     imageRendering: pixelated would actually hurt — we want crisp AA.
+     The trick: always use actual devicePixelRatio, and also handle
+     window resize (which changes effective DPR on some browsers). */
+  const SIZE = 44; // CSS px — fixed display size
+  let DPR = 1;
+
+  function setupCanvas() {
+    DPR = Math.min(window.devicePixelRatio || 1, 4); // support up to 4x (hi-DPI zoom)
+    cv.width  = Math.round(SIZE * DPR);
+    cv.height = Math.round(SIZE * DPR);
+    cv.style.width  = SIZE + 'px';
+    cv.style.height = SIZE + 'px';
+    // Disable any CSS smoothing
+    cv.style.imageRendering = 'crisp-edges';
+  }
+  setupCanvas();
+  // Re-setup if zoom changes (fires on resize + zoom in Chrome/Firefox)
+  window.addEventListener('resize', setupCanvas);
+
+  const ctx = cv.getContext('2d', { alpha: true });
+
+  const CX = SIZE/2, CY = SIZE/2, R = 11.2;
+
+  /* ── Nodes ── phi=polar[0..PI], th=azimuth[0..2PI]
+     11 nodes, well spread: top band, mid, lower, south */
+  const NODES = [
+    [0.5, 0.3],  [0.55,2.1],  [0.6, 4.0],
+    [1.05,0.9],  [1.0, 2.6],  [1.1, 4.5],  [1.0,5.8],
+    [1.6, 1.5],  [1.55,3.3],  [1.7, 5.1],
+    [2.2, 2.2],
+  ];
+  const EDGES = [
+    [0,3],[0,1],[1,4],[1,3],[2,5],[2,6],
+    [3,4],[3,7],[4,5],[4,8],[5,6],[5,9],
+    [6,9],[7,8],[7,10],[8,9],[8,10],[9,10]
+  ];
+  const SPIN = 0.07; // globe spin speed (rad/s)
+  const TILT = 0.40; // globe X-axis tilt (rad)
+
+  /* Project spherical (phi,th) → canvas {x,y,z}
+     z: +1=front, -1=back  */
+  function proj(phi, th) {
+    const gx = Math.sin(phi)*Math.sin(th);
+    const gy = Math.cos(phi);
+    const gz = Math.sin(phi)*Math.cos(th);
+    const sy =  gy*Math.cos(TILT) - gz*Math.sin(TILT);
+    const sz =  gy*Math.sin(TILT) + gz*Math.cos(TILT);
+    return { x: CX+gx*R, y: CY-sy*R, z: sz };
+  }
+
+  /* Great-circle arc via slerp */
+  function greatArc(phi1,th1, phi2,th2, steps) {
+    const v1=[Math.sin(phi1)*Math.sin(th1), Math.cos(phi1), Math.sin(phi1)*Math.cos(th1)];
+    const v2=[Math.sin(phi2)*Math.sin(th2), Math.cos(phi2), Math.sin(phi2)*Math.cos(th2)];
+    const dot=Math.max(-1,Math.min(1, v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2]));
+    const omega=Math.acos(dot);
+    const pts=[];
+    for(let i=0;i<=steps;i++){
+      const t=i/steps;
+      let vx,vy,vz;
+      if(omega<0.001){vx=v1[0];vy=v1[1];vz=v1[2];}
+      else{
+        const sa=Math.sin((1-t)*omega)/Math.sin(omega);
+        const sb=Math.sin(t*omega)/Math.sin(omega);
+        vx=sa*v1[0]+sb*v2[0]; vy=sa*v1[1]+sb*v2[1]; vz=sa*v1[2]+sb*v2[2];
+      }
+      const sy=vy*Math.cos(TILT)-vz*Math.sin(TILT);
+      const sz=vy*Math.sin(TILT)+vz*Math.cos(TILT);
+      pts.push({x:CX+vx*R, y:CY-sy*R, z:sz});
+    }
+    return pts;
+  }
+
+  const pulses=EDGES.map((_,i)=>({t:-(i/EDGES.length), spd:0.14+Math.random()*0.22}));
+
+  /* ── Orbit with TRUE perspective ──
+
+     The rocket travels on a tilted ellipse in 3D.
+     We define the orbit plane in 3D and project with the same
+     perspective rules as the globe nodes.
+
+     Orbit plane: tilted ~40° from horizontal, diagonal left-bottom → right-top.
+
+     In orbit-local coords:
+       angle=0   → rightmost point (3 o'clock)
+       angle=PI/2 → "into screen" (behind globe)
+       angle=PI  → leftmost (9 o'clock)
+       angle=3PI/2 → "out of screen" (front of globe)
+
+     We map local orbit coords to 3D world, apply globe TILT, get screen xy + depth z.
+
+     Orbit axes in world space:
+       U = orbit "horizontal" direction
+       V = orbit "depth" direction (into/out of screen)
+     The ellipse: pos = cos(a)*U*OA + sin(a)*V*OB
+     OA > R so rocket clears the globe visually.
+     OB controls how far in/out of screen it goes.
+
+     We choose:
+       U = normalize(cos(OT), -sin(OT)*sinTILT,  sin(OT)*cosTILT)  — diagonal in screen
+       V = (0, cosTILT, sinTILT)  — straight into/out of screen after tilt
+     This gives a clean diagonal ellipse with correct depth.
+  */
+  const OA = R+6.5,  OB = R*1.1;   // OB large → deep perspective travel
+  const cosTILT=Math.cos(TILT), sinTILT=Math.sin(TILT);
+
+  /* Orbit axes — explicitly screen-space:
+     U = screen right(+x) AND screen up(-y) → normalized diagonal stânga-jos→dreapta-sus
+     In canvas coords: right = +x, DOWN = +y, so UP = -y.
+     U screen = (1, -1) normalized = (0.707, -0.707)
+     We need to map screen-U back to world 3D for the projection.
+     Simpler: just use screenX and screenY directly.
+     
+     Orbit is a 2D ellipse in SCREEN space, tilted 45° so:
+       major axis along screen (right, up) = (+1,-1)/sqrt2
+       minor axis = depth (in/out of screen) = world Z after tilt
+     
+     Rocket screen position:
+       sx = CX + cos(a)*OA * cos45  + depth_offset_x (≈0 for V)
+       sy = CY + cos(a)*OA * (-sin45) + sin(a)*OB_screen_y
+     
+     Actually cleanest: define orbit entirely in SCREEN x,y + depth:
+       screenX = CX + cos(a)*OA*cos(PI/4)          = CX + cos(a)*OA*0.707
+       screenY = CY + cos(a)*OA*(-sin(PI/4))        = CY - cos(a)*OA*0.707  [UP = -y]
+       depth   = sin(a)*OB  (+1=front, -1=back)
+  */
+  const OA_DIAG = OA * 0.707; // projected onto each screen axis (45°)
+  const PHASE_OFFSET = Math.PI; // angle=PI → cos=-1 → stânga-jos start
+
+  let orbitAngle = PHASE_OFFSET;
+  let smoothH = 0;
+
+  /* Comet tail ring buffer */
+  const TAIL = 28;
+  const tailX=new Float32Array(TAIL).fill(CX);
+  const tailY=new Float32Array(TAIL).fill(CY);
+  const tailA=new Float32Array(TAIL).fill(0); // opacity at each point
+  let tPtr=0, tFill=0;
+
+  function pushTail(x,y,op){
+    tailX[tPtr]=x; tailY[tPtr]=y; tailA[tPtr]=op;
+    tPtr=(tPtr+1)%TAIL; if(tFill<TAIL) tFill++;
+  }
+
+  function drawTail() {
+    if(tFill<3) return;
+    ctx.save();
+    ctx.lineCap='round';
+    for(let i=1;i<Math.min(tFill,TAIL)-1;i++){
+      const a=(tPtr-i+TAIL)%TAIL;
+      const b=(tPtr-i-1+TAIL)%TAIL;
+      const t=i/(TAIL-1);
+      const headOp=tailA[(tPtr-1+TAIL)%TAIL];
+      const segAlpha=(1-t)*headOp*0.55;
+      if(segAlpha<0.01) continue;
+      const w=Math.max(0.2,(1-t)*2.0);
+      ctx.beginPath();
+      ctx.moveTo(tailX[b],tailY[b]);
+      ctx.lineTo(tailX[a],tailY[a]);
+      ctx.strokeStyle=`rgba(220,170,255,${segAlpha})`;
+      ctx.lineWidth=w;
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function rocketState(dt) {
+    orbitAngle += dt * 0.9; // ~7s per orbit
+
+    const a  = orbitAngle;
+    const ca = Math.cos(a), sa = Math.sin(a);
+
+    /* Screen-space orbit:
+       Major axis = diagonal (right,up) on screen → x+, y-
+       Minor axis = depth (in/out of screen)
+       angle=0   → rightmost point  (CX+OA_DIAG, CY-OA_DIAG) = top-right
+       angle=PI  → leftmost point   (CX-OA_DIAG, CY+OA_DIAG) = bottom-left ← START
+       angle=PI/2→ deepest (behind globe)
+       angle=3PI/2→ front (closest)
+       Going from PI→2PI→PI: bottom-left → behind → top-right → front → bottom-left
+    */
+    const screenX = CX + ca * OA_DIAG;
+    const screenY = CY - ca * OA_DIAG; // -y = up on screen
+
+    // Depth: NEGATED so rocket stays FRONT during BL→TR arc (sin flipped)
+    // sa=0 at BL/TR edges, sa=-1 at center-front → depth=+OB → closest ✓
+    const depth    = -sa * OB;
+    const isBehind = depth < -OB * 0.05;
+
+    // Perspective: normDepth 0=far-behind → 1=front
+    const normDepth = (depth + OB) / (2 * OB);
+    const scale     = 0.32 + normDepth * 0.68;
+    const opacity   = isBehind
+      ? Math.max(0, normDepth * 0.35)
+      : Math.max(0.08, normDepth * 0.95 + 0.05);
+
+    /* Heading: tangent of orbit in screen space
+       d/da screenX = -sa * OA_DIAG
+       d/da screenY = +sa * OA_DIAG  (since screenY = CY - ca*OA_DIAG → d = sa*OA_DIAG ... wait)
+       d/da (CY - ca*OA_DIAG) = sa*OA_DIAG  → positive when sa>0
+       So tangent vector = (-sa*OA_DIAG, sa*OA_DIAG) — but this gives only ±45°.
+       Rocket points along travel direction: atan2(dy, dx) + PI/2 (nose = forward)
+    */
+    const tdx = -sa * OA_DIAG;
+    const tdy =  sa * OA_DIAG; // screen Y increases downward, so +sa = downward when sa>0
+    // Actually when going from bottom-left(a=PI) → top-right(a=2PI=0):
+    // a goes PI→2PI, sa goes 0→0 (negative in between), ca goes -1→+1
+    // tdx = -sa*K: sa negative between PI..2PI → tdx positive → going right ✓
+    // tdy = sa*K: negative → going up (screen -y) ✓
+    const rawH = Math.atan2(tdy, tdx) + Math.PI/2;
+
+    let diff = rawH - smoothH;
+    while(diff >  Math.PI) diff -= 2*Math.PI;
+    while(diff < -Math.PI) diff += 2*Math.PI;
+    smoothH += diff * 0.08;
+
+    return {x:screenX, y:screenY, h:smoothH, isBehind, opacity, scale, depth, normDepth};
+  }
+
+  function drawRocket(rk) {
+    const sz=4.0*rk.scale;
+    const op=rk.opacity;
+    if(op<0.03||sz<0.3) return;
+
+    // Glow
+    ctx.save();
+    ctx.globalAlpha=op*0.45;
+    ctx.translate(rk.x,rk.y);
+    const gg=ctx.createRadialGradient(0,0,0,0,0,sz*1.8);
+    gg.addColorStop(0,'rgba(240,171,252,0.5)');
+    gg.addColorStop(1,'rgba(124,58,237,0)');
+    ctx.beginPath(); ctx.arc(0,0,sz*1.8,0,Math.PI*2);
+    ctx.fillStyle=gg; ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    ctx.globalAlpha=op;
+    ctx.translate(rk.x,rk.y);
+    ctx.rotate(rk.h);
+
+    // Flame
+    if(!rk.isBehind && op>0.3){
+      const fg=ctx.createLinearGradient(0,sz*0.4,0,sz*1.8);
+      fg.addColorStop(0,`rgba(251,191,36,${op*0.85})`);
+      fg.addColorStop(0.5,`rgba(248,100,100,${op*0.5})`);
+      fg.addColorStop(1,'rgba(139,92,246,0)');
+      ctx.beginPath();
+      ctx.moveTo(-sz*0.18,sz*0.4);
+      ctx.bezierCurveTo(-sz*0.28,sz*0.88,sz*0.28,sz*0.88,sz*0.18,sz*0.4);
+      ctx.bezierCurveTo(sz*0.08,sz*1.7,-sz*0.08,sz*1.7,-sz*0.18,sz*0.4);
+      ctx.fillStyle=fg; ctx.fill();
+    }
+
+    // Body
+    const bg=ctx.createLinearGradient(0,-sz,0,sz*0.6);
+    bg.addColorStop(0,`rgba(240,171,252,${op*0.72})`);
+    bg.addColorStop(1,`rgba(109,40,217,${op*0.52})`);
+    ctx.beginPath();
+    ctx.moveTo(0,-sz);
+    ctx.bezierCurveTo(sz*0.46,-sz*0.2,sz*0.46,sz*0.34,sz*0.24,sz*0.56);
+    ctx.lineTo(-sz*0.24,sz*0.56);
+    ctx.bezierCurveTo(-sz*0.46,sz*0.34,-sz*0.46,-sz*0.2,0,-sz);
+    ctx.fillStyle=bg; ctx.fill();
+
+    // Fins
+    ctx.beginPath();
+    ctx.moveTo(sz*0.22,sz*0.32); ctx.lineTo(sz*0.54,sz*0.64); ctx.lineTo(sz*0.24,sz*0.56);
+    ctx.fillStyle=`rgba(168,85,247,${op*0.46})`; ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-sz*0.22,sz*0.32); ctx.lineTo(-sz*0.54,sz*0.64); ctx.lineTo(-sz*0.24,sz*0.56);
+    ctx.fillStyle=`rgba(168,85,247,${op*0.46})`; ctx.fill();
+
+    // Window
+    const wg=ctx.createRadialGradient(-sz*0.05,-sz*0.04,0,0,0,sz*0.22);
+    wg.addColorStop(0,`rgba(255,255,255,${op*0.3})`);
+    wg.addColorStop(1,`rgba(192,132,252,${op*0.07})`);
+    ctx.beginPath(); ctx.arc(0,sz*0.06,sz*0.22,0,Math.PI*2);
+    ctx.fillStyle=wg; ctx.fill();
+
+    ctx.restore();
+  }
+
+  let lastTS=null;
+  function draw(ts){
+    const dt=lastTS===null?0.016:Math.min((ts-lastTS)/1000,0.05);
+    lastTS=ts;
+
+    // Re-apply scale in case DPR changed (zoom)
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    ctx.clearRect(0,0,SIZE,SIZE);
+
+    const spin=orbitAngle*SPIN; // globe spin coupled to orbit time
+    const pn=NODES.map(([phi,th])=>proj(phi,th+spin));
+    const rk=rocketState(dt);
+    pushTail(rk.x,rk.y,rk.opacity);
+
+    // 1) Halo
+    const halo=ctx.createRadialGradient(CX,CY,R*0.3,CX,CY,R*1.65);
+    halo.addColorStop(0,'rgba(109,40,217,0.22)');
+    halo.addColorStop(0.55,'rgba(139,92,246,0.09)');
+    halo.addColorStop(1,'rgba(109,40,217,0)');
+    ctx.beginPath(); ctx.arc(CX,CY,R*1.65,0,Math.PI*2);
+    ctx.fillStyle=halo; ctx.fill();
+
+    // 2) Globe glass
+    const gf=ctx.createRadialGradient(CX-3,CY-3.5,0.5,CX,CY,R);
+    gf.addColorStop(0,'rgba(192,132,252,0.16)');
+    gf.addColorStop(0.55,'rgba(109,40,217,0.08)');
+    gf.addColorStop(1,'rgba(55,48,163,0.04)');
+    ctx.beginPath(); ctx.arc(CX,CY,R,0,Math.PI*2);
+    ctx.fillStyle=gf; ctx.fill();
+
+    // 3) Rocket behind (ghost) + tail
+    if(rk.isBehind){ drawTail(); drawRocket(rk); }
+
+    // 4) Constellation lines + shooting stars
+    EDGES.forEach(([ai,bi],ei)=>{
+      const na=NODES[ai], nb=NODES[bi];
+      const za=pn[ai].z, zb=pn[bi].z;
+      const avgZ=(za+zb)*0.5;
+      if(avgZ<-0.12) return;
+      const vis=Math.max(0,Math.min(1,(avgZ+0.12)/0.88));
+
+      const pts=greatArc(na[0],na[1]+spin,nb[0],nb[1]+spin,8);
+
+      // Line
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x,pts[0].y);
+      for(let k=1;k<pts.length;k++) ctx.lineTo(pts[k].x,pts[k].y);
+      ctx.strokeStyle=`rgba(167,139,250,${vis*0.70})`;
+      ctx.lineWidth=0.55; ctx.stroke();
+
+      // Shooting star
+      const p=pulses[ei];
+      p.t+=p.spd*dt;
+      if(p.t>1.18){p.t=-0.06; p.spd=0.12+Math.random()*0.24;}
+      const pt=Math.max(0,Math.min(1,p.t));
+      if(pt<=0||pt>=1) return;
+
+      const fi=pt*(pts.length-1);
+      const i0=Math.floor(fi),i1=Math.min(i0+1,pts.length-1);
+      const fr=fi-i0;
+      const hx=pts[i0].x+(pts[i1].x-pts[i0].x)*fr;
+      const hy=pts[i0].y+(pts[i1].y-pts[i0].y)*fr;
+      const hz=pts[i0].z+(pts[i1].z-pts[i0].z)*fr;
+      const df=Math.max(0.1,(hz+0.5)/1.3);
+      const ti=Math.max(0,i0-2);
+      const tx=pts[ti].x,ty=pts[ti].y;
+      if(Math.abs(hx-tx)<0.001&&Math.abs(hy-ty)<0.001) return;
+
+      const lg=ctx.createLinearGradient(tx,ty,hx,hy);
+      lg.addColorStop(0,'rgba(216,180,254,0)');
+      lg.addColorStop(1,`rgba(248,215,255,${vis*df*1.65})`);
+      ctx.beginPath(); ctx.moveTo(tx,ty); ctx.lineTo(hx,hy);
+      ctx.strokeStyle=lg; ctx.lineWidth=0.8; ctx.stroke();
+
+      const dg=ctx.createRadialGradient(hx,hy,0,hx,hy,1.8);
+      dg.addColorStop(0,`rgba(255,235,255,${vis*df*1.45})`);
+      dg.addColorStop(1,'rgba(200,150,255,0)');
+      ctx.beginPath(); ctx.arc(hx,hy,1.8,0,Math.PI*2);
+      ctx.fillStyle=dg; ctx.fill();
+    });
+
+    // 5) Nodes
+    pn.forEach(n=>{
+      if(n.z<-0.18) return;
+      const a=Math.max(0,Math.min(1,(n.z+0.18)/1.0))*0.85;
+      const ng=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,2.1);
+      ng.addColorStop(0,`rgba(216,180,254,${a*0.72})`);
+      ng.addColorStop(1,'rgba(139,92,246,0)');
+      ctx.beginPath(); ctx.arc(n.x,n.y,2.1,0,Math.PI*2); ctx.fillStyle=ng; ctx.fill();
+      ctx.beginPath(); ctx.arc(n.x,n.y,0.68,0,Math.PI*2);
+      ctx.fillStyle=`rgba(240,210,255,${a})`; ctx.fill();
+    });
+
+    // 6) Glass sheen
+    const sh=ctx.createRadialGradient(CX-3.5,CY-3.5,0.2,CX-1,CY-1,R*0.85);
+    sh.addColorStop(0,'rgba(255,255,255,0.10)');
+    sh.addColorStop(0.4,'rgba(255,255,255,0.03)');
+    sh.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.beginPath(); ctx.arc(CX,CY,R,0,Math.PI*2); ctx.fillStyle=sh; ctx.fill();
+
+    // 7) Rocket front + tail
+    if(!rk.isBehind){ drawTail(); drawRocket(rk); }
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})(); });
+
+/* ─── ORYN COMET TEXT EFFECT ─── */
+document.addEventListener("DOMContentLoaded", function() { (function(){
+  document.fonts.ready.then(init);
+
+  function init(){
+    const span = document.getElementById('orynSpan');
+    const cv   = document.getElementById('orynComet');
+    if(!span||!cv) return;
+
+    const DPR = Math.min(window.devicePixelRatio||1, 3);
+    let W, H, FS;
+
+    function resize(){
+      W  = span.offsetWidth  || 64;
+      H  = span.offsetHeight || 24;
+      FS = parseFloat(getComputedStyle(span).fontSize) || 22;
+      cv.width  = Math.round(W*DPR);
+      cv.height = Math.round(H*DPR);
+      cv.style.width  = W+'px';
+      cv.style.height = H+'px';
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const ctx = cv.getContext('2d');
+
+    /* ── Sample real glyph outline via offscreen render ── */
+    function buildGlyphPath(){
+      const SCALE = 4;
+      const OW = Math.ceil(W*SCALE), OH = Math.ceil(H*SCALE);
+      const oc = document.createElement('canvas');
+      oc.width=OW; oc.height=OH;
+      const ox=oc.getContext('2d');
+      ox.clearRect(0,0,OW,OH);
+      ox.font=`700 ${FS*SCALE}px Outfit,sans-serif`;
+      ox.fillStyle='#fff';
+      ox.textBaseline='middle';
+      ox.fillText('ORYN', 0, OH/2);
+
+      const id=ox.getImageData(0,0,OW,OH);
+      const d=id.data;
+      const filled=(x,y)=>{
+        if(x<0||y<0||x>=OW||y>=OH) return false;
+        return d[(y*OW+x)*4+3]>30;
+      };
+
+      // Collect top and bottom edge per column
+      const topPts=[], botPts=[];
+      for(let x=0;x<OW;x++){
+        let top=-1, bot=-1;
+        for(let y=0;y<OH;y++){ if(filled(x,y)){top=y;break;} }
+        for(let y=OH-1;y>=0;y--){ if(filled(x,y)){bot=y;break;} }
+        if(top>=0){
+          topPts.push({x:x/SCALE, y:top/SCALE});
+          botPts.push({x:x/SCALE, y:bot/SCALE});
+        }
+      }
+      if(topPts.length===0) return null;
+
+      // Smooth outline: top L→R, bottom R→L, closed
+      const outline=[...topPts, ...[...botPts].reverse(), topPts[0]];
+
+      // Subsample to ~200 evenly-spaced points — removes column-by-column jitter
+      const total = outline.length;
+      const TARGET = 200;
+      const step = total / TARGET;
+      const simplified = [];
+      for(let i=0;i<TARGET;i++){
+        const idx = Math.round(i*step) % total;
+        simplified.push(outline[idx]);
+      }
+      simplified.push(simplified[0]); // close
+      return simplified;
+    }
+
+    /* Catmull-Rom → dense smooth path */
+    function catmull(pts, stepsPerSeg){
+      const out=[], n=pts.length;
+      for(let i=0;i<n-1;i++){
+        const p0=pts[Math.max(0,i-1)];
+        const p1=pts[i];
+        const p2=pts[i+1];
+        const p3=pts[Math.min(n-1,i+2)];
+        for(let j=0;j<stepsPerSeg;j++){
+          const t=j/stepsPerSeg, t2=t*t, t3=t2*t;
+          const x=0.5*((-p0.x+3*p1.x-3*p2.x+p3.x)*t3+(2*p0.x-5*p1.x+4*p2.x-p3.x)*t2+(-p0.x+p2.x)*t+2*p1.x);
+          const y=0.5*((-p0.y+3*p1.y-3*p2.y+p3.y)*t3+(2*p0.y-5*p1.y+4*p2.y-p3.y)*t2+(-p0.y+p2.y)*t+2*p1.y);
+          out.push({x,y});
+        }
+      }
+      out.push(pts[n-1]);
+      return out;
+    }
+
+    /* Arc-length reparametrize so comet moves at constant SPEED not constant index */
+    function arcLength(pts){
+      const lens=[0];
+      for(let i=1;i<pts.length;i++){
+        const dx=pts[i].x-pts[i-1].x, dy=pts[i].y-pts[i-1].y;
+        lens.push(lens[i-1]+Math.sqrt(dx*dx+dy*dy));
+      }
+      return lens;
+    }
+
+    function resampleByArcLength(pts, targetCount){
+      const lens=arcLength(pts);
+      const total=lens[lens.length-1];
+      const out=[];
+      for(let k=0;k<targetCount;k++){
+        const target=(k/targetCount)*total;
+        // binary search
+        let lo=0, hi=lens.length-1;
+        while(hi-lo>1){ let mid=(lo+hi)>>1; if(lens[mid]<=target) lo=mid; else hi=mid; }
+        const t=(target-lens[lo])/(lens[hi]-lens[lo]||1);
+        out.push({
+          x:pts[lo].x+(pts[hi].x-pts[lo].x)*t,
+          y:pts[lo].y+(pts[hi].y-pts[lo].y)*t
+        });
+      }
+      out.push(out[0]); // close
+      return out;
+    }
+
+    let path = null;
+    function buildPath(){
+      const raw = buildGlyphPath();
+      if(!raw) return;
+      const smooth = catmull(raw, 5);       // smooth out sharp corners
+      path = resampleByArcLength(smooth, 600); // 600 evenly-spaced points
+    }
+    buildPath();
+
+    /* ── Comet — long tail, constant speed ── */
+    // Tail: store last N path-indices, draw segments between them
+    const TAIL_LEN = 120;  // long tail — covers ~20% of path
+    const tailX = new Float32Array(TAIL_LEN);
+    const tailY = new Float32Array(TAIL_LEN);
+    let tPtr = 0, tFill = 0;
+
+    function pushTail(x,y){
+      tailX[tPtr]=x; tailY[tPtr]=y;
+      tPtr=(tPtr+1)%TAIL_LEN;
+      if(tFill<TAIL_LEN) tFill++;
+    }
+
+    // State
+    let pathIdx  = 0;       // current index into path[] (integer steps)
+    let phase    = 'run';   // 'run' | 'pause'
+    let pauseT   = 0;
+    const STEP_PER_SEC = 28; // path-points per second — slow, smooth
+    const PAUSE_DUR    = 2.5;
+
+    function reset(){
+      tFill=0; tPtr=0; pathIdx=0; phase='run';
+      buildPath();
+    }
+
+    let lastTS=null;
+    function draw(ts){
+      const dt = lastTS===null ? 0.016 : Math.min((ts-lastTS)/1000, 0.05);
+      lastTS = ts;
+
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+      ctx.clearRect(0,0,W,H);
+
+      if(phase==='pause'){
+        pauseT -= dt;
+        if(pauseT<=0) reset();
+        requestAnimationFrame(draw);
+        return;
+      }
+
+      if(!path || path.length<2){ requestAnimationFrame(draw); return; }
+
+      // Advance index
+      pathIdx += STEP_PER_SEC * dt;
+
+      if(pathIdx >= path.length - 1){
+        phase='pause'; pauseT=PAUSE_DUR;
+        requestAnimationFrame(draw);
+        return;
+      }
+
+      const i0  = Math.floor(pathIdx);
+      const fr  = pathIdx - i0;
+      const i1  = Math.min(i0+1, path.length-1);
+      const px  = path[i0].x + (path[i1].x-path[i0].x)*fr;
+      const py  = path[i0].y + (path[i1].y-path[i0].y)*fr;
+      pushTail(px, py);
+
+      /* ── Draw tail ──
+         Segments from head backward. Each segment:
+         - thinner + more transparent toward tip
+         - shadowBlur increases toward tip (blurry fade)
+         - color: white → warm white → transparent yellow-white
+      */
+      ctx.save();
+      ctx.lineCap  = 'round';
+      ctx.lineJoin = 'round';
+
+      const tailCount = Math.min(tFill, TAIL_LEN);
+      for(let ti=1; ti<tailCount; ti++){
+        const idxA = (tPtr - ti     + TAIL_LEN) % TAIL_LEN;
+        const idxB = (tPtr - ti - 1 + TAIL_LEN) % TAIL_LEN;
+        const tf   = ti / TAIL_LEN;
+
+        const alpha = Math.pow(1-tf, 1.6) * 0.39;
+        const lw    = Math.pow(1-tf, 0.7) * 2.2 + 0.12;
+
+        if(alpha < 0.006) break;
+
+        ctx.shadowColor = 'rgba(255,248,200,' + (alpha*0.5) + ')';
+        ctx.shadowBlur  = tf * 9;
+
+        const cr = 255;
+        const cg = Math.round(248 + tf*4);
+        const cb2 = Math.round(230 - tf*80);
+        ctx.beginPath();
+        ctx.moveTo(tailX[idxB], tailY[idxB]);
+        ctx.lineTo(tailX[idxA], tailY[idxA]);
+        ctx.strokeStyle = 'rgba(' + cr + ',' + cg + ',' + cb2 + ',' + alpha + ')';
+        ctx.lineWidth   = lw;
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      /* ── Head ── */
+      ctx.save();
+      ctx.shadowColor = 'rgba(255,252,200,0.7)';
+      ctx.shadowBlur  = 5;
+
+      const halo = ctx.createRadialGradient(px,py,0,px,py,4.5);
+      halo.addColorStop(0,'rgba(255,255,230,0.11)');
+      halo.addColorStop(1,'rgba(255,240,160,0)');
+      ctx.beginPath(); ctx.arc(px,py,4.5,0,Math.PI*2);
+      ctx.fillStyle=halo; ctx.fill();
+
+      const core = ctx.createRadialGradient(px,py,0,px,py,1.5);
+      core.addColorStop(0,'rgba(255,255,255,0.5)');
+      core.addColorStop(0.45,'rgba(255,252,210,0.45)');
+      core.addColorStop(1,'rgba(255,235,140,0)');
+      ctx.beginPath(); ctx.arc(px,py,1.5,0,Math.PI*2);
+      ctx.fillStyle=core; ctx.fill();
+      ctx.restore();
+
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  }
+})(); });
+
+/* ─── HEADBAR MOBILE TOGGLE ─── */
+document.getElementById('hbToggle').addEventListener('click',()=>{
+  const nav=document.getElementById('hbNav');
+  const icon=document.getElementById('hbIcon');
+  nav.classList.toggle('open');
+  icon.textContent=nav.classList.contains('open')?'close':'menu';
+});
+
+/* ─── DROPDOWNS ─── */
+document.querySelectorAll('.fi-row').forEach(row=>{
+  row.addEventListener('click',()=>{
+    const fi=row.closest('.fi');
+    const open=fi.classList.contains('open');
+    document.querySelectorAll('.fi').forEach(f=>f.classList.remove('open'));
+    if(!open)fi.classList.add('open');
+  });
+});
+
+/* ─── FAQ ─── */
+document.querySelectorAll('.faq-item').forEach(item=>{
+  item.querySelector('.faq-q').addEventListener('click',()=>{
+    const open=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!open)item.classList.add('open');
+  });
+});
+
+/* ─── FORM ─── */
+const form=document.getElementById('trialForm'),sb=document.getElementById('sb'),ss=document.getElementById('ss');
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  let valid=true;
+  form.querySelectorAll('[required]').forEach(f=>{
+    if(!f.value.trim()){f.style.borderColor='rgba(219,39,119,.8)';valid=false;}
+    else f.style.borderColor='';
+  });
+  if(!valid)return;
+  sb.disabled=true;
+  sb.textContent='Se procesează...';
+  const data={
+    firstname: document.getElementById('fn').value.trim(),
+    lastname:  document.getElementById('ln').value.trim(),
+    email:     document.getElementById('em').value.trim(),
+    phone:     document.getElementById('ph').value.trim(),
+    business:  document.getElementById('biz').value.trim(),
+    niche:     document.getElementById('ni').value.trim(),
+    leads_month: document.getElementById('le').value.trim(),
+    problem:   document.getElementById('pb').value.trim(),
+  };
+  try {
+    const res = await fetch('/api/leads', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    if(res.ok && json.success){
+      // Succes — arată mesajul de confirmare
+      form.style.display='none';
+      if(ss) ss.style.display='block';
+    } else {
+      throw new Error(json.error || 'Eroare necunoscută');
+    }
+  } catch(err){
+    sb.disabled=false;
+    sb.textContent='Vreau Acces Gratuit — 14 Zile →';
+    alert('A apărut o eroare: ' + err.message + '\nÎncearcă din nou sau contactează-ne direct.');
+  }
+});
+O
