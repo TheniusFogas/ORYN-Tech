@@ -363,29 +363,47 @@ body { background:var(--bg); color:var(--text); height:100vh; overflow:hidden; d
   async function loadPages() {
     try {
       const res = await fetch('/api/pages');
-      const { pages } = await res.json();
+      const data = await res.json();
+      
+      // API poate returna un array direct conform api/pages/index.js (L27: res.status(200).json(data))
+      // Sau un obiect { pages: [] } în funcție de versiunile anterioare. Gestionăm ambele.
+      const pages = Array.isArray(data) ? data : (data.pages || []);
+      
       const list = document.getElementById('pagesList');
       const select = document.getElementById('pageSelect');
-      
+      if(!list || !select) return;
+
       const currentSlug = editor.state?.slug;
       
+      if (pages.length === 0) {
+        list.innerHTML = '<div style="padding:20px;text-align:center;opacity:0.5;">Nicio pagină găsită.</div>';
+        select.innerHTML = '<option value="">Fără pagini</option>';
+        return;
+      }
+
       list.innerHTML = pages.map(p => `
         <div class="page-item ${currentSlug === p.slug ? 'active' : ''}" onclick="selectPage('${p.slug}')" data-slug="${p.slug}">
           <span class="material-symbols-rounded">article</span>
-          <span class="page-item-name">${p.title}</span>
+          <span class="page-item-name">${p.title || p.slug}</span>
           <span class="page-item-badge ${p.slug==='index'?'nav':''}">${p.slug === 'index' ? 'Home' : 'Pag'}</span>
         </div>
       `).join('');
 
       select.innerHTML = pages.map(p => `
-        <option value="${p.slug}">${p.title} ${p.slug==='index'?'(Home)':''}</option>
+        <option value="${p.slug}" ${currentSlug === p.slug ? 'selected' : ''}>${p.title || p.slug} ${p.slug==='index'?'(Home)':''}</option>
       `).join('');
       
-      if(currentSlug) select.value = currentSlug;
-      else if(pages.length) selectPage(pages[0].slug);
+      // Dacă nu avem o pagină încărcată, o încărcăm pe prima
+      if(!editor.state && pages.length > 0) {
+        selectPage(pages[0].slug);
+      } else if (currentSlug) {
+        select.value = currentSlug;
+      }
 
     } catch (err) {
       console.error('Eroare loadPages:', err);
+      const select = document.getElementById('pageSelect');
+      if(select) select.innerHTML = '<option value="error">Eroare la încărcare</option>';
     }
   }
 
