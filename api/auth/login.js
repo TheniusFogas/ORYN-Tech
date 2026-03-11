@@ -29,30 +29,16 @@ export default async function handler(req, res) {
   try {
     const db = getDB();
     
-    // DEBUG — Foolproof environment check
-    const url = process.env.SUPABASE_URL || 'https://yjquviufzsfpqqcezbny.supabase.co'; // Hardcoded fallback for emergency
-    const key = process.env.SUPABASE_SERVICE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqcXV2aXVmenNmcHFxY2V6Ym55Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MzE2OTA5MiwiZXhwIjoyMDg4NzQ1MDkyfQ.OP9sbsuhed6KUk8dwFSCcnC8Mm-xF3TBU5HXw9BFthk';
-
     // ── Caută userul în DB ─────────────────────────────
-    // Folosim o încercare directă cu fetch dacă Supabase client eșuează
-    let user = null;
-    let error = null;
+    const { data: user, error: dbErr } = await db
+      .from('users')
+      .select('id, email, name, role, password_hash')
+      .eq('email', emailClean)
+      .single();
 
-    try {
-      const { data, error: dbErr } = await db
-        .from('users')
-        .select('id, email, name, role, password_hash')
-        .eq('email', emailClean)
-        .single();
-      user = data;
-      error = dbErr;
-    } catch (e) {
-      error = { message: 'Supabase Client Crash: ' + e.message };
-    }
-
-    if (error || !user) {
+    if (dbErr || !user) {
       return res.status(401).json({ 
-        error: `Login Fail: ${error ? error.message : 'User inexistent'}. [E:${emailClean}] [U:${url.slice(0,25)}...]` 
+        error: dbErr ? `Eroare Bază de Date: ${dbErr.message}` : 'Utilizator sau parolă incorectă' 
       });
     }
 
@@ -63,7 +49,7 @@ export default async function handler(req, res) {
     // ── Verifică parola ────────────────────────────────
     const valid = await verifyPassword(password, user.password_hash);
     if (!valid) {
-      return res.status(401).json({ error: 'Parolă greșită pentru acest user' });
+      return res.status(401).json({ error: 'Utilizator sau parolă incorectă' });
     }
 
     // ── Generează JWT ──────────────────────────────────
