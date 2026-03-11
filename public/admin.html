@@ -63,7 +63,7 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
 /* ─── LAYOUT ─── */
 .adm-body{
   position:fixed;top:52px;bottom:0;left:0;right:0;
-  display:grid;grid-template-columns:220px 1fr 280px;
+  display:grid;grid-template-columns:250px 1fr 300px;
 }
 
 /* ─── LEFT PANEL — Pages + Widgets ─── */
@@ -394,21 +394,22 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
 /* Responsive hide */
 /* ─── MAIN NAV SIDEBAR ─── */
 .adm-nav {
-  width: 64px; flex-shrink: 0; background: rgba(10, 6, 21, 0.98);
-  border-right: 1px solid var(--border); display: flex; flex-direction: column;
+  width: 64px; flex-shrink: 0; background: #0a0615;
+  border-right: 1px solid var(--hair); display: flex; flex-direction: column;
   align-items: center; padding: 20px 0; gap: 15px; z-index: 105;
 }
 .adm-nav-item {
-  width: 44px; height: 44px; border-radius: 12px; display: flex;
+  width: 42px; height: 42px; border-radius: 10px; display: flex;
   align-items: center; justify-content: center; color: var(--dim);
   cursor: pointer; transition: all 0.2s; position: relative;
 }
-.adm-nav-item:hover { background: rgba(124, 58, 237, 0.15); color: var(--text); }
-.adm-nav-item.active { background: var(--purple); color: #fff; box-shadow: 0 0 15px rgba(124, 58, 237, 0.4); }
-.adm-nav-item .material-symbols-rounded { font-size: 24px; }
+.adm-nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+.adm-nav-item.active { background: var(--violet); color: #fff; box-shadow: 0 4px 15px rgba(109, 40, 217, 0.4); }
+.adm-nav-item .material-symbols-rounded { font-size: 22px; }
 
 /* ─── DASHBOARD VIEW ─── */
 .adm-main-view {
+  grid-column: 2 / 5;
   flex: 1; display: flex; flex-direction: column; overflow: hidden;
   background: var(--bg1); padding: 32px 40px;
 }
@@ -677,13 +678,10 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
 
 <!-- TOP BAR -->
 <div class="adm-top">
-  <a href="./index.html" class="hb-logo" style="text-decoration:none;margin-right:4px;">
-    <div class="globe-wrap">
-      <canvas class="globe-canvas" id="logoCanvas" width="72" height="72"></canvas>
-    </div>
-    <span class="hb-logo-text"><span class="oryn" id="orynSpan"><canvas class="oryn-comet" id="orynComet"></canvas>ORYN</span><span class="tech">Tech</span></span>
-  </a>
-  <span style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(167,139,250,.5);padding:3px 8px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.25);border-radius:6px;">Admin</span>
+  <div class="adm-logo">
+    <div class="adm-logo-dot"></div>
+    ORYN<span>Tech</span> Admin
+  </div>
   <div class="adm-sep"></div>
   <select class="adm-page-select" id="pageSelect">
     <option value="index">Homepage</option>
@@ -706,31 +704,12 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
 </div>
 
 <div class="adm-body">
-  <!-- ─── SIDEBAR NAVIGATION (Narrow) ─── -->
-  <div class="adm-nav">
-    <div class="adm-nav-item active" data-view="editor" title="Editor">
-      <span class="material-symbols-rounded">edit_note</span>
-    </div>
-    <div class="adm-nav-item" data-view="dashboard" title="Leads & Stats">
-      <span class="material-symbols-rounded">bar_chart</span>
-    </div>
-    <div class="adm-nav-item" data-view="media" title="Media Library">
-      <span class="material-symbols-rounded">image</span>
-    </div>
-    <div class="adm-nav-item" data-view="settings" title="Global Settings">
-      <span class="material-symbols-rounded">settings</span>
-    </div>
-    <div class="adm-spacer"></div>
-    <div class="adm-nav-item" id="logoutBtn" title="Logout">
-      <span class="material-symbols-rounded">logout</span>
-    </div>
-  </div>
 
   <!-- ─── LEFT PANEL (Pages/Widgets) ─── -->
   <div class="adm-left" id="sidebarEditor">
     <div class="adm-left-tabs">
-      <div class="adm-ltab active" data-ltab="pages">PAGINI</div>
-      <div class="adm-ltab" data-ltab="widgets">WIDGETS</div>
+      <div class="adm-ltab active" data-ltab="pages" style="font-size:11px; font-weight:700;">PAGINI</div>
+      <div class="adm-ltab" data-ltab="widgets" style="font-size:11px; font-weight:700;">WIDGETS</div>
     </div>
     <div class="adm-left-body">
       <!-- Pages tab -->
@@ -891,13 +870,23 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
     onStateChange: (state) => {
       renderCanvas();
       updateSidebarSections();
+      // Dacă avem o secțiune selectată, forțăm re-randarea proprietăților
+      if (editor.selected) {
+        const sec = editor.state.sections.find(s => s.id === editor.selected);
+        if (sec) propPanel.render(sec);
+      }
     },
     onSelectionChange: (section, prop = null) => {
+      const rightPanel = document.querySelector('.adm-right');
       if (section) {
+        if (rightPanel) rightPanel.style.display = 'flex';
         propPanel.render(section);
+        document.getElementById('propPanelTitle').textContent = `PROPRIETĂȚI ${WIDGET_DEFINITIONS[section.type]?.label.toUpperCase() || section.type.toUpperCase()}`;
         if (prop) propPanel.scrollToField(prop);
       } else {
+        if (rightPanel) rightPanel.style.display = 'flex';
         renderPageSettings(editor.state);
+        document.getElementById('propPanelTitle').textContent = 'SETĂRI PAGINĂ';
       }
       // Sync sidebar selection
       document.querySelectorAll('#sectionsList .section-row').forEach(el => {
@@ -938,89 +927,17 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
     loadPages();
     renderWidgets();
     initUIEvents();
-    loadLeads();
+    initUIEvents();
     checkAuth();
-    // Default to editor view after all inits
+    // Default view
     setTimeout(async () => {
-      switchView('editor');
-      // Dacă nu s-a încărcat nicio pagină automat, forțăm index
       if (!editor.state) await selectPage('index');
     }, 200);
   }
 
   window.addEventListener('DOMContentLoaded', initApp);
 
-  function switchView(view) {
-    // Hide all views
-    document.getElementById('viewDashboard').style.display = 'none';
-    document.getElementById('admCanvas').style.display = 'none';
-    document.getElementById('sidebarEditor').style.display = 'none';
-    document.querySelector('.adm-right').style.display = 'none';
-
-    // Remove active class from nav
-    document.querySelectorAll('.adm-nav-item').forEach(i => i.classList.remove('active'));
-    document.querySelector(`[data-view="${view}"]`)?.classList.add('active');
-
-    if (view === 'dashboard') {
-      document.getElementById('viewDashboard').style.display = 'flex';
-      document.getElementById('sidebarEditor').style.display = 'none';
-      document.querySelector('.adm-right').style.display = 'none';
-      document.getElementById('admCanvas').style.display = 'none';
-    } else if (view === 'editor') {
-      document.getElementById('viewDashboard').style.display = 'none';
-      document.getElementById('sidebarEditor').style.display = 'flex';
-      document.getElementById('admCanvas').style.display = 'flex';
-      document.querySelector('.adm-right').style.display = 'flex';
-      renderCanvas();
-    }
-  }
-
-  async function loadLeads() {
-    try {
-      const res = await fetch('/api/admin/leads', {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('oryn_admin_token')}` }
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-
-      const tableBody = document.getElementById('leadsTableBody');
-      const leads = data.leads || [];
-      
-      document.getElementById('totalLeadsCount').textContent = data.total || leads.length;
-      
-      const today = new Date().toISOString().split('T')[0];
-      const todayCount = leads.filter(l => l.created_at.startsWith(today)).length;
-      document.getElementById('todayLeadsCount').textContent = todayCount;
-
-      tableBody.innerHTML = leads.map(l => `
-        <tr>
-          <td>${new Date(l.created_at).toLocaleString('ro-RO')}</td>
-          <td><div class="lead-name">${l.firstname} ${l.lastname}</div></td>
-          <td>
-            <div class="lead-info">${l.email}</div>
-            <div class="lead-info">${l.phone || '-'}</div>
-          </td>
-          <td><div class="lead-name">${l.business || '-'}</div><div class="lead-info">${l.niche || '-'}</div></td>
-          <td style="max-width:200px; font-size:11px; white-space:normal;">${l.details || '-'}</td>
-          <td>
-            <button class="cs-tool" title="Vezi detalii"><span class="material-symbols-rounded">visibility</span></button>
-            <button class="cs-tool" style="color:#f87171" title="Șterge"><span class="material-symbols-rounded">delete</span></button>
-          </td>
-        </tr>
-      `).join('');
-
-    } catch (err) { console.error('Error loadLeads:', err); }
-  }
-
   function initUIEvents() {
-    // Nav Navigation (Main tabs)
-    document.querySelectorAll('.adm-nav-item[data-view]').forEach(item => {
-      item.addEventListener('click', () => switchView(item.dataset.view));
-    });
-
-    // Refresh Leads
-    document.getElementById('refreshLeadsBtn')?.addEventListener('click', loadLeads);
-
     // Logout
     document.getElementById('logoutBtn')?.addEventListener('click', () => {
       localStorage.removeItem('oryn_admin_token');
@@ -1109,9 +1026,8 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
 
       pages.forEach(p => {
         // Sidebar item
-        const isNav = p.slug === 'index' || p.location === 'nav';
-        const badgeLabel = isNav ? 'Nav' : 'Pag';
-        const badgeClass = isNav ? 'nav' : 'pag';
+        const badgeLabel = p.slug === 'index' ? 'Nav' : (p.location === 'nav' ? 'Nav' : (p.location === 'standalone' ? 'Standalone' : 'Pag'));
+        const badgeClass = badgeLabel.toLowerCase();
         
         const item = document.createElement('div');
         item.className = `page-item ${editor.state?.slug === p.slug ? 'active' : ''}`;
@@ -1188,7 +1104,8 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
       const pageData = {
         slug: data.slug,
         title: data.title,
-        sections: data.content?.sections || []
+        location: data.location,
+        sections: data.content?.sections || data.sections || []
       };
       
       editor.loadPage(pageData);
@@ -1384,7 +1301,6 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
           return;
         }
         document.getElementById('loginScreen').style.display = 'none';
-        document.querySelector('.adm-nav').style.display = 'flex'; // Ensure main nav is visible
         document.querySelector('.adm-top').style.display = '';
         document.querySelector('.adm-body').style.display = '';
         document.getElementById('statusText').textContent = 'Bun venit, ' + (user.name || user.email);
