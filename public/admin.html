@@ -678,9 +678,11 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
 
 <!-- TOP BAR -->
 <div class="adm-top">
-  <div class="adm-logo">
-    <div class="adm-logo-dot"></div>
-    ORYN<span>Tech</span> Admin
+  <div class="hb-logo" style="margin-right:12px; cursor:default;">
+    <div class="globe-wrap">
+      <canvas class="globe-canvas" id="logoCanvas" width="72" height="72"></canvas>
+    </div>
+    <span class="hb-logo-text"><span class="oryn" id="orynSpan"><canvas class="oryn-comet" id="orynComet"></canvas>ORYN</span><span class="tech">Tech</span> Admin</span>
   </div>
   <div class="adm-sep"></div>
   <select class="adm-page-select" id="pageSelect">
@@ -927,7 +929,6 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
     loadPages();
     renderWidgets();
     initUIEvents();
-    initUIEvents();
     checkAuth();
     // Default view
     setTimeout(async () => {
@@ -1012,17 +1013,18 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
   // ─── DATA LOADING ───
   async function loadPages() {
     try {
-      const res = await fetch('/api/pages');
+      const res = await fetch('/api/pages', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('oryn_admin_token')}` }
+      });
       const data = await res.json();
       const pages = Array.isArray(data) ? data : (data.pages || []);
       
       const select = document.getElementById('pageSelect');
-      const list = document.getElementById('pagesTab');
+      const list = document.getElementById('pagesList'); // Inserăm direct în listă
       const addBtn = document.getElementById('addPageBtn');
 
-      // Curățăm lista actuală (păstrăm doar butonul add la final)
-      const existingItems = list.querySelectorAll('.page-item');
-      existingItems.forEach(el => el.remove());
+      // Curățăm lista actuală
+      list.innerHTML = '';
 
       pages.forEach(p => {
         // Sidebar item
@@ -1038,8 +1040,7 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
           <span class="page-item-badge ${badgeClass}">${badgeLabel}</span>
         `;
         item.addEventListener('click', () => selectPage(p.slug));
-        if (addBtn) list.insertBefore(item, addBtn);
-        else list.appendChild(item);
+        list.appendChild(item);
 
         // Select option
         const opt = document.createElement('option');
@@ -1098,7 +1099,10 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
 
   window.selectPage = async (slug) => {
     try {
-      const res = await fetch(`/api/pages/${slug}`);
+      const res = await fetch(`/api/pages/${slug}`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('oryn_admin_token')}` }
+      });
+      if (!res.ok) throw new Error('Nu s-a putut încărca pagina');
       const data = await res.json();
       
       const pageData = {
@@ -1966,115 +1970,10 @@ document.addEventListener("DOMContentLoaded", function() { (function(){
 
 
 
-/* ─── HEADBAR MOBILE TOGGLE ─── */
-document.getElementById('hbToggle').addEventLis
-
-// ─── AUTH LOGIC ───────────────────────────────────────
-const TOKEN_KEY = 'oryn_admin_token';
-
-async function checkAuth() {
-  const token = localStorage.getItem(TOKEN_KEY);
-  if (!token) { showLoginScreen(); return; }
-  try {
-    const res = await fetch('/api/auth/verify', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    if (res.ok) {
-      const { user } = await res.json();
-      hideLoginScreen(user);
-    } else {
-      localStorage.removeItem(TOKEN_KEY);
-      showLoginScreen();
-    }
-  } catch {
-    // Offline sau eroare — permite acces cu token existent
-    const stored = localStorage.getItem(TOKEN_KEY);
-    if (stored) hideLoginScreen({ email: 'Admin', name: 'Admin' });
-    else showLoginScreen();
-  }
-}
-
-function showLoginScreen() {
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.querySelector('.adm-top').style.display = 'none';
-  document.querySelector('.adm-body').style.display = 'none';
-}
-
-function hideLoginScreen(user) {
-  document.getElementById('loginScreen').style.display = 'none';
-  document.querySelector('.adm-top').style.display = '';
-  document.querySelector('.adm-body').style.display = '';
-  if (user) {
-    // Afișează numele în topbar
-    const statusEl = document.getElementById('statusText');
-    if (statusEl) statusEl.textContent = 'Bun venit, ' + (user.name || user.email);
-  }
-}
-
-document.getElementById('loginBtn').addEventListener('click', async () => {
-  const email    = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value;
-  const errEl    = document.getElementById('loginError');
-  const btn      = document.getElementById('loginBtn');
-
-  errEl.style.display = 'none';
-  if (!email || !password) {
-    errEl.textContent = 'Completează email și parola.';
-    errEl.style.display = 'block';
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = 'Se conectează...';
-
-  try {
-    const res  = await fetch('/api/auth/login', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ email, password }),
-    });
-    const json = await res.json();
-
-    if (res.ok && json.token) {
-      localStorage.setItem(TOKEN_KEY, json.token);
-      hideLoginScreen(json.user);
-      showToast('Autentificat cu succes!');
-    } else {
-      errEl.textContent = json.error || 'Eroare la autentificare';
-      errEl.style.display = 'block';
-    }
-  } catch (err) {
-    errEl.textContent = 'Eroare de conexiune. Verifică internetul.';
-    errEl.style.display = 'block';
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<span class="material-symbols-rounded">lock_open</span>Intră în Admin';
-  }
-});
-
-// Enter key pe câmpurile de login
-['loginEmail','loginPassword'].forEach(id => {
-  document.getElementById(id).addEventListener('keydown', e => {
-    if (e.key === 'Enter') document.getElementById('loginBtn').click();
+  // Mobile toggle logic can stay if needed, but fixed
+  document.getElementById('hbToggle')?.addEventListener('click', () => {
+    // toggle menu logic here if needed
   });
-});
-
-document.getElementById('loginGoogleBtn').addEventListener('click', () => {
-  showToast('Google OAuth — în curând disponibil');
-});
-
-// Logout din topbar save button (Ctrl+Shift+L)
-document.addEventListener('keydown', e => {
-  if (e.ctrlKey && e.shiftKey && e.key === 'L') {
-    localStorage.removeItem(TOKEN_KEY);
-    showLoginScreen();
-    showToast('Deconectat');
-  }
-});
-
-// Init
-checkAuth();
-
 </script>
 </body>
 </html>
