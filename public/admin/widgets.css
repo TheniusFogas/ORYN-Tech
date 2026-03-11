@@ -1,4 +1,33 @@
-/* public/admin/widgets.css */
+
+/* ════ TESTIMONIALS ════ */
+.testi-grid { display: grid; gap: 20px; }
+.testi-card { padding: 24px; border-radius: 20px; position: relative; }
+.testi-card.gl.base { background: rgba(255,255,255,0.03); border: 1px solid var(--border); }
+.testi-stars { color: #fbbf24; font-size: 14px; margin-bottom: 12px; }
+.testi-text { font-size: 14px; line-height: 1.6; font-style: italic; color: var(--muted); margin-bottom: 16px; }
+.testi-author { display: flex; align-items: center; gap: 12px; }
+.testi-avatar, .testi-avatar-ph { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: var(--purple); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+.testi-name { font-size: 13.5px; font-weight: 700; color: var(--text); }
+.testi-role { font-size: 11px; color: var(--dim); }
+
+/* ════ FORM ════ */
+.form-card { padding: 40px; border-radius: 24px; background: rgba(21,12,46,0.6); border: 1px solid var(--border); backdrop-filter: blur(10px); }
+.form-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; text-align: center; }
+.form-sub { font-size: 14px; color: var(--dim); text-align: center; margin-bottom: 32px; }
+.form-fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.form-field.half { grid-column: span 1; }
+.form-field:not(.half) { grid-column: span 2; }
+.fl { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--dim); margin-bottom: 6px; }
+.fi { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; padding: 12px; color: var(--text); font-family: inherit; }
+.btn-submit { width: 100%; padding: 14px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--purple), var(--pink)); color: #fff; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+/* ════ CTA BANNER ════ */
+.w-cta { border-radius: 20px; overflow: hidden; position: relative; }
+.cta-title { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+.cta-sub { font-size: 15px; color: var(--muted); margin-bottom: 28px; max-width: 600px; margin-left: auto; margin-right: auto; }
+.cta-actions { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.cta-btn-sec { padding: 12px 28px; border-radius: 12px; border: 1px solid var(--purple); color: var(--text); font-weight: 600; text-decoration: none; transition: background 0.2s; }
+.cta-btn-sec:hover { background: rgba(124,58,237,0.1); }
 /* Stiluri extrase din index.html pentru randarea fidelă în Editor */
 
 :root {
@@ -20,7 +49,9 @@
 }
 
 /* WIDGET BASE */
-.sec { position: relative; width: 100%; transition: all 0.2s; }
+.sec { position: relative; width: 100%; transition: all 0.2s; cursor: pointer; }
+.sec:hover { background: rgba(124, 58, 237, 0.02); box-shadow: inset 0 0 40px rgba(124, 58, 237, 0.05); }
+.sec.selected { outline: 2px solid var(--purple); outline-offset: -2px; background: rgba(124, 58, 237, 0.04); }
 .sec-empty { padding: 40px; text-align: center; color: var(--dim); border: 1px dashed var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; }
 
 /* ════ HERO ════ */
@@ -28,7 +59,12 @@
 .eyebrow { display:inline-flex; align-items:center; gap:8px; font-size:10px; font-weight:500; letter-spacing:3.5px; text-transform:uppercase; color:#8a84aa; margin-bottom:18px; }
 .ey-line { width:22px; height:1px; background:rgba(255,255,255,0.15); }
 .hero-title { font-size:clamp(32px, 5vw, 64px); font-weight:700; line-height:1.1; letter-spacing:-1.5px; margin-bottom: 20px; }
-.hero-title .g { background: linear-gradient(120deg, #c084fc, #e879f9, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero-title .g { 
+  background: linear-gradient(120deg, #c084fc, #e879f9, #818cf8); 
+  -webkit-background-clip: text; 
+  background-clip: text;
+  -webkit-text-fill-color: transparent; 
+}
 .hero-sub { font-size:15px; font-weight:300; color:#b0aacf; line-height:1.7; max-width:520px; margin:0 auto 24px; }
 .cta-btn { display:inline-flex; align-items:center; gap:8px; padding:12px 28px; border-radius:12px; background:linear-gradient(135deg, var(--purple), var(--pink)); color:#fff; font-weight:700; text-decoration:none; box-shadow:0 10px 30px rgba(124,58,237,0.4); }
 

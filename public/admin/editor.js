@@ -126,12 +126,24 @@ export class Editor {
   updateProps(id, newProps) {
     const sections = this.state.sections.map(s => {
       if (s.id !== id) return s;
-      return { ...s, props: { ...s.props, ...newProps } };
+      
+      let updatedProps = { ...s.props };
+      if (newProps._isRepeater) {
+        const { key, idx, subKey, value } = newProps;
+        const items = [...(s.props[key] || [])];
+        if (items[idx]) {
+          items[idx] = { ...items[idx], [subKey]: value };
+          updatedProps[key] = items;
+        }
+      } else {
+        updatedProps = { ...s.props, ...newProps };
+      }
+      
+      return { ...s, props: updatedProps };
     });
     this.state = { ...this.state, sections };
     this._markDirty();
     this._emit();
-    // Nu push history la fiecare keystroke — pushem la blur/confirm
   }
 
   updatePropsWithHistory(id, newProps) {

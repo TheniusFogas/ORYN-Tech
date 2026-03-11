@@ -290,7 +290,9 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
   width:100%;background:rgba(255,255,255,.05);
   border:1px solid rgba(139,92,246,.2);border-radius:8px;
   color:var(--text);font-size:13px;padding:8px 10px;
-  cursor:pointer;outline:none;-webkit-appearance:none;
+  cursor:pointer;outline:none;  -webkit-appearance:none;
+  appearance:none;
+  outline:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%238a84aa' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 8px center;background-size:16px;
   padding-right:28px;
@@ -439,30 +441,89 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
   .adm-body{grid-template-columns:0 1fr 0;}
   .adm-left,.adm-right{display:none;}
 }
-  
-/* ─── LOGO (shared with site) ─── */
-.headbar{
-  position:fixed;top:0;left:0;right:0;z-index:200;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 32px;height:56px;
-  background:rgba(13,7,32,0.82);
-  border-bottom:1px solid rgba(139,92,246,.18);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  box-shadow:0 2px 32px rgba(124,58,237,.1);
+  /* ─── EDITOR TOOLBARS ─── */
+.cs-toolbar {
+  position: absolute; top: 0; right: 0; z-index: 100;
+  background: var(--bg2); border: 1px solid var(--border);
+  display: flex; gap: 4px; padding: 4px; border-radius: 0 0 0 12px;
+  backdrop-filter: blur(10px); opacity: 0; transition: opacity .2s;
+  pointer-events: auto;
 }
+.sec:hover .cs-toolbar, .sec.selected .cs-toolbar { opacity: 1; }
+.cs-tool {
+  width: 28px; height: 28px; border-radius: 6px; border: none;
+  background: none; color: var(--dim); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.cs-tool:hover { background: var(--accent); color: var(--text); }
+.cs-tool .material-symbols-rounded { font-size: 16px; }
+
+.sec.selected { outline: 2px solid var(--purple); outline-offset: -2px; }
+
+/* ─── PROPERTIES FIELDS ─── */
+.prop-group { margin-bottom: 20px; }
+.prop-label { 
+  display: block; font-size: 11px; font-weight: 700; 
+  text-transform: uppercase; color: var(--dim); 
+  letter-spacing: .8px; margin-bottom: 8px; 
+}
+.prop-input {
+  width: 100%; background: rgba(255,255,255,.05);
+  border: 1px solid var(--border); border-radius: 9px;
+  color: var(--text); font-size: 13px; padding: 10px;
+  outline: none; transition: border-color .15s;
+  font-family: inherit;
+}
+.prop-input:focus { border-color: var(--purple); }
+.prop-textarea { resize: vertical; min-height: 60px; }
+.prop-select {
+  width: 100%; background: var(--bg2);
+  border: 1px solid var(--border); border-radius: 9px;
+  color: var(--text); font-size: 13px; padding: 8px;
+  cursor: pointer;
+}
+.prop-color-row { display: flex; gap: 8px; align-items: center; }
+.prop-color { 
+  width: 36px; height: 32px; padding: 2px; border-radius: 8px; 
+  border: 1px solid var(--border); background: var(--bg2); cursor: pointer;
+}
+
+.pp-icon-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin-top: 8px; }
+.pp-icon-option {
+  width: 100%; aspect-ratio: 1/1; border-radius: 6px; border: 1px solid transparent;
+  background: rgba(255,255,255,.03); color: var(--dim); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: all .15s;
+}
+.pp-icon-option:hover { background: var(--accent); color: var(--text); }
+.pp-icon-option.active { border-color: var(--purple); background: var(--accent-h); color: var(--text); }
+
+.prop-toggle {
+  position: relative; width: 36px; height: 18px; cursor: pointer;
+}
+.prop-toggle-track {
+  position: absolute; inset: 0; background: rgba(255,255,255,.1);
+  border-radius: 20px; transition: .2s;
+}
+.prop-toggle input:checked + .prop-toggle-track { background: var(--purple); }
+.prop-toggle-track::after {
+  content: ''; position: absolute; top: 3px; left: 3px; width: 12px; height: 12px;
+  background: #fff; border-radius: 50%; transition: .2s;
+}
+.prop-toggle input:checked + .prop-toggle-track::after { left: 21px; }
+
+</style>/* ─── LOGO (shared with site) ─── */
 .hb-logo{
   text-decoration:none;color:var(--text);display:flex;align-items:center;gap:10px;flex-shrink:0;
 }
 .hb-logo-text{font-family:'Outfit',sans-serif;font-size:22px;color:#fff;line-height:1;position:relative;}
 .hb-logo-text .oryn{font-weight:700;letter-spacing:2px;text-transform:uppercase;position:relative;}
 .hb-logo-text .tech{font-weight:500;letter-spacing:1.2px;}
-/* Comet canvas sits behind ORYN text */
 .oryn-comet{
   position:absolute;inset:0;
   pointer-events:none;
   width:100%;height:100%;
 }
-/* ─── GLOBE LOGO ─── */
 .globe-wrap{
   position:relative;width:48px;height:48px;flex-shrink:0;
 }
@@ -488,22 +549,9 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
 }
 .hb-login .material-symbols-rounded{font-size:14px;color:rgba(167,139,250,.8);}
 .hb-login:hover{background:rgba(124,58,237,.25);border-color:rgba(167,139,250,.6);box-shadow:0 0 20px rgba(124,58,237,.2);}
-.hb-mobile-btn{display:none;background:none;border:none;cursor:pointer;color:#b0aacf;padding:4px;}
-.hb-mobile-btn .material-symbols-rounded{font-size:22px;}
-.page{padding-top:80px!important;}
-@media(max-width:700px){
-  .headbar{padding:0 16px;}
-  .hb-nav{display:none;position:fixed;top:56px;left:0;right:0;
-    flex-direction:column;align-items:stretch;gap:2px;
-    background:rgba(13,7,32,.97);border-bottom:1px solid rgba(139,92,246,.2);
-    padding:10px 12px 14px;backdrop-filter:blur(20px);}
-  .hb-nav.open{display:flex;}
-  .hb-nav a{font-size:13px;padding:10px 14px;}
-  .hb-mobile-btn{display:flex;align-items:center;}
-}
 
-/* ─── page top padding ─── */
-.page{padding-top:80px!important;}
+/* override headbar position for admin topbar */
+.headbar{display:none!important;}
 
 /* ─── FOOTER ─── */
 .site-footer{
@@ -647,7 +695,8 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
   <div class="adm-sep"></div>
   <button class="adm-btn adm-btn-ghost" id="previewBtn"><span class="material-symbols-rounded">visibility</span>Preview</button>
   <button class="adm-btn adm-btn-ghost" id="saveBtn"><span class="material-symbols-rounded">save</span>Salvează</button>
-  <button class="adm-btn adm-btn-primary" id="publishBtn"><span class="material-symbols-rounded">publish</span>Publică</button>
+  <button class="adm-btn adm-btn-primary" id="publishBtn"><span class="material-symbols-rounded">rocket_launch</span>Publică</button>
+  <button class="adm-btn adm-btn-ghost" style="color:#f87171" id="deletePageBtn" title="Șterge Pagina"><span class="material-symbols-rounded">delete</span></button>
 </div>
 
 <!-- BODY -->
@@ -655,10 +704,10 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
 
   <!-- MAIN SIDEBAR NAVIGATION (NEW) -->
   <div class="adm-nav">
-    <div class="adm-nav-item active" data-view="dashboard" title="Dashboard">
+    <div class="adm-nav-item" data-view="dashboard" title="Dashboard">
       <span class="material-symbols-rounded">dashboard</span>
     </div>
-    <div class="adm-nav-item" data-view="editor" title="Editor Pagini">
+    <div class="adm-nav-item active" data-view="editor" title="Editor Pagini">
       <span class="material-symbols-rounded">edit_square</span>
     </div>
     <div class="adm-nav-item" data-view="media" title="Media Library">
@@ -789,7 +838,7 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
         <button class="emb-btn" id="openPageBtn"><span class="material-symbols-rounded">open_in_new</span>Deschide</button>
         <button class="emb-btn" id="addSectionBtn"><span class="material-symbols-rounded">add</span>Secțiune nouă</button>
       </div>
-      <iframe class="page-iframe" id="pageIframe" src="./index.html" title="Page Preview"></iframe>
+      <div id="canvasContent" style="padding:40px; min-height:100%;"></div>
     </div>
   </div>
 
@@ -799,57 +848,6 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
       <span class="adm-right-title" id="propPanelTitle">Proprietăți Hero</span>
       <button class="cs-tool" id="closePropBtn"><span class="material-symbols-rounded">close</span></button>
     </div>
-    <div class="adm-right-body" id="propBody">
-
-      <!-- Hero props (default) -->
-      <div id="propHero">
-        <div class="prop-group">
-          <div class="prop-label"><span class="material-symbols-rounded" style="font-size:12px">title</span>Titlu principal</div>
-          <input class="prop-input" type="text" value="Business-ul tău pe Pilot Automat." id="heroPropTitle">
-        </div>
-        <div class="prop-group">
-          <div class="prop-label"><span class="material-symbols-rounded" style="font-size:12px">notes</span>Subtitlu</div>
-          <textarea class="prop-input prop-textarea" id="heroPropSub">Sistemul complet de AI automation care transformă haosul operațional într-un motor de vânzări care lucrează 24/7.</textarea>
-        </div>
-        <div class="prop-group">
-          <div class="prop-label"><span class="material-symbols-rounded" style="font-size:12px">ads_click</span>Text buton CTA</div>
-          <input class="prop-input" type="text" value="Încearcă 14 Zile Gratuit" id="heroPropCta">
-        </div>
-        <div class="prop-group">
-          <div class="prop-label"><span class="material-symbols-rounded" style="font-size:12px">link</span>Link buton</div>
-          <input class="prop-input" type="text" value="./trial.html" id="heroPropLink">
-        </div>
-        <div class="prop-group">
-          <div class="prop-label"><span class="material-symbols-rounded" style="font-size:12px">format_size</span>Dimensiune titlu</div>
-          <div class="prop-row">
-            <select class="prop-select">
-              <option>Mic (32px)</option>
-              <option selected>Mediu (48px)</option>
-              <option>Mare (64px)</option>
-            </select>
-            <select class="prop-select">
-              <option>Stânga</option>
-              <option selected>Centru</option>
-              <option>Dreapta</option>
-            </select>
-          </div>
-        </div>
-        <div class="prop-group">
-          <div class="prop-label"><span class="material-symbols-rounded" style="font-size:12px">interests</span>Icoană buton</div>
-          <input class="icon-search prop-input" type="text" placeholder="Caută icoană..." id="iconSearchInput">
-          <div class="icon-grid" id="iconGrid"></div>
-        </div>
-        <div class="prop-group">
-          <div class="prop-label"><span class="material-symbols-rounded" style="font-size:12px">palette</span>Culoare fundal</div>
-          <div class="prop-color-row">
-            <input type="color" class="prop-color" value="#0d0720">
-            <select class="prop-select" style="flex:1;">
-              <option selected>Gradient mov-roz</option>
-              <option>Solid</option>
-              <option>Transparent</option>
-            </select>
-          </div>
-        </div>
         <div class="prop-group">
           <div class="prop-label">Padding vertical</div>
           <input class="prop-input" type="range" min="20" max="120" value="60" style="padding:6px 0;">
@@ -992,23 +990,17 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
   propPanel._getSection = (id) => editor.state?.sections.find(s => s.id === id);
 
   // ─── INITIALIZATION ───
-  window.addEventListener('DOMContentLoaded', () => {
-    // Înlocuim Iframe-ul cu un Div pentru editare directă (Păstrăm design-ul frame-ului)
-    const frame = document.getElementById('canvasFrame');
-    const iframe = document.getElementById('pageIframe');
-    if (iframe) {
-      const div = document.createElement('div');
-      div.id = 'canvasContent';
-      div.style.minHeight = '700px';
-      iframe.replaceWith(div);
-    }
-
+  function initApp() {
     loadPages();
     renderWidgets();
     initUIEvents();
-    loadLeads(); // Load leads initially for dashboard
+    loadLeads();
     checkAuth();
-  });
+    // Default to editor view after all inits
+    setTimeout(() => switchView('editor'), 100);
+  }
+
+  window.addEventListener('DOMContentLoaded', initApp);
 
   function switchView(view) {
     // Hide all views
@@ -1023,7 +1015,8 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
 
     if (view === 'dashboard') {
       document.getElementById('viewDashboard').style.display = 'flex';
-    } else if (view === 'editor') {
+    } else if (view === 'editor' || view === 'media' || view === 'settings') {
+      // For now media/settings are also in editor view context or placeholders
       document.getElementById('admCanvas').style.display = 'flex';
       document.getElementById('sidebarEditor').style.display = 'flex';
       document.querySelector('.adm-right').style.display = 'flex';
@@ -1142,6 +1135,10 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
       const type = e.dataTransfer.getData('type');
       if (type) editor.addSection(type);
     });
+
+    // Add/Delete Page
+    document.getElementById('addPageBtn')?.addEventListener('click', addPage);
+    document.getElementById('deletePageBtn')?.addEventListener('click', deleteCurrentPage);
   }
 
   // ─── DATA LOADING ───
@@ -1185,6 +1182,48 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
     } catch (err) { console.error('Error loadPages:', err); }
   }
 
+  async function addPage() {
+    const title = prompt('Titlu pagină nouă:');
+    if (!title) return;
+    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    try {
+      const res = await fetch('/api/pages', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('oryn_admin_token')}`
+        },
+        body: JSON.stringify({ title, slug, content: { sections: [] } })
+      });
+      if (res.ok) {
+        showToast('Pagină creată!');
+        loadPages();
+      } else {
+        const err = await res.json();
+        showToast('Eroare: ' + (err.error || 'Slug existent?'));
+      }
+    } catch (err) { showToast('Eroare la creare!'); }
+  }
+
+  async function deleteCurrentPage() {
+    if (!editor.state || editor.state.slug === 'index') {
+      showToast('Nu poți șterge pagina principală!');
+      return;
+    }
+    if (!confirm(`Ești sigur că vrei să ștergi pagina "${editor.state.title}"?`)) return;
+    
+    try {
+      const res = await fetch(`/api/pages/${editor.state.slug}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('oryn_admin_token')}` }
+      });
+      if (res.ok) {
+        showToast('Pagină ștearsă!');
+        window.location.reload();
+      }
+    } catch (err) { showToast('Eroare la ștergere!'); }
+  }
+
   window.selectPage = async (slug) => {
     try {
       const res = await fetch(`/api/pages/${slug}`);
@@ -1206,8 +1245,7 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
       document.getElementById('currentPageLabel').textContent = data.title;
       document.getElementById('currentPageUrl').textContent = `/${slug}`;
       
-      // Update global page settings in prop panel UI if needed
-      this._lastSelection = null;
+      // Update global page settings in prop panel UI
       renderPageSettings(data);
 
     } catch (err) { console.error('Error selectPage:', err); }
@@ -1273,7 +1311,19 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
             const action = btn.title || btn.dataset.action; // depending on renderer
             const id = el.dataset.sectionId;
             if (action === 'Șterge') editor.deleteSection(id);
-            if (action === 'Duplică') editor.duplicateSection(id);
+            if (action === 'Duplică') {
+              editor._pushHistory();
+              const sec = editor.state.sections.find(s => s.id === id);
+              const newSec = JSON.parse(JSON.stringify(sec));
+              newSec.id = 'sec_' + Math.random().toString(36).substr(2, 9);
+              const idx = editor.state.sections.findIndex(s => s.id === id);
+              const newSections = [...editor.state.sections];
+              newSections.splice(idx + 1, 0, newSec);
+              editor.state = { ...editor.state, sections: newSections };
+              editor._reorder(editor.state.sections);
+              editor._markDirty();
+              editor._emit();
+            }
             if (action === 'Mută sus') editor.moveSection(id, 'up');
             if (action === 'Mută jos') editor.moveSection(id, 'down');
           });
