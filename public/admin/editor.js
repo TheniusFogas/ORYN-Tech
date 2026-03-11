@@ -17,6 +17,7 @@ export class Editor {
     this.history   = [];     // undo stack
     this.future    = [];     // redo stack
     this.selected  = null;   // id secțiune selectată
+    this.selectedProp = null; // proprietatea elementului selectat granular
     this.dirty     = false;  // modificări nesalvate
     this.dragState = null;   // drag-drop state
 
@@ -160,10 +161,11 @@ export class Editor {
   }
 
   // ── SELECTION ─────────────────────────────────────────
-  select(id) {
+  select(id, prop = null) {
     this.selected = id;
+    this.selectedProp = prop;
     const section = id ? this.state.sections.find(s => s.id === id) : null;
-    this.onSelectionChange(section);
+    this.onSelectionChange(section, prop);
   }
 
   deselect() {

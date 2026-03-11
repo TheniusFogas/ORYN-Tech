@@ -63,6 +63,21 @@ export class PropertiesPanel {
     this._bindEvents(section);
   }
 
+  scrollToField(key) {
+    if (!key) return;
+    const field = this.container.querySelector(`[data-key="${key}"], [data-rep-key="${key.split('[')[0]}"]`);
+    if (field) {
+      const group = field.closest('.prop-group');
+      if (group) {
+        group.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        group.style.transition = 'background 0.5s';
+        group.style.background = 'rgba(124, 58, 237, 0.2)';
+        setTimeout(() => { group.style.background = ''; }, 1500);
+      }
+      field.focus();
+    }
+  }
+
   // ── FIELD RENDERERS ───────────────────────────────────
   _renderField(field, value, sectionId) {
     const v = value !== undefined ? value : '';

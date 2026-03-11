@@ -70,15 +70,17 @@ export class PageRenderer {
   // ── HERO ──────────────────────────────────────────────
   render_hero({ eyebrow, title, subtitle, ctaText, ctaLink, ctaIcon = 'rocket_launch',
     align = 'center', paddingY = 80, showEyebrow = true, showCta = true } = {}, ea = '') {
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    
     return `<section class="sec w-hero" style="padding:${paddingY}px 40px;text-align:${align}"${ea}>
-      ${showEyebrow && eyebrow ? `<div class="eyebrow">
+      ${showEyebrow && eyebrow ? `<div class="eyebrow"${edit('eyebrow')}>
         <span class="ey-line"></span>${this.esc(eyebrow)}<span class="ey-line"></span>
       </div>` : ''}
-      <div class="hero-title">${this.renderGradientTitle(title)}</div>
-      ${subtitle ? `<p class="hero-sub">${this.esc(subtitle)}</p>` : ''}
+      <div class="hero-title"${edit('title')}>${this.renderGradientTitle(title)}</div>
+      ${subtitle ? `<p class="hero-sub"${edit('subtitle')}>${this.esc(subtitle)}</p>` : ''}
       ${showCta && ctaText ? `<a href="${this.esc(ctaLink || '#')}" class="cta-btn">
-        <span class="material-symbols-rounded">${this.esc(ctaIcon)}</span>
-        ${this.esc(ctaText)}
+        <span class="material-symbols-rounded"${edit('ctaIcon')}>${this.esc(ctaIcon)}</span>
+        <span${edit('ctaText')}>${this.esc(ctaText)}</span>
       </a>` : ''}
     </section>`;
   }
@@ -86,22 +88,26 @@ export class PageRenderer {
   // ── TEXT ──────────────────────────────────────────────
   render_text({ title, content = '', align = 'left', fontSize = 15,
     paddingY = 32, paddingX = 40, showTitle = false } = {}, ea = '') {
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    
     return `<section class="sec w-text" style="padding:${paddingY}px ${paddingX}px;text-align:${align}"${ea}>
-      ${showTitle && title ? `<h2 class="sec-title">${this.esc(title)}</h2>` : ''}
-      <div class="sec-text-body" style="font-size:${fontSize}px">${this.nl2br(content)}</div>
+      ${showTitle && title ? `<h2 class="sec-title"${edit('title')}>${this.esc(title)}</h2>` : ''}
+      <div class="sec-text-body" style="font-size:${fontSize}px"${edit('content')}>${this.nl2br(content)}</div>
     </section>`;
   }
 
   // ── IMAGE ─────────────────────────────────────────────
   render_image({ src, alt = '', caption = '', width = '100%', borderRadius = 12,
     paddingY = 24, paddingX = 40, showCaption = false } = {}, ea = '') {
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    
     if (!src) return `<section class="sec w-image sec-empty"${ea} style="padding:${paddingY}px ${paddingX}px">
       <span class="material-symbols-rounded">image</span> Adaugă o imagine
     </section>`;
     return `<section class="sec w-image" style="padding:${paddingY}px ${paddingX}px"${ea}>
-      <img src="${this.esc(src)}" alt="${this.esc(alt)}"
+      <img src="${this.esc(src)}" alt="${this.esc(alt)}"${edit('src')}
         style="width:${width};border-radius:${borderRadius}px;display:block;margin:auto">
-      ${showCaption && caption ? `<p class="img-caption">${this.esc(caption)}</p>` : ''}
+      ${showCaption && caption ? `<p class="img-caption"${edit('caption')}>${this.esc(caption)}</p>` : ''}
     </section>`;
   }
 
@@ -117,16 +123,17 @@ export class PageRenderer {
     return `<section class="sec w-video" style="padding:${paddingY}px ${paddingX}px"${ea}>
       <div style="position:relative;padding-bottom:56.25%;border-radius:${borderRadius}px;overflow:hidden">
         <iframe src="${this.esc(embedUrl)}" frameborder="0" allowfullscreen
-          style="position:absolute;inset:0;width:100%;height:100%"></iframe>
+          style="position:absolute;inset:0;width:100%;height:100%" data-editable="true" data-prop="url"></iframe>
       </div>
     </section>`;
   }
 
   // ── STATS ─────────────────────────────────────────────
   render_stats({ items = [], columns = 4, paddingY = 40, paddingX = 40 } = {}, ea = '') {
-    const cells = items.map(it => `<div class="st">
-      <div class="st-v">${this.esc(it.value)}</div>
-      <div class="st-l">${this.esc(it.label)}</div>
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    const cells = items.map((it, idx) => `<div class="st">
+      <div class="st-v"${edit(`items[${idx}].value`)}>${this.esc(it.value)}</div>
+      <div class="st-l"${edit(`items[${idx}].label`)}>${this.esc(it.label)}</div>
     </div>`).join('');
     return `<section class="sec w-stats" style="padding:${paddingY}px ${paddingX}px"${ea}>
       <div class="stats" style="grid-template-columns:repeat(${columns},1fr)">${cells}</div>
@@ -136,13 +143,14 @@ export class PageRenderer {
   // ── CARDS ─────────────────────────────────────────────
   render_cards({ title = '', showTitle = true, cards = [], columns = 3,
     paddingY = 40, paddingX = 40 } = {}, ea = '') {
-    const cells = cards.map(c => `<div class="feat-card gl base">
-      <div class="fc-icon"><span class="material-symbols-rounded">${this.esc(c.icon || 'star')}</span></div>
-      <div class="fc-title">${this.esc(c.title)}</div>
-      <div class="fc-desc">${this.esc(c.desc)}</div>
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    const cells = cards.map((c, idx) => `<div class="feat-card gl base">
+      <div class="fc-icon"><span class="material-symbols-rounded"${edit(`cards[${idx}].icon`)}>${this.esc(c.icon || 'star')}</span></div>
+      <div class="fc-title"${edit(`cards[${idx}].title`)}>${this.esc(c.title)}</div>
+      <div class="fc-desc"${edit(`cards[${idx}].desc`)}>${this.esc(c.desc)}</div>
     </div>`).join('');
     return `<section class="sec w-cards" style="padding:${paddingY}px ${paddingX}px"${ea}>
-      ${showTitle && title ? `<h2 class="sec-title">${this.esc(title)}</h2>` : ''}
+      ${showTitle && title ? `<h2 class="sec-title"${edit('title')}>${this.esc(title)}</h2>` : ''}
       <div class="feat-grid" style="grid-template-columns:repeat(${columns},1fr)">${cells}</div>
     </section>`;
   }
@@ -150,15 +158,16 @@ export class PageRenderer {
   // ── FAQ ───────────────────────────────────────────────
   render_faq({ title = 'FAQ', showTitle = true, items = [],
     paddingY = 40, paddingX = 40 } = {}, ea = '') {
-    const rows = items.map(it => `<div class="faq-item">
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    const rows = items.map((it, idx) => `<div class="faq-item">
       <div class="faq-q">
-        <span>${this.esc(it.q)}</span>
+        <span${edit(`items[${idx}].q`)}>${this.esc(it.q)}</span>
         <span class="material-symbols-rounded fi-chev">expand_more</span>
       </div>
-      <div class="faq-a">${this.nl2br(it.a)}</div>
+      <div class="faq-a"${edit(`items[${idx}].a`)}>${this.nl2br(it.a)}</div>
     </div>`).join('');
     return `<section class="sec w-faq" style="padding:${paddingY}px ${paddingX}px"${ea}>
-      ${showTitle && title ? `<h2 class="sec-title">${this.esc(title)}</h2>` : ''}
+      ${showTitle && title ? `<h2 class="sec-title"${edit('title')}>${this.esc(title)}</h2>` : ''}
       <div class="faq-list">${rows}</div>
     </section>`;
   }
@@ -167,17 +176,19 @@ export class PageRenderer {
   render_cta({ title = '', subtitle = '', ctaText = '', ctaLink = '#',
     ctaIcon = 'rocket_launch', secondaryText = '', secondaryLink = '#',
     showSecondary = false, paddingY = 56, bgStyle = 'gradient' } = {}, ea = '') {
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
     const bg = bgStyle === 'gradient'
       ? 'background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(219,39,119,.1))'
       : bgStyle === 'solid' ? 'background:rgba(255,255,255,.04)' : '';
     return `<section class="sec w-cta" style="padding:${paddingY}px 40px;text-align:center;${bg}"${ea}>
-      ${title ? `<h2 class="cta-title">${this.esc(title)}</h2>` : ''}
-      ${subtitle ? `<p class="cta-sub">${this.esc(subtitle)}</p>` : ''}
+      ${title ? `<h2 class="cta-title"${edit('title')}>${this.esc(title)}</h2>` : ''}
+      ${subtitle ? `<p class="cta-sub"${edit('subtitle')}>${this.esc(subtitle)}</p>` : ''}
       <div class="cta-actions">
         ${ctaText ? `<a href="${this.esc(ctaLink)}" class="cta-btn">
-          <span class="material-symbols-rounded">${this.esc(ctaIcon)}</span>${this.esc(ctaText)}
+          <span class="material-symbols-rounded"${edit('ctaIcon')}>${this.esc(ctaIcon)}</span>
+          <span${edit('ctaText')}>${this.esc(ctaText)}</span>
         </a>` : ''}
-        ${showSecondary && secondaryText ? `<a href="${this.esc(secondaryLink)}" class="cta-btn-sec">
+        ${showSecondary && secondaryText ? `<a href="${this.esc(secondaryLink)}" class="cta-btn-sec"${edit('secondaryText')}>
           ${this.esc(secondaryText)}
         </a>` : ''}
       </div>
@@ -187,23 +198,24 @@ export class PageRenderer {
   // ── PRICING ───────────────────────────────────────────
   render_pricing({ title = '', subtitle = '', showTitle = true, plans = [],
     paddingY = 56, paddingX = 40 } = {}, ea = '') {
-    const cards = plans.map(p => `<div class="price-card gl ${p.highlighted ? 'highlighted' : 'base'}">
-      ${p.badge ? `<div class="price-badge">${this.esc(p.badge)}</div>` : ''}
-      <div class="price-name">${this.esc(p.name)}</div>
-      <div class="price-amount">
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    const cards = plans.map((p, idx) => `<div class="price-card gl ${p.highlighted ? 'highlighted' : 'base'}">
+      ${p.badge ? `<div class="price-badge"${edit(`plans[${idx}].badge`)}>${this.esc(p.badge)}</div>` : ''}
+      <div class="price-name"${edit(`plans[${idx}].name`)}>${this.esc(p.name)}</div>
+      <div class="price-amount"${edit(`plans[${idx}].price`)}>
         <span class="price-cur">${this.esc(p.currency || '$')}</span>
         <span class="price-val">${this.esc(p.price)}</span>
         <span class="price-per">${this.esc(p.period || '/lună')}</span>
       </div>
-      ${p.total ? `<div class="price-total">${this.esc(p.total)}</div>` : ''}
+      ${p.total ? `<div class="price-total"${edit(`plans[${idx}].total`)}>${this.esc(p.total)}</div>` : ''}
       <ul class="price-features">
-        ${(p.features || []).map(f => `<li><span class="material-symbols-rounded">check_circle</span>${this.esc(f)}</li>`).join('')}
+        ${(p.features || []).map((f, fidx) => `<li${edit(`plans[${idx}].features[${fidx}]`)}><span class="material-symbols-rounded">check_circle</span>${this.esc(f)}</li>`).join('')}
       </ul>
-      <a href="${this.esc(p.ctaLink || '#')}" class="cta-btn">${this.esc(p.ctaText || 'Alege planul')}</a>
+      <a href="${this.esc(p.ctaLink || '#')}" class="cta-btn"${edit(`plans[${idx}].ctaText`)}>${this.esc(p.ctaText || 'Alege planul')}</a>
     </div>`).join('');
     return `<section class="sec w-pricing" style="padding:${paddingY}px ${paddingX}px"${ea}>
-      ${showTitle && title ? `<h2 class="sec-title">${this.esc(title)}</h2>` : ''}
-      ${subtitle ? `<p class="sec-subtitle">${this.esc(subtitle)}</p>` : ''}
+      ${showTitle && title ? `<h2 class="sec-title"${edit('title')}>${this.esc(title)}</h2>` : ''}
+      ${subtitle ? `<p class="sec-subtitle"${edit('subtitle')}>${this.esc(subtitle)}</p>` : ''}
       <div class="pricing-grid">${cards}</div>
     </section>`;
   }
@@ -211,19 +223,20 @@ export class PageRenderer {
   // ── TESTIMONIALS ──────────────────────────────────────
   render_testimonials({ title = '', showTitle = true, items = [], columns = 3,
     paddingY = 48, paddingX = 40 } = {}, ea = '') {
-    const cards = items.map(t => `<div class="testi-card gl base">
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    const cards = items.map((t, idx) => `<div class="testi-card gl base">
       <div class="testi-stars">${'★'.repeat(t.rating || 5)}</div>
-      <div class="testi-text">${this.esc(t.text)}</div>
+      <div class="testi-text"${edit(`items[${idx}].text`)}>${this.esc(t.text)}</div>
       <div class="testi-author">
-        ${t.avatar ? `<img src="${this.esc(t.avatar)}" class="testi-avatar">` : `<div class="testi-avatar-ph">${this.esc((t.name||'?')[0])}</div>`}
+        ${t.avatar ? `<img src="${this.esc(t.avatar)}" class="testi-avatar"${edit(`items[${idx}].avatar`)}>` : `<div class="testi-avatar-ph"${edit(`items[${idx}].name`)}>${this.esc((t.name||'?')[0])}</div>`}
         <div>
-          <div class="testi-name">${this.esc(t.name)}</div>
-          <div class="testi-role">${this.esc(t.role)}</div>
+          <div class="testi-name"${edit(`items[${idx}].name`)}>${this.esc(t.name)}</div>
+          <div class="testi-role"${edit(`items[${idx}].role`)}>${this.esc(t.role)}</div>
         </div>
       </div>
     </div>`).join('');
     return `<section class="sec w-testimonials" style="padding:${paddingY}px ${paddingX}px"${ea}>
-      ${showTitle && title ? `<h2 class="sec-title">${this.esc(title)}</h2>` : ''}
+      ${showTitle && title ? `<h2 class="sec-title"${edit('title')}>${this.esc(title)}</h2>` : ''}
       <div class="testi-grid" style="grid-template-columns:repeat(${columns},1fr)">${cards}</div>
     </section>`;
   }
@@ -232,31 +245,32 @@ export class PageRenderer {
   render_form({ title = '', subtitle = '', showTitle = true, fields = [],
     submitText = 'Trimite', submitIcon = 'send', successMessage = 'Mulțumim!',
     paddingY = 48, paddingX = 40 } = {}, ea = '') {
-    const inputs = fields.map(f => {
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    const inputs = fields.map((f, idx) => {
       const cls = f.half ? 'form-field half' : 'form-field';
       const req = f.required ? 'required' : '';
       if (f.type === 'textarea') {
         return `<div class="${cls}">
-          <label class="fl">${this.esc(f.label)}${f.required ? ' *' : ''}</label>
+          <label class="fl"${edit(`fields[${idx}].label`)}>${this.esc(f.label)}${f.required ? ' *' : ''}</label>
           <textarea name="${this.esc(f.name)}" class="fi" rows="4" ${req}></textarea>
         </div>`;
       }
       return `<div class="${cls}">
-        <label class="fl">${this.esc(f.label)}${f.required ? ' *' : ''}</label>
+        <label class="fl"${edit(`fields[${idx}].label`)}>${this.esc(f.label)}${f.required ? ' *' : ''}</label>
         <input type="${this.esc(f.type || 'text')}" name="${this.esc(f.name)}" class="fi" ${req}>
       </div>`;
     }).join('');
     return `<section class="sec w-form" style="padding:${paddingY}px ${paddingX}px"${ea}>
       <div class="form-card gl base">
-        ${showTitle && title ? `<h2 class="form-title">${this.esc(title)}</h2>` : ''}
-        ${subtitle ? `<p class="form-sub">${this.esc(subtitle)}</p>` : ''}
+        ${showTitle && title ? `<h2 class="form-title"${edit('title')}>${this.esc(title)}</h2>` : ''}
+        ${subtitle ? `<p class="form-sub"${edit('subtitle')}>${this.esc(subtitle)}</p>` : ''}
         <form class="dyn-form" data-success="${this.esc(successMessage)}">
           <div class="form-fields-grid">${inputs}</div>
-          <button type="submit" class="btn-submit">
-            <span class="material-symbols-rounded">${this.esc(submitIcon)}</span>
-            ${this.esc(submitText)}
+          <button type="button" class="btn-submit">
+            <span class="material-symbols-rounded"${edit('submitIcon')}>${this.esc(submitIcon)}</span>
+            <span${edit('submitText')}>${this.esc(submitText)}</span>
           </button>
-          <div class="form-success" style="display:none">${this.esc(successMessage)}</div>
+          <div class="form-success" style="display:none"${edit('successMessage')}>${this.esc(successMessage)}</div>
         </form>
       </div>
     </section>`;
@@ -264,7 +278,8 @@ export class PageRenderer {
 
   // ── COLUMNS ───────────────────────────────────────────
   render_columns({ cols = 2, gap = 24, cells = [], paddingY = 32, paddingX = 40 } = {}, ea = '') {
-    const cellHtml = cells.map(c => `<div class="col-cell">${this.nl2br(c.content || '')}</div>`).join('');
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    const cellHtml = cells.map((c, idx) => `<div class="col-cell"${edit(`cells[${idx}].content`)}>${this.nl2br(c.content || '')}</div>`).join('');
     return `<section class="sec w-cols" style="padding:${paddingY}px ${paddingX}px"${ea}>
       <div class="cols-layout" style="display:grid;grid-template-columns:repeat(${cols},1fr);gap:${gap}px">
         ${cellHtml}
@@ -275,7 +290,7 @@ export class PageRenderer {
   // ── HTML CUSTOM ───────────────────────────────────────
   render_html({ code = '', paddingY = 24, paddingX = 40 } = {}, ea = '') {
     return `<section class="sec w-html" style="padding:${paddingY}px ${paddingX}px"${ea}>
-      ${code}
+      <div data-editable="true" data-prop="code">${code || '<em>Cod HTML custom</em>'}</div>
     </section>`;
   }
 
@@ -300,7 +315,7 @@ export class PageRenderer {
 
   renderGradientTitle(title = '') {
     // Ultimul cuvânt primește gradient
-    const words = title.trim().split(' ');
+    const words = String(title || '').trim().split(' ');
     if (words.length <= 1) return `<span class="g">${this.esc(title)}</span>`;
     const last = words.pop();
     return `${this.esc(words.join(' '))} <span class="g">${this.esc(last)}</span>`;
