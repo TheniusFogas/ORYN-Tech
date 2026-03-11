@@ -702,6 +702,9 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
   <button class="adm-btn adm-btn-ghost" style="color:#f87171" id="deletePageBtn" title="Șterge Pagina"><span class="material-symbols-rounded">delete</span></button>
 </div>
 
+<!-- BODY -->
+<div class="adm-body">
+
   <!-- LEFT PANEL — Pages + Widgets ─── -->
   <div class="adm-left" id="sidebarEditor">
     <div class="adm-left-tabs">
@@ -712,6 +715,11 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
 
       <!-- Pages tab -->
       <div id="pagesTab" class="pages-panel">
+          <div id="pagesList"></div>
+          <button class="add-page-btn" id="addPageBtn">
+            <span class="material-symbols-rounded">add</span>Pagină nouă
+          </button>
+      </div>
 
       <!-- Widgets tab -->
       <div id="widgetsTab" style="display:none;" class="widgets-panel">
@@ -739,8 +747,8 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
     </div>
   </div>
 
-  <!-- DASHBOARD VIEW (NEW) -->
-  <div class="adm-main-view" id="viewDashboard">
+  <!-- DASHBOARD VIEW -->
+  <div class="adm-main-view" id="viewDashboard" style="display:none;">
     <div class="view-header">
       <div class="view-title">Dashboard & Leads</div>
       <div class="view-actions">
@@ -798,33 +806,14 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
     </div>
   </div>
 
-  <!-- RIGHT: Properties -->
-  <div class="adm-right">
-    <div class="adm-right-head">
-      <span class="adm-right-title" id="propPanelTitle">Proprietăți Hero</span>
+  <!-- RIGHT: Properties Panel -->
+  <div class="adm-right" style="display:none;">
+    <div class="adm-right-head" style="border-bottom:1px solid var(--border); margin-bottom:16px;">
+      <span class="adm-right-title" id="propPanelTitle">Proprietăți</span>
       <button class="cs-tool" id="closePropBtn"><span class="material-symbols-rounded">close</span></button>
     </div>
-        <div class="prop-group">
-          <div class="prop-label">Padding vertical</div>
-          <input class="prop-input" type="range" min="20" max="120" value="60" style="padding:6px 0;">
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Footer editor section -->
-    <div style="border-top:1px solid var(--border);padding:14px 16px;">
-      <div style="font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-bottom:10px;">Footer</div>
-      <div style="font-size:11.5px;color:var(--muted);margin-bottom:8px;">Coloane footer:</div>
-      <div class="col-picker" id="footerColPicker">
-        <button class="col-btn" data-cols="0">0</button>
-        <button class="col-btn" data-cols="1">1</button>
-        <button class="col-btn" data-cols="2">2</button>
-        <button class="col-btn active" data-cols="3">3</button>
-        <button class="col-btn" data-cols="4">4</button>
-        <button class="col-btn" data-cols="5">5</button>
-        <button class="col-btn" data-cols="6">6</button>
-      </div>
+    <div id="propBody" style="padding:0 16px 40px;">
+       <!-- Dinamic injectat de PropertiesPanel -->
     </div>
   </div>
 
@@ -954,7 +943,11 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
     loadLeads();
     checkAuth();
     // Default to editor view after all inits
-    setTimeout(() => switchView('editor'), 100);
+    setTimeout(async () => {
+      switchView('editor');
+      // Dacă nu s-a încărcat nicio pagină automat, forțăm index
+      if (!editor.state) await selectPage('index');
+    }, 200);
   }
 
   window.addEventListener('DOMContentLoaded', initApp);
@@ -972,10 +965,13 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
 
     if (view === 'dashboard') {
       document.getElementById('viewDashboard').style.display = 'flex';
-    } else if (view === 'editor' || view === 'media' || view === 'settings') {
-      // For now media/settings are also in editor view context or placeholders
-      document.getElementById('admCanvas').style.display = 'flex';
+      document.getElementById('sidebarEditor').style.display = 'none';
+      document.querySelector('.adm-right').style.display = 'none';
+      document.getElementById('admCanvas').style.display = 'none';
+    } else if (view === 'editor') {
+      document.getElementById('viewDashboard').style.display = 'none';
       document.getElementById('sidebarEditor').style.display = 'flex';
+      document.getElementById('admCanvas').style.display = 'flex';
       document.querySelector('.adm-right').style.display = 'flex';
       renderCanvas();
     }
@@ -1124,7 +1120,8 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
           <span class="page-item-badge ${p.slug === 'index' ? 'nav' : ''}">${p.slug === 'index' ? 'Home' : 'Pag'}</span>
         `;
         item.addEventListener('click', () => selectPage(p.slug));
-        list.insertBefore(item, addBtn);
+        if (addBtn) list.insertBefore(item, addBtn);
+        else list.appendChild(item);
 
         // Select option
         const opt = document.createElement('option');
