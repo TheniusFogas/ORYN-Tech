@@ -1681,25 +1681,8 @@ document.getElementById('hbToggle').addEventLis
 const TOKEN_KEY = 'oryn_admin_token';
 
 async function checkAuth() {
-  const token = localStorage.getItem(TOKEN_KEY);
-  if (!token) { showLoginScreen(); return; }
-  try {
-    const res = await fetch('/api/auth/verify', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    if (res.ok) {
-      const { user } = await res.json();
-      hideLoginScreen(user);
-    } else {
-      localStorage.removeItem(TOKEN_KEY);
-      showLoginScreen();
-    }
-  } catch {
-    // Offline sau eroare — permite acces cu token existent
-    const stored = localStorage.getItem(TOKEN_KEY);
-    if (stored) hideLoginScreen({ email: 'Admin', name: 'Admin' });
-    else showLoginScreen();
-  }
+  // LOGIN DEZACTIVAT TEMPORAR — acces direct fără autentificare
+  hideLoginScreen({ name: 'Admin', email: 'admin@oryntech.com' });
 }
 
 function showLoginScreen() {
