@@ -37,8 +37,7 @@ export default async function handler(req, res) {
       .single();
 
     if (error || !user) {
-      // Nu da hint că emailul nu există (securitate)
-      return res.status(401).json({ error: 'Email sau parolă incorectă' });
+      return res.status(401).json({ error: 'User inexistente în DB: ' + (error ? error.message : 'Niciun rezultat') });
     }
 
     if (!user.password_hash) {
@@ -48,7 +47,7 @@ export default async function handler(req, res) {
     // ── Verifică parola ────────────────────────────────
     const valid = await verifyPassword(password, user.password_hash);
     if (!valid) {
-      return res.status(401).json({ error: 'Email sau parolă incorectă' });
+      return res.status(401).json({ error: 'Parolă greșită pentru acest user' });
     }
 
     // ── Generează JWT ──────────────────────────────────
