@@ -68,39 +68,42 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
 
 /* ─── LEFT PANEL — Pages + Widgets ─── */
 .adm-left{
-  background:var(--panel);border-right:1px solid var(--border);
+  background:rgba(10, 6, 21, 0.98); border-right:1px solid var(--hair);
   display:flex;flex-direction:column;overflow:hidden;
 }
-.adm-left-tabs{display:flex;border-bottom:1px solid var(--border);}
+.adm-left-tabs{display:flex;border-bottom:1px solid var(--hair); background: rgba(255,255,255,0.02);}
 .adm-ltab{
-  flex:1;padding:12px 0;text-align:center;font-size:10px;font-weight:700;
+  flex:1;padding:14px 0;text-align:center;font-size:10px;font-weight:700;
   letter-spacing:1px;text-transform:uppercase;color:var(--dim);
   cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;
-  background:rgba(255,255,255,.02);
 }
-.adm-ltab:hover{color:var(--muted);background:rgba(255,255,255,.04);}
-.adm-ltab.active{color:var(--text);border-bottom-color:var(--purple);background:rgba(124,58,237,.08);}
-.adm-left-body{flex:1;overflow-y:auto;padding:12px;}
+.adm-ltab:hover{color:var(--muted);background:rgba(255,255,255,0.02);}
+.adm-ltab.active{color:var(--text);border-bottom-color:var(--purple);background:rgba(124,58,237,0.05);}
+.adm-left-body{flex:1;overflow-y:auto;padding:16px 12px;}
 .adm-left-body::-webkit-scrollbar{width:4px;}
 .adm-left-body::-webkit-scrollbar-track{background:transparent;}
 .adm-left-body::-webkit-scrollbar-thumb{background:rgba(139,92,246,.3);border-radius:4px;}
 
 /* Pages panel */
-.pages-panel{display:flex;flex-direction:column;gap:6px;}
+.pages-panel{display:flex;flex-direction:column;gap:4px;}
 .page-item{
-  display:flex;align-items:center;gap:8px;
-  padding:8px 10px;border-radius:8px;
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:10px;
   border:1px solid transparent;cursor:pointer;
-  transition:all .15s;font-size:12.5px;
+  transition:all .15s;font-size:13px; font-weight: 500;
 }
-.page-item:hover{background:var(--accent);border-color:var(--border);}
-.page-item.active{background:var(--accent-h);border-color:rgba(124,58,237,.4);}
-.page-item .material-symbols-rounded{font-size:15px;color:var(--dim);}
+.page-item:hover{background:rgba(255,255,255,0.04);border-color:var(--border);}
+.page-item.active{background:var(--accent-h);border-color:rgba(124,58,237,0.4); box-shadow: 0 4px 12px rgba(0,0,0,0.2);}
+.page-item .material-symbols-rounded{font-size:18px;color:var(--dim);}
+.page-item.active .material-symbols-rounded{color: var(--purple);}
 .page-item-name{flex:1;}
 .page-item-badge{
-  font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:6px;
-  background:rgba(139,92,246,.2);color:rgba(167,139,250,.8);
+  font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 2px 6px; border-radius: 6px; background: rgba(0,0,0,0.3); color: var(--dim);
+  border: 1px solid var(--border);
 }
+.page-item-badge.nav { border-color: #059669; color: #34d399; background: rgba(52, 211, 153, 0.05); }
+.page-item-badge.pag { background: rgba(139,92,246,.15); color: rgba(167,139,250,.8); border-color: rgba(139,92,246,.25); }
 .page-item-badge.nav{background:rgba(16,185,129,.15);color:#6ee7b7;}
 .add-page-btn{
   display:flex;align-items:center;gap:7px;
@@ -702,23 +705,40 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
   <button class="adm-btn adm-btn-ghost" style="color:#f87171" id="deletePageBtn" title="Șterge Pagina"><span class="material-symbols-rounded">delete</span></button>
 </div>
 
-<!-- BODY -->
 <div class="adm-body">
+  <!-- ─── SIDEBAR NAVIGATION (Narrow) ─── -->
+  <div class="adm-nav">
+    <div class="adm-nav-item active" data-view="editor" title="Editor">
+      <span class="material-symbols-rounded">edit_note</span>
+    </div>
+    <div class="adm-nav-item" data-view="dashboard" title="Leads & Stats">
+      <span class="material-symbols-rounded">bar_chart</span>
+    </div>
+    <div class="adm-nav-item" data-view="media" title="Media Library">
+      <span class="material-symbols-rounded">image</span>
+    </div>
+    <div class="adm-nav-item" data-view="settings" title="Global Settings">
+      <span class="material-symbols-rounded">settings</span>
+    </div>
+    <div class="adm-spacer"></div>
+    <div class="adm-nav-item" id="logoutBtn" title="Logout">
+      <span class="material-symbols-rounded">logout</span>
+    </div>
+  </div>
 
-  <!-- LEFT PANEL — Pages + Widgets ─── -->
+  <!-- ─── LEFT PANEL (Pages/Widgets) ─── -->
   <div class="adm-left" id="sidebarEditor">
     <div class="adm-left-tabs">
-      <div class="adm-ltab active" data-ltab="pages">Pagini</div>
-      <div class="adm-ltab" data-ltab="widgets">Widgets</div>
+      <div class="adm-ltab active" data-ltab="pages">PAGINI</div>
+      <div class="adm-ltab" data-ltab="widgets">WIDGETS</div>
     </div>
-    <div class="adm-left-body" id="leftBody">
-
+    <div class="adm-left-body">
       <!-- Pages tab -->
       <div id="pagesTab" class="pages-panel">
-          <div id="pagesList"></div>
-          <button class="add-page-btn" id="addPageBtn">
-            <span class="material-symbols-rounded">add</span>Pagină nouă
-          </button>
+        <div id="pagesList"></div>
+        <button class="add-page-btn" id="addPageBtn">
+          <span class="material-symbols-rounded">add</span>Pagină nouă
+        </button>
       </div>
 
       <!-- Widgets tab -->
@@ -727,73 +747,22 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
         <div class="widget-item" draggable="true" data-widget="columns"><span class="material-symbols-rounded">view_column</span>Coloane</div>
         <div class="widget-item" draggable="true" data-widget="spacer"><span class="material-symbols-rounded">height</span>Spațiu</div>
         <div class="widget-item" draggable="true" data-widget="divider"><span class="material-symbols-rounded">horizontal_rule</span>Separator</div>
-
         <div class="widget-section-title">Conținut</div>
         <div class="widget-item" draggable="true" data-widget="hero"><span class="material-symbols-rounded">title</span>Hero Section</div>
         <div class="widget-item" draggable="true" data-widget="text"><span class="material-symbols-rounded">text_fields</span>Text / HTML</div>
         <div class="widget-item" draggable="true" data-widget="image"><span class="material-symbols-rounded">image</span>Imagine</div>
         <div class="widget-item" draggable="true" data-widget="video"><span class="material-symbols-rounded">play_circle</span>Video</div>
-
         <div class="widget-section-title">Componente</div>
         <div class="widget-item" draggable="true" data-widget="stats"><span class="material-symbols-rounded">bar_chart</span>Stats Bar</div>
         <div class="widget-item" draggable="true" data-widget="cards"><span class="material-symbols-rounded">grid_view</span>Cards Grid</div>
         <div class="widget-item" draggable="true" data-widget="faq"><span class="material-symbols-rounded">help</span>FAQ</div>
         <div class="widget-item" draggable="true" data-widget="cta"><span class="material-symbols-rounded">ads_click</span>CTA Banner</div>
-        <div class="widget-item" draggable="true" data-widget="pricing"><span class="material-symbols-rounded">price_change</span>Pricing<span class="widget-item-tag">Pro</span></div>
-        <div class="widget-item" draggable="true" data-widget="form"><span class="material-symbols-rounded">contact_mail</span>Formular</div>
-        <div class="widget-item" draggable="true" data-widget="testimonials"><span class="material-symbols-rounded">format_quote</span>Testimoniale</div>
-        <div class="widget-item" draggable="true" data-widget="html"><span class="material-symbols-rounded">code</span>HTML Custom</div>
       </div>
     </div>
   </div>
 
-  <!-- DASHBOARD VIEW -->
-  <div class="adm-main-view" id="viewDashboard" style="display:none;">
-    <div class="view-header">
-      <div class="view-title">Dashboard & Leads</div>
-      <div class="view-actions">
-        <button class="adm-btn adm-btn-ghost" id="refreshLeadsBtn"><span class="material-symbols-rounded">refresh</span>Refresh</button>
-        <button class="adm-btn adm-btn-ghost"><span class="material-symbols-rounded">download</span>Export CSV</button>
-      </div>
-    </div>
-    <div class="view-body">
-      <div class="leads-stats-grid">
-        <div class="stat-card gl base">
-          <div class="sc-label">Total Lead-uri</div>
-          <div class="sc-val" id="totalLeadsCount">0</div>
-        </div>
-        <div class="stat-card gl base">
-          <div class="sc-label">Lead-uri azi</div>
-          <div class="sc-val" id="todayLeadsCount">0</div>
-        </div>
-        <div class="stat-card gl base">
-          <div class="sc-label">GHL Sync status</div>
-          <div class="sc-val" style="color:#34d399">Activ</div>
-        </div>
-      </div>
-      
-      <div class="leads-table-container gl base">
-        <table class="leads-table" id="leadsTable">
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Nume</th>
-              <th>Email / Telefon</th>
-              <th>Business / Nișă</th>
-              <th>Detalii</th>
-              <th>Acțiuni</th>
-            </tr>
-          </thead>
-          <tbody id="leadsTableBody">
-            <!-- Populated via JS -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- CENTER: Canvas -->
-  <div class="adm-canvas" id="admCanvas" style="display:none;">
+  <!-- ─── CENTER: Canvas (The site) ─── -->
+  <div class="adm-canvas" id="admCanvas">
     <div class="canvas-frame" id="canvasFrame">
       <div class="edit-mode-bar">
         <span class="material-symbols-rounded">edit</span>
@@ -806,17 +775,46 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
     </div>
   </div>
 
-  <!-- RIGHT: Properties Panel -->
-  <div class="adm-right" style="display:none;">
-    <div class="adm-right-head" style="border-bottom:1px solid var(--border); margin-bottom:16px;">
-      <span class="adm-right-title" id="propPanelTitle">Proprietăți</span>
-      <button class="cs-tool" id="closePropBtn"><span class="material-symbols-rounded">close</span></button>
+  <!-- ─── DASHBOARD VIEW ─── -->
+  <div class="adm-main-view" id="viewDashboard" style="display:none;">
+    <div class="view-header">
+      <div class="view-title">Dashboard & Leads</div>
+      <div class="view-actions">
+        <button class="adm-btn adm-btn-ghost" id="refreshLeadsBtn"><span class="material-symbols-rounded">refresh</span>Refresh</button>
+      </div>
     </div>
-    <div id="propBody" style="padding:0 16px 40px;">
-       <!-- Dinamic injectat de PropertiesPanel -->
+    <div class="view-body">
+      <div class="leads-stats-grid">
+        <div class="stat-card gl base">
+          <div class="sc-label">Total Lead-uri</div>
+          <div class="sc-val" id="totalLeadsCount">0</div>
+        </div>
+        <div class="stat-card gl base">
+          <div class="sc-label">Lead-uri azi</div>
+          <div class="sc-val" id="todayLeadsCount">0</div>
+        </div>
+      </div>
+      <div class="leads-table-container gl base">
+        <table class="leads-table">
+          <thead>
+            <tr><th>Data</th><th>Nume</th><th>Email / Telefon</th><th>Detalii</th><th>Acțiuni</th></tr>
+          </thead>
+          <tbody id="leadsTableBody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
+  <!-- ─── RIGHT PANEL: Properties ─── -->
+  <div class="adm-right">
+    <div class="adm-right-head">
+      <span class="adm-right-title" id="propPanelTitle">PROPRIETĂȚI</span>
+      <button class="cs-tool" id="closePropBtn"><span class="material-symbols-rounded">close</span></button>
+    </div>
+    <div id="propBody" style="padding: 16px;">
+      <!-- Dinamic -->
+    </div>
+  </div>
 </div><!-- /adm-body -->
 
 <!-- ADD PAGE MODAL -->
@@ -1111,13 +1109,17 @@ button,input,select,textarea{font-family:'Outfit',sans-serif;}
 
       pages.forEach(p => {
         // Sidebar item
+        const isNav = p.slug === 'index' || p.location === 'nav';
+        const badgeLabel = isNav ? 'Nav' : 'Pag';
+        const badgeClass = isNav ? 'nav' : 'pag';
+        
         const item = document.createElement('div');
         item.className = `page-item ${editor.state?.slug === p.slug ? 'active' : ''}`;
         item.dataset.page = p.slug;
         item.innerHTML = `
           <span class="material-symbols-rounded">${p.slug === 'index' ? 'home' : 'insert_drive_file'}</span>
           <span class="page-item-name">${p.title}</span>
-          <span class="page-item-badge ${p.slug === 'index' ? 'nav' : ''}">${p.slug === 'index' ? 'Home' : 'Pag'}</span>
+          <span class="page-item-badge ${badgeClass}">${badgeLabel}</span>
         `;
         item.addEventListener('click', () => selectPage(p.slug));
         if (addBtn) list.insertBefore(item, addBtn);
