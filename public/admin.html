@@ -270,14 +270,14 @@
   const TOKEN_KEY = 'oryn_admin_token';
   const editor = new Editor({
     onStateChange: () => renderCanvas(),
-    onSelectionChange: (section) => propPanel.inspect(section),
+    onSelectionChange: (section) => propPanel.render(section),
     onSaveStatus: (status) => updateSaveStatus(status)
   });
 
-  const propPanel = new PropertiesPanel({
-    containerId: 'propBody',
-    onUpdate: (id, props) => editor.updateProps(id, props)
-  });
+  const propPanel = new PropertiesPanel(
+    document.getElementById('propBody'),
+    (id, props) => editor.updateProps(id, props)
+  );
 
   // --- AUTH ---
   async function checkAuth() {
