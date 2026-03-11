@@ -37,9 +37,7 @@ export default async function handler(req, res) {
       .single();
 
     if (dbErr || !user) {
-      return res.status(401).json({ 
-        error: dbErr ? `Eroare Bază de Date: ${dbErr.message}` : 'Utilizator sau parolă incorectă' 
-      });
+      return res.status(401).json({ error: 'Email sau parolă incorectă' });
     }
 
     if (!user.password_hash) {
