@@ -28,6 +28,11 @@ export default async function handler(req, res) {
 
   try {
     const db = getDB();
+    
+    // Log env status (masked)
+    const url = process.env.SUPABASE_URL || 'MISSING';
+    const key = process.env.SUPABASE_SERVICE_KEY ? 'PRESENT' : 'MISSING';
+    console.log(`[login] Connecting to: ${url}, Key: ${key}`);
 
     // ── Caută userul în DB ─────────────────────────────
     const { data: user, error } = await db
@@ -37,7 +42,9 @@ export default async function handler(req, res) {
       .single();
 
     if (error || !user) {
-      return res.status(401).json({ error: 'User inexistente în DB: ' + (error ? error.message : 'Niciun rezultat') });
+      return res.status(401).json({ 
+        error: `User Inexistent în DB: ${error ? error.message : 'Niciun rezultat'}. [URL: ${url}, SK: ${key}]` 
+      });
     }
 
     if (!user.password_hash) {
