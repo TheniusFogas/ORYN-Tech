@@ -18,55 +18,60 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Slug lipsă' });
   }
 
-  const db = getDB();
+  try {
+    const db = getDB();
 
-  // ── GET: citește pagina (public) ───────────────────────
-  if (req.method === 'GET') {
-    const { data, error } = await db
-      .from('pages')
-      .select('slug, title, content, meta_title, meta_desc, nav_location, bg_color, updated_at')
-      .eq('slug', slug)
-      .single();
+    // ── GET: citește pagina (public) ───────────────────────
+    if (req.method === 'GET') {
+      const { data, error } = await db
+        .from('pages')
+        .select('slug, title, content, meta_title, meta_desc, nav_location, bg_color, updated_at')
+        .eq('slug', slug)
+        .single();
 
-    if (error || !data) {
-      return res.status(404).json({ error: 'Pagina nu există' });
+      if (error || !data) {
+        return res.status(404).json({ error: 'Pagina nu există' });
+      }
+
+      return res.status(200).json(data);
     }
 
-    return res.status(200).json(data);
-  }
+    // ── PUT: salvează pagina (admin only) ─────────────────
+    if (req.method === 'PUT') {
+      const user = await requireAuth(req, res);
+      if (!user) return;
 
-  // ── PUT: salvează pagina (admin only) ─────────────────
-  if (req.method === 'PUT') {
-    const user = await requireAuth(req, res);
-    if (!user) return;
+      const { title, content, meta_title, meta_desc, nav_location, bg_color } = req.body || {};
 
-    const { title, content, meta_title, meta_desc, nav_location, bg_color } = req.body || {};
+      const updateData = {
+        updated_by: user.id,
+      };
 
-    const updateData = {
-      updated_by: user.id,
-    };
+      if (title       !== undefined) updateData.title        = title;
+      if (content     !== undefined) updateData.content      = content;
+      if (meta_title  !== undefined) updateData.meta_title   = meta_title;
+      if (meta_desc   !== undefined) updateData.meta_desc    = meta_desc;
+      if (nav_location !== undefined) updateData.nav_location = nav_location;
+      if (bg_color    !== undefined) updateData.bg_color     = bg_color;
 
-    if (title       !== undefined) updateData.title        = title;
-    if (content     !== undefined) updateData.content      = content;
-    if (meta_title  !== undefined) updateData.meta_title   = meta_title;
-    if (meta_desc   !== undefined) updateData.meta_desc    = meta_desc;
-    if (nav_location !== undefined) updateData.nav_location = nav_location;
-    if (bg_color    !== undefined) updateData.bg_color     = bg_color;
+      const { data, error } = await db
+        .from('pages')
+        .update(updateData)
+        .eq('slug', slug)
+        .select()
+        .single();
 
-    const { data, error } = await db
-      .from('pages')
-      .update(updateData)
-      .eq('slug', slug)
-      .select()
-      .single();
+      if (error) {
+        console.error('[pages PUT] Error:', error);
+        return res.status(500).json({ error: 'Eroare la salvare: ' + error.message });
+      }
 
-    if (error) {
-      console.error('[pages PUT] Error:', error);
-      return res.status(500).json({ error: 'Eroare la salvare' });
+      return res.status(200).json({ success: true, page: data });
     }
 
-    return res.status(200).json({ success: true, page: data });
+    return res.status(405).json({ error: 'Method not allowed' });
+  } catch (err) {
+    console.error('[API Page Slug] Global Error:', err);
+    return res.status(500).json({ error: 'Internal Server Error: ' + err.message });
   }
-
-  return res.status(405).json({ error: 'Method not allowed' });
 }

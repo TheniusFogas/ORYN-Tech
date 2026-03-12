@@ -410,7 +410,7 @@ async function loadPages() {
         if(pages.length) selectPage(pages[0].slug, list.firstChild);
     } catch(e) { 
         console.error('[Editor] Load pages error:', e);
-        list.innerHTML = '<div style="padding:20px;color:rgba(255,100,100,0.8);font-size:12px;">Eroare la încărcarea paginilor. Verifică consola.</div>';
+        list.innerHTML = `<div style="padding:20px;color:rgba(255,100,100,0.8);font-size:12px;">Eroare la încărcarea paginilor.<br><br><code style="font-size:10px;opacity:0.7;">${e.message}</code></div>`;
     }
 }
 
