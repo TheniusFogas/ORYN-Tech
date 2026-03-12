@@ -327,9 +327,18 @@ export class PageRenderer {
   }
 
   // ── HTML CUSTOM ───────────────────────────────────────
-  render_html({ code = '', paddingY = 24, paddingX = 40 } = {}, ea = '') {
+  render_html({ html = '', paddingY = 24, paddingX = 40 } = {}, ea = '') {
+    // Curățăm tag-urile boilerplate dacă există (pentru importuri de pagini întregi)
+    let clean = html;
+    if (clean.includes('<body')) {
+      const match = clean.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+      if (match) clean = match[1];
+    }
+    // Scoatem head-ul dacă a mai rămas ceva random
+    clean = clean.replace(/<html[^>]*>|<\/html>|<head[^>]*>[\s\S]*<\/head>|<!DOCTYPE[^>]*>/gi, '').trim();
+
     return `<section class="sec w-html" style="padding:${paddingY}px ${paddingX}px"${ea}>
-      <div data-editable="true" data-prop="code">${code || '<em>Cod HTML custom</em>'}</div>
+      <div data-editable="true" data-prop="html">${clean || '<em>Cod HTML custom</em>'}</div>
     </section>`;
   }
 

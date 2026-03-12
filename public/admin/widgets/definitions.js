@@ -387,11 +387,11 @@ export const WIDGET_DEFINITIONS = {
   html: {
     type: 'html', label: 'HTML Custom', icon: 'code', category: 'components',
     defaultProps: {
-      code: '<!-- Adaugă HTML personalizat aici -->',
+      html: '<!-- Adaugă HTML personalizat aici -->',
       paddingY: 24, paddingX: 40,
     },
     schema: [
-      { key: 'code',     label: 'Cod HTML', type: 'code' },
+      { key: 'html',     label: 'Cod HTML', type: 'code' },
       { key: 'paddingY', label: 'Padding vertical',  type: 'range', min: 0, max: 80 },
       { key: 'paddingX', label: 'Padding orizontal', type: 'range', min: 0, max: 80 },
     ],
