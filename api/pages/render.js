@@ -124,8 +124,49 @@ class PageRenderer {
     </section>`;
   }
 
-  render_html({code='',paddingY=24,paddingX=40}={}){
-    return`<section style="padding:${paddingY}px ${paddingX}px">${code}</section>`;
+  render_columns({ cols = 2, gap = 24, cells = [], paddingY = 32, paddingX = 40 } = {}) {
+    const cellHtml = cells.map(c => `<div class="col-cell">${this.nl2br(c.content || '')}</div>`).join('');
+    return `<section class="w-cols" style="padding:${paddingY}px ${paddingX}px">
+      <div class="cols-layout" style="display:grid;grid-template-columns:repeat(${cols},1fr);gap:${gap}px">
+        ${cellHtml}
+      </div>
+    </section>`;
+  }
+
+  render_tutorials_grid({ title = '', showTitle = false, categories = [], courses = [], paddingY = 48, paddingX = 40 } = {}) {
+    const catHtml = (categories || []).map((cat, idx) => `
+      <button class="cat-btn ${idx === 0 ? 'active' : ''}">
+        <span class="material-symbols-rounded">${this.esc(cat.icon || 'apps')}</span>
+        <span>${this.esc(cat.label)}</span>
+      </button>`).join('');
+
+    const courseHtml = (courses || []).map(c => {
+      const levelClass = (c.level || 'Beginner').toLowerCase();
+      return `
+        <div class="course-card">
+          <div class="cc-thumb" style="background-image:url('${this.esc(c.thumbnailUrl)}');background-size:cover;background-position:center;">
+            <div class="cc-thumb-icon"><span class="material-symbols-rounded">play_circle</span></div>
+            <div class="cc-play-overlay"><div class="cc-play-btn"><span class="material-symbols-rounded">play_arrow</span></div></div>
+            <div class="cc-level ${levelClass}">${this.esc(c.level)}</div>
+            <div class="cc-duration"><span class="material-symbols-rounded">schedule</span><span>${this.esc(c.duration)}</span></div>
+          </div>
+          <div class="cc-body">
+            <div class="cc-cat">${this.esc(c.category)}</div>
+            <div class="cc-title">${this.esc(c.title)}</div>
+            <div class="cc-desc">${this.esc(c.desc)}</div>
+            <div class="cc-footer">
+              <button class="cc-btn" data-video-url="${this.esc(c.youtubeUrl)}"><span class="material-symbols-rounded">play_arrow</span>Start</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    return `
+      <section class="w-tutorials-grid" style="padding:${paddingY}px ${paddingX}px">
+        ${showTitle && title ? `<h2 class="sec-title">${this.esc(title)}</h2>` : ''}
+        <div class="cats">${catHtml}</div>
+        <div class="course-grid">${courseHtml}</div>
+      </section>`;
   }
 }
 

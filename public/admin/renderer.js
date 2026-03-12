@@ -287,6 +287,45 @@ export class PageRenderer {
     </section>`;
   }
 
+  // ── TUTORIALS GRID ───────────────────────────────────
+  render_tutorials_grid({ title = '', showTitle = false, categories = [], courses = [], paddingY = 48, paddingX = 40 } = {}, ea = '') {
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    
+    const catHtml = (categories || []).map((cat, idx) => `
+      <button class="cat-btn ${idx === 0 ? 'active' : ''}">
+        <span class="material-symbols-rounded"${edit(`categories[${idx}].icon`)}>${this.esc(cat.icon || 'apps')}</span>
+        <span${edit(`categories[${idx}].label`)}>${this.esc(cat.label)}</span>
+      </button>`).join('');
+
+    const courseHtml = (courses || []).map((c, idx) => {
+      const levelClass = (c.level || 'Beginner').toLowerCase();
+      return `
+        <div class="course-card">
+          <div class="cc-thumb" style="background-image:url('${this.esc(c.thumbnailUrl)}');background-size:cover;background-position:center;">
+            <div class="cc-thumb-icon"><span class="material-symbols-rounded">play_circle</span></div>
+            <div class="cc-play-overlay"><div class="cc-play-btn"><span class="material-symbols-rounded">play_arrow</span></div></div>
+            <div class="cc-level ${levelClass}"${edit(`courses[${idx}].level`)}>${this.esc(c.level)}</div>
+            <div class="cc-duration"><span class="material-symbols-rounded">schedule</span><span${edit(`courses[${idx}].duration`)}>${this.esc(c.duration)}</span></div>
+          </div>
+          <div class="cc-body">
+            <div class="cc-cat"${edit(`courses[${idx}].category`)}>${this.esc(c.category)}</div>
+            <div class="cc-title"${edit(`courses[${idx}].title`)}>${this.esc(c.title)}</div>
+            <div class="cc-desc"${edit(`courses[${idx}].desc`)}>${this.esc(c.desc)}</div>
+            <div class="cc-footer">
+              <button class="cc-btn" data-video-url="${this.esc(c.youtubeUrl)}"><span class="material-symbols-rounded">play_arrow</span>Start</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    return `
+      <section class="sec w-tutorials-grid" style="padding:${paddingY}px ${paddingX}px"${ea}>
+        ${showTitle && title ? `<h2 class="sec-title"${edit('title')}>${this.esc(title)}</h2>` : ''}
+        <div class="cats">${catHtml}</div>
+        <div class="course-grid">${courseHtml}</div>
+      </section>`;
+  }
+
   // ── HTML CUSTOM ───────────────────────────────────────
   render_html({ code = '', paddingY = 24, paddingX = 40 } = {}, ea = '') {
     return `<section class="sec w-html" style="padding:${paddingY}px ${paddingX}px"${ea}>

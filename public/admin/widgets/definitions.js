@@ -346,6 +346,44 @@ export const WIDGET_DEFINITIONS = {
     ],
   },
 
+  tutorials_grid: {
+    type: 'tutorials_grid', label: 'Tutorials Grid', icon: 'play_lesson', category: 'components',
+    defaultProps: {
+      title: 'Toate cursurile',
+      showTitle: false,
+      paddingY: 48, paddingX: 40,
+      categories: [
+        { id: 'cat1', label: 'Getting Started', icon: 'rocket_launch' },
+        { id: 'cat2', label: 'AI Agents', icon: 'smart_toy' },
+        { id: 'cat3', label: 'Automatizări', icon: 'account_tree' },
+      ],
+      courses: [
+        { id: 'c1', title: 'Setup rapid', desc: 'Învață bazele.', youtubeUrl: '', thumbnailUrl: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&q=80&w=300', level: 'Beginner', duration: '15m', category: 'cat1' },
+      ],
+    },
+    schema: [
+      { key: 'title', label: 'Titlu', type: 'text' },
+      { key: 'paddingY', label: 'Padding vertical', type: 'range', min: 0, max: 120 },
+      { key: 'categories', label: 'Categorii', type: 'repeater', 
+        itemSchema: [
+          { key: 'label', label: 'Nume', type: 'text' },
+          { key: 'icon', label: 'Icoană', type: 'icon_picker' },
+        ]
+      },
+      { key: 'courses', label: 'Cursuri', type: 'repeater',
+        itemSchema: [
+          { key: 'title', label: 'Titlu curs', type: 'text' },
+          { key: 'desc', label: 'Descriere', type: 'textarea' },
+          { key: 'youtubeUrl', label: 'Link YouTube', type: 'text' },
+          { key: 'thumbnailUrl', label: 'URL Cover (Art)', type: 'image_upload' },
+          { key: 'level', label: 'Nivel', type: 'select', options: ['Beginner', 'Intermediate', 'Advanced'] },
+          { key: 'duration', label: 'Durată (ex: 15m)', type: 'text' },
+          { key: 'category', label: 'Categorie (label)', type: 'text' },
+        ]
+      }
+    ]
+  },
+
   html: {
     type: 'html', label: 'HTML Custom', icon: 'code', category: 'components',
     defaultProps: {

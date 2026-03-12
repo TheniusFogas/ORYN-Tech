@@ -4,7 +4,7 @@
   "outputDirectory": "public",
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/admin", "dest": "/admin.html" },
+    { "src": "/admin", "dest": "/oryntech-admin.html" },
     { "src": "/trial", "dest": "/trial.html" },
     { "src": "/tutorials", "dest": "/tutorials.html" },
     { "src": "/pricing", "dest": "/index.html" },
