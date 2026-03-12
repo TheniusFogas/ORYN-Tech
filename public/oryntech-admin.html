@@ -390,7 +390,14 @@ async function loadPages() {
     try {
         console.log('[Editor] Fetching pages...');
         const res = await fetch('/api/pages');
-        if (!res.ok) throw new Error('Fetch failed: ' + res.status);
+        if (!res.ok) {
+            let errorMsg = 'Fetch failed: ' + res.status;
+            try {
+                const errorData = await res.json();
+                if (errorData.error) errorMsg = errorData.error;
+            } catch(e) {}
+            throw new Error(errorMsg);
+        }
         const pages = await res.json();
         console.log('[Editor] Pages loaded:', pages);
         list.innerHTML = '';
