@@ -13,6 +13,7 @@ export default async function handler(req, res) {
       raw_url_exists: !!process.env.SUPABASE_URL,
       raw_url_valid: (process.env.SUPABASE_URL || '').startsWith('https://'),
       raw_key_exists: !!process.env.SUPABASE_SERVICE_KEY,
+      url_being_used: (process.env.SUPABASE_URL || '').trim() || 'FALLBACK_URL'
     },
     db: 'WAITING',
     error: null
