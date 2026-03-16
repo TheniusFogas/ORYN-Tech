@@ -2,7 +2,6 @@
   "version": 2,
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/admin", "destination": "/oryntech-admin.html" },
     { "source": "/pricing", "destination": "/" }
   ],
   "headers": [
