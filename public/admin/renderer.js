@@ -276,6 +276,107 @@ export class PageRenderer {
     </section>`;
   }
 
+  // ── HOME_HERO ──────────────────────────────────────────
+  render_home_hero({ eyebrow = '', title1 = '', title2 = '', subtitle = '', badges = [] } = {}, ea = '') {
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    const badgesHtml = (badges || []).map((b, idx) => `
+      <div class="bdg"><span${edit(`badges[${idx}].text`)}>${this.esc(b.text)}</span></div>`).join('');
+
+    return `
+      <div class="hero"${ea}>
+        <div class="eyebrow"><span class="ey-line"></span><span${edit('eyebrow')}>${this.esc(eyebrow)}</span><span class="ey-line"></span></div>
+        <span class="hl-1"${edit('title1')}>${this.esc(title1)}</span>
+        <span class="hl-2"${edit('title2')}>${this.esc(title2)}</span>
+        <p class="hero-sub"${edit('subtitle')}>${subtitle}</p>
+        <div class="bdgs">${badgesHtml}</div>
+      </div>`;
+  }
+
+  // ── INDEX_STATS ────────────────────────────────────────
+  render_index_stats({ items = [] } = {}, ea = '') {
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    const itemsHtml = (items || []).map((it, idx) => `
+      <div class="st">
+        <div class="st-v"${edit(`items[${idx}].value`)}>${this.esc(it.value)}</div>
+        <div class="st-l"${edit(`items[${idx}].label`)}>${this.esc(it.label)}</div>
+      </div>`).join('');
+    return `<div class="stats"${ea}>${itemsHtml}</div>`;
+  }
+
+  // ── BENTO_PRICING ──────────────────────────────────────
+  render_bento_pricing({ starter = {}, scale = {} } = {}, ea = '') {
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    
+    const renderFList = (features = [], pathPrefix = '') => {
+      return (features || []).map((f, idx) => `
+        <li class="fi">
+          <div class="fi-row">
+            <span class="fi-ms material-symbols-rounded">${this.esc(f.icon)}</span>
+            <span class="fi-name"${edit(`${pathPrefix}.features[${idx}].name`)}>${this.esc(f.name)}</span>
+            <span class="fi-chev material-symbols-rounded">expand_more</span>
+          </div>
+          <div class="drop-body"${edit(`${pathPrefix}.features[${idx}].desc`)}>${this.esc(f.desc)}</div>
+        </li>`).join('');
+    };
+
+    const starterHtml = renderFList(starter.features, 'starter');
+    const scaleHtml = renderFList(scale.features, 'scale');
+    const bonusHtml = (scale.bonuses || []).map((b, idx) => `
+      <div class="bi">
+        <div class="bi-row">
+          <span class="bi-ms material-symbols-rounded">${this.esc(b.icon)}</span>
+          <span class="bi-name"${edit(`scale.bonuses[${idx}].name`)}>${this.esc(b.name)}</span>
+          <span class="bi-chev material-symbols-rounded">expand_more</span>
+        </div>
+        <div class="bi-drop"${edit(`scale.bonuses[${idx}].desc`)}>${this.esc(b.desc)}</div>
+      </div>`).join('');
+
+    return `
+      <div class="bento pricing-grid"${ea}>
+        <!-- STARTER -->
+        <div class="card cl">
+          <div class="gl base"></div><div class="gl frost"></div><div class="gl rim"></div><div class="gl shine"></div>
+          <div class="cblob c1"></div><div class="cblob c2"></div><div class="cblob c3"></div>
+          <div class="cc">
+            <div class="plan-name"${edit('starter.name')}>${this.esc(starter.name)}</div>
+            <p class="plan-hook"${edit('starter.hook')}>${this.esc(starter.hook)}</p>
+            <div class="price-row">
+              <span class="psym">$</span><span class="pnum"${edit('starter.price')}>${this.esc(starter.price)}</span><span class="pmo">/mo</span>
+            </div>
+            <div class="ptot"${edit('starter.total')}>${starter.total}</div>
+            <div class="div"></div>
+            <ul class="flist">${starterHtml}</ul>
+            <a href="#" class="btn btn-l">Start Plan →</a>
+          </div>
+        </div>
+
+        <!-- SCALE -->
+        <div class="card cr">
+          <div class="gl base"></div><div class="gl frost"></div><div class="gl rim"></div><div class="gl shine"></div>
+          <div class="cblob c1"></div><div class="cblob c2"></div><div class="cblob c3"></div>
+          <canvas id="starCanvasPreview" style="position:absolute;inset:0;width:100%;height:100%;z-index:9;pointer-events:none;border-radius:22px;"></canvas>
+          <div class="cc">
+            <div class="pop-tag">✦ Most Chosen</div>
+            <div class="plan-name"${edit('scale.name')}>${this.esc(scale.name)}</div>
+            <p class="plan-hook"${edit('scale.hook')}>${this.esc(scale.hook)}</p>
+            <div class="price-row">
+              <span class="psym">$</span><span class="pnum"${edit('scale.price')}>${this.esc(scale.price)}</span><span class="pmo">/mo</span>
+            </div>
+            <div class="ptot"${edit('scale.total')}>${scale.total}</div>
+            <div class="div"></div>
+            <ul class="flist">${scaleHtml}</ul>
+            <div class="bonus-wrap">
+              <div class="bonus-inner">
+                <div class="b-label">Exclusives</div>
+                ${bonusHtml}
+              </div>
+            </div>
+            <a href="#" class="btn btn-r">Start Scale Plan ✦</a>
+          </div>
+        </div>
+      </div>`;
+  }
+
   // ── COLUMNS ───────────────────────────────────────────
   render_columns({ cols = 2, gap = 24, cells = [], paddingY = 32, paddingX = 40 } = {}, ea = '') {
     const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
@@ -285,6 +386,164 @@ export class PageRenderer {
         ${cellHtml}
       </div>
     </section>`;
+  }
+
+  // ── TUT_HERO ──────────────────────────────────────────
+  render_tut_hero({ eyebrowIcon = 'school', eyebrowText = 'ORYNTech Hero', title = 'Academy & Docs', subtitle = '', searchPlaceholder = 'Caută...', stats = [] } = {}, ea = '') {
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    const statsHtml = (stats || []).map((s, idx) => `
+      <div class="tut-stat">
+        <span class="tut-stat-n"${edit(`stats[${idx}].value`)}>${this.esc(s.value)}</span>
+        <span class="tut-stat-l"${edit(`stats[${idx}].label`)}>${this.esc(s.label)}</span>
+      </div>`).join('');
+
+    return `
+      <section class="tut-hero"${ea}>
+        <div class="tut-hero-left">
+          <div class="tut-eyebrow">
+            <span class="material-symbols-rounded" style="font-size:13px"${edit('eyebrowIcon')}>${this.esc(eyebrowIcon)}</span>
+            <span${edit('eyebrowText')}>${this.esc(eyebrowText)}</span>
+          </div>
+          <h1${edit('title')}>${title}</h1>
+          <p class="tut-hero-sub"${edit('subtitle')}>${this.esc(subtitle)}</p>
+          <div class="tut-stats">${statsHtml}</div>
+        </div>
+        <div class="tut-hero-search">
+          <div class="search-box">
+            <span class="material-symbols-rounded">search</span>
+            <input type="text"${edit('searchPlaceholder')} placeholder="${this.esc(searchPlaceholder)}">
+          </div>
+        </div>
+      </section>`;
+  }
+
+  // ── TUT_FEATURED ───────────────────────────────────────
+  render_tut_featured({ label = '', badgeIcon = 'star', badgeText = '', title = '', desc = '', metaItems = [], videoUrl = '' } = {}, ea = '') {
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    const metaHtml = (metaItems || []).map((m, idx) => `
+      <div class="feat-meta-item">
+        <span class="material-symbols-rounded">${this.esc(m.icon)}</span>
+        <span${edit(`metaItems[${idx}].text`)}>${this.esc(m.text)}</span>
+      </div>`).join('');
+
+    return `
+      <section class="featured-section"${ea}>
+        <div class="section-label"${edit('label')}>${this.esc(label)}</div>
+        <div class="featured-card">
+          <div>
+            <div class="feat-badge">
+              <span class="material-symbols-rounded" style="font-size:12px">${this.esc(badgeIcon)}</span>
+              <span${edit('badgeText')}>${this.esc(badgeText)}</span>
+            </div>
+            <h2 class="feat-title"${edit('title')}>${this.esc(title)}</h2>
+            <p class="feat-desc"${edit('desc')}>${this.esc(desc)}</p>
+            <div class="feat-meta">${metaHtml}</div>
+          </div>
+          <div class="feat-play" data-video="${this.esc(videoUrl)}"><span class="material-symbols-rounded">play_arrow</span></div>
+        </div>
+      </section>`;
+  }
+
+  // ── TUT_PATHS ──────────────────────────────────────────
+  render_tut_paths({ label = '', paths = [] } = {}, ea = '') {
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    const pathsHtml = (paths || []).map((p, idx) => `
+      <div class="path-card">
+        <div class="path-icon"><span class="material-symbols-rounded">${this.esc(p.icon)}</span></div>
+        <div class="path-name"${edit(`paths[${idx}].name`)}>${this.esc(p.name)}</div>
+        <div class="path-count"${edit(`paths[${idx}].count`)}>${this.esc(p.count)}</div>
+      </div>`).join('');
+
+    return `
+      <section class="path-section"${ea}>
+        <div class="section-label"${edit('label')}>${this.esc(label)}</div>
+        <div class="path-cards">${pathsHtml}</div>
+      </section>`;
+  }
+
+  // ── TRIAL_HERO ─────────────────────────────────────────
+  render_trial_hero({ eyebrow = '', title1 = '', title2 = '', subtitle = '', badges = [], ctaText = '', ctaLink = '', ctaNote = '' } = {}, ea = '') {
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    const badgesHtml = (badges || []).map((b, idx) => `
+      <div class="bdg">
+        ${idx === 0 ? '<span class="pulse-dot"></span> ' : ''}
+        <span${edit(`badges[${idx}]`)}>${this.esc(typeof b === 'string' ? b : b.text)}</span>
+      </div>`).join('');
+
+    return `
+      <div class="hero"${ea}>
+        <div class="eyebrow"><span class="ey-line"></span><span${edit('eyebrow')}>${this.esc(eyebrow)}</span><span class="ey-line"></span></div>
+        <span class="hl-1"${edit('title1')}>${this.esc(title1)}</span>
+        <span class="hl-2"${edit('title2')}>${this.esc(title2)}</span>
+        <p class="hero-sub"${edit('subtitle')}>${this.nl2br(subtitle)}</p>
+        <div class="bdgs">${badgesHtml}</div>
+        <a href="${this.esc(ctaLink)}" class="cta-btn"${edit('ctaText')}>${this.esc(ctaText)}</a>
+        <span class="cta-note"${edit('ctaNote')}>${this.esc(ctaNote)}</span>
+      </div>`;
+  }
+
+  // ── PROBLEMS_GRID ──────────────────────────────────────
+  render_problems_grid({ eyebrow = '', title = '', subtitle = '', items = [] } = {}, ea = '') {
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    const itemsHtml = (items || []).map((it, idx) => `
+      <div class="prob-item">
+        <span class="material-symbols-rounded prob-ms">${this.esc(it.icon)}</span>
+        <div class="prob-title"${edit(`items[${idx}].title`)}>${this.esc(it.title)}</div>
+        <div class="prob-desc"${edit(`items[${idx}].desc`)}>${this.esc(it.desc)}</div>
+      </div>`).join('');
+
+    return `
+      <div class="sec"${ea}>
+        <div class="eyebrow-sm"><span class="ey-line"></span><span${edit('eyebrow')}>${this.esc(eyebrow)}</span><span class="ey-line"></span></div>
+        <h2 class="sec-h"${edit('title')}>${title}</h2>
+        <p class="sec-sub"${edit('subtitle')}>${this.esc(subtitle)}</p>
+        <div class="prob-grid">${itemsHtml}</div>
+      </div>`;
+  }
+
+  // ── BRIDGE_BANNER ──────────────────────────────────────
+  render_bridge_banner({ title = '', subtitle = '' } = {}, ea = '') {
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    return `
+      <div class="bridge"${ea}>
+        <div class="gl-rim"></div><div class="shine"></div>
+        <div class="bcb1"></div><div class="bcb2"></div>
+        <div class="bridge-in">
+          <h2${edit('title')}>${title}</h2>
+          <p${edit('subtitle')}>${this.nl2br(subtitle)}</p>
+        </div>
+      </div>`;
+  }
+
+  // ── BEFORE_AFTER_TABLE ─────────────────────────────────
+  render_before_after_table({ eyebrow = '', title = '', beforeTitle = '', afterTitle = '', rows = [] } = {}, ea = '') {
+    const edit = (prop) => (this.editMode ? ` data-editable="true" data-prop="${prop}"` : '');
+    const rowsHtml = (rows || []).map((r, idx) => `
+      <div class="ba-row-wrap" style="display:contents">
+        <div class="ba-row"><span class="material-symbols-rounded ba-ms">sms_failed</span><span${edit(`rows[${idx}].before`)}>${this.esc(r.before)}</span></div>
+        <div class="ba-row"><span class="material-symbols-rounded ba-ms">bolt</span><span${edit(`rows[${idx}].after`)}>${this.esc(r.after)}</span></div>
+      </div>`).join('');
+
+    // În original era o structură pe coloane, dar pentru tabel de comparație e mai bine să randăm rând cu rând dacă vrem flexibilitate.
+    // Totuși, respectăm structura HTML originală 1:1:
+    const beforeRows = (rows || []).map((r, idx) => `<div class="ba-row"><span class="material-symbols-rounded ba-ms">sms_failed</span><span${edit(`rows[${idx}].before`)}>${this.esc(r.before)}</span></div>`).join('');
+    const afterRows = (rows || []).map((r, idx) => `<div class="ba-row"><span class="material-symbols-rounded ba-ms">bolt</span><span${edit(`rows[${idx}].after`)}>${this.esc(r.after)}</span></div>`).join('');
+
+    return `
+      <div class="sec"${ea}>
+        <div class="eyebrow-sm"><span class="ey-line"></span><span${edit('eyebrow')}>${this.esc(eyebrow)}</span><span class="ey-line"></span></div>
+        <h2 class="sec-h"${edit('title')}>${title}</h2>
+        <div class="ba-wrap">
+          <div class="ba-col before">
+            <div class="ba-header"><span class="material-symbols-rounded" style="font-size:14px">close</span><span${edit('beforeTitle')}>${this.esc(beforeTitle)}</span></div>
+            ${beforeRows}
+          </div>
+          <div class="ba-col after">
+            <div class="ba-header"><span class="material-symbols-rounded" style="font-size:14px">check</span><span${edit('afterTitle')}>${this.esc(afterTitle)}</span></div>
+            ${afterRows}
+          </div>
+        </div>
+      </div>`;
   }
 
   // ── TUTORIALS GRID ───────────────────────────────────

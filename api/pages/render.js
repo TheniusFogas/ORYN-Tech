@@ -155,7 +155,7 @@ class PageRenderer {
             <div class="cc-title">${this.esc(c.title)}</div>
             <div class="cc-desc">${this.esc(c.desc)}</div>
             <div class="cc-footer">
-              <button class="cc-btn" data-video-url="${this.esc(c.youtubeUrl)}"><span class="material-symbols-rounded">play_arrow</span>Start</button>
+              <button class="cc-btn" data-video="${this.esc(c.youtubeUrl)}"><span class="material-symbols-rounded">play_arrow</span>Start</button>
             </div>
           </div>
         </div>`;
@@ -167,6 +167,238 @@ class PageRenderer {
         <div class="cats">${catHtml}</div>
         <div class="course-grid">${courseHtml}</div>
       </section>`;
+  }
+
+  // ── TUT_HERO ──────────────────────────────────────────
+  render_tut_hero({ eyebrowIcon = 'school', eyebrowText = 'ORYNTech Hero', title = 'Academy & Docs', subtitle = '', searchPlaceholder = 'Caută...', stats = [] } = {}) {
+    const statsHtml = (stats || []).map(s => `
+      <div class="tut-stat">
+        <span class="tut-stat-n">${this.esc(s.value)}</span>
+        <span class="tut-stat-l">${this.esc(s.label)}</span>
+      </div>`).join('');
+
+    return `
+      <section class="tut-hero">
+        <div class="tut-hero-left">
+          <div class="tut-eyebrow">
+            <span class="material-symbols-rounded" style="font-size:13px">${this.esc(eyebrowIcon)}</span>
+            <span>${this.esc(eyebrowText)}</span>
+          </div>
+          <h1>${title}</h1>
+          <p class="tut-hero-sub">${this.esc(subtitle)}</p>
+          <div class="tut-stats">${statsHtml}</div>
+        </div>
+        <div class="tut-hero-search">
+          <div class="search-box">
+            <span class="material-symbols-rounded">search</span>
+            <input type="text" placeholder="${this.esc(searchPlaceholder)}">
+          </div>
+        </div>
+      </section>`;
+  }
+
+  // ── TUT_FEATURED ───────────────────────────────────────
+  render_tut_featured({ label = '', badgeIcon = 'star', badgeText = '', title = '', desc = '', metaItems = [], videoUrl = '' } = {}) {
+    const metaHtml = (metaItems || []).map(m => `
+      <div class="feat-meta-item">
+        <span class="material-symbols-rounded">${this.esc(m.icon)}</span>
+        <span>${this.esc(m.text)}</span>
+      </div>`).join('');
+
+    return `
+      <section class="featured-section">
+        <div class="section-label">${this.esc(label)}</div>
+        <div class="featured-card">
+          <div>
+            <div class="feat-badge">
+              <span class="material-symbols-rounded" style="font-size:12px">${this.esc(badgeIcon)}</span>
+              <span>${this.esc(badgeText)}</span>
+            </div>
+            <h2 class="feat-title">${this.esc(title)}</h2>
+            <p class="feat-desc">${this.esc(desc)}</p>
+            <div class="feat-meta">${metaHtml}</div>
+          </div>
+          <div class="feat-play" data-video="${this.esc(videoUrl)}"><span class="material-symbols-rounded">play_arrow</span></div>
+        </div>
+      </section>`;
+  }
+
+  // ── TUT_PATHS ──────────────────────────────────────────
+  render_tut_paths({ label = '', paths = [] } = {}) {
+    const pathsHtml = (paths || []).map(p => `
+      <div class="path-card">
+        <div class="path-icon"><span class="material-symbols-rounded">${this.esc(p.icon)}</span></div>
+        <div class="path-name">${this.esc(p.name)}</div>
+        <div class="path-count">${this.esc(p.count)}</div>
+      </div>`).join('');
+
+    return `
+      <section class="path-section">
+        <div class="section-label">${this.esc(label)}</div>
+        <div class="path-cards">${pathsHtml}</div>
+      </section>`;
+  }
+
+  // ── TRIAL_HERO ─────────────────────────────────────────
+  render_trial_hero({ eyebrow = '', title1 = '', title2 = '', subtitle = '', badges = [], ctaText = '', ctaLink = '', ctaNote = '' } = {}) {
+    const badgesHtml = (badges || []).map((b, idx) => `
+      <div class="bdg">
+        ${idx === 0 ? '<span class="pulse-dot"></span> ' : ''}
+        <span>${this.esc(typeof b === 'string' ? b : b.text)}</span>
+      </div>`).join('');
+
+    return `
+      <div class="hero">
+        <div class="eyebrow"><span class="ey-line"></span><span>${this.esc(eyebrow)}</span><span class="ey-line"></span></div>
+        <span class="hl-1">${this.esc(title1)}</span>
+        <span class="hl-2">${this.esc(title2)}</span>
+        <p class="hero-sub">${this.nl2br(subtitle)}</p>
+        <div class="bdgs">${badgesHtml}</div>
+        <a href="${this.esc(ctaLink)}" class="cta-btn">${this.esc(ctaText)}</a>
+        <span class="cta-note">${this.esc(ctaNote)}</span>
+      </div>`;
+  }
+
+  // ── PROBLEMS_GRID ──────────────────────────────────────
+  render_problems_grid({ eyebrow = '', title = '', subtitle = '', items = [] } = {}) {
+    const itemsHtml = (items || []).map(it => `
+      <div class="prob-item">
+        <span class="material-symbols-rounded prob-ms">${this.esc(it.icon)}</span>
+        <div class="prob-title">${this.esc(it.title)}</div>
+        <div class="prob-desc">${this.esc(it.desc)}</div>
+      </div>`).join('');
+
+    return `
+      <div class="sec">
+        <div class="eyebrow-sm"><span class="ey-line"></span><span>${this.esc(eyebrow)}</span><span class="ey-line"></span></div>
+        <h2 class="sec-h">${title}</h2>
+        <p class="sec-sub">${this.esc(subtitle)}</p>
+        <div class="prob-grid">${itemsHtml}</div>
+      </div>`;
+  }
+
+  // ── BRIDGE_BANNER ──────────────────────────────────────
+  render_bridge_banner({ title = '', subtitle = '' } = {}) {
+    return `
+      <div class="bridge">
+        <div class="gl-rim"></div><div class="shine"></div>
+        <div class="bcb1"></div><div class="bcb2"></div>
+        <div class="bridge-in">
+          <h2>${title}</h2>
+          <p>${this.nl2br(subtitle)}</p>
+        </div>
+      </div>`;
+  }
+
+  // ── BEFORE_AFTER_TABLE ─────────────────────────────────
+  render_before_after_table({ eyebrow = '', title = '', beforeTitle = '', afterTitle = '', rows = [] } = {}) {
+    const beforeRows = (rows || []).map(r => `<div class="ba-row"><span class="material-symbols-rounded ba-ms">sms_failed</span><span>${this.esc(r.before)}</span></div>`).join('');
+    const afterRows = (rows || []).map(r => `<div class="ba-row"><span class="material-symbols-rounded ba-ms">bolt</span><span>${this.esc(r.after)}</span></div>`).join('');
+
+    return `
+      <div class="sec">
+        <div class="eyebrow-sm"><span class="ey-line"></span><span>${this.esc(eyebrow)}</span><span class="ey-line"></span></div>
+        <h2 class="sec-h">${title}</h2>
+        <div class="ba-wrap">
+          <div class="ba-col before">
+            <div class="ba-header"><span class="material-symbols-rounded" style="font-size:14px">close</span><span>${this.esc(beforeTitle)}</span></div>
+            ${beforeRows}
+          </div>
+          <div class="ba-col after">
+            <div class="ba-header"><span class="material-symbols-rounded" style="font-size:14px">check</span><span>${this.esc(afterTitle)}</span></div>
+            ${afterRows}
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // ── HOME_HERO ──────────────────────────────────────────
+  render_home_hero({ eyebrow = '', title1 = '', title2 = '', subtitle = '', badges = [] } = {}) {
+    const badgesHtml = (badges || []).map(b => `
+      <div class="bdg"><span>${this.esc(b.text)}</span></div>`).join('');
+
+    return `
+      <div class="hero">
+        <div class="eyebrow"><span class="ey-line"></span><span>${this.esc(eyebrow)}</span><span class="ey-line"></span></div>
+        <span class="hl-1">${this.esc(title1)}</span>
+        <span class="hl-2">${this.esc(title2)}</span>
+        <p class="hero-sub">${subtitle}</p>
+        <div class="bdgs">${badgesHtml}</div>
+      </div>`;
+  }
+
+  // ── INDEX_STATS ────────────────────────────────────────
+  render_index_stats({ items = [] } = {}) {
+    const itemsHtml = (items || []).map(it => `
+      <div class="st">
+        <div class="st-v">${this.esc(it.value)}</div>
+        <div class="st-l">${this.esc(it.label)}</div>
+      </div>`).join('');
+    return `<div class="stats">${itemsHtml}</div>`;
+  }
+
+  // ── BENTO_PRICING ──────────────────────────────────────
+  render_bento_pricing({ starter = {}, scale = {} } = {}) {
+    const renderFList = (features = []) => {
+      return (features || []).map(f => `
+        <li class="fi">
+          <div class="fi-row">
+            <span class="fi-ms material-symbols-rounded">${this.esc(f.icon)}</span>
+            <span class="fi-name">${this.esc(f.name)}</span>
+            <span class="fi-chev material-symbols-rounded">expand_more</span>
+          </div>
+          <div class="drop-body">${this.esc(f.desc)}</div>
+        </li>`).join('');
+    };
+
+    const starterHtml = renderFList(starter.features);
+    const scaleHtml = renderFList(scale.features);
+    const bonusHtml = (scale.bonuses || []).map(b => `
+      <div class="bi">
+        <div class="bi-row">
+          <span class="bi-ms material-symbols-rounded">${this.esc(b.icon)}</span>
+          <span class="bi-name">${this.esc(b.name)}</span>
+          <span class="bi-chev material-symbols-rounded">expand_more</span>
+        </div>
+        <div class="bi-drop">${this.esc(b.desc)}</div>
+      </div>`).join('');
+
+    return `
+      <div class="bento pricing-grid">
+        <div class="card cl">
+          <div class="gl base"></div><div class="gl frost"></div><div class="gl rim"></div><div class="gl shine"></div>
+          <div class="cblob c1"></div><div class="cblob c2"></div><div class="cblob c3"></div>
+          <div class="cc">
+            <div class="plan-name">${this.esc(starter.name)}</div>
+            <p class="plan-hook">${this.esc(starter.hook)}</p>
+            <div class="price-row">
+              <span class="psym">$</span><span class="pnum">${this.esc(starter.price)}</span><span class="pmo">/mo</span>
+            </div>
+            <div class="ptot">${starter.total}</div>
+            <div class="div"></div>
+            <ul class="flist">${starterHtml}</ul>
+            <a href="#" class="btn btn-l">Start Plan →</a>
+          </div>
+        </div>
+        <div class="card cr">
+          <div class="gl base"></div><div class="gl frost"></div><div class="gl rim"></div><div class="gl shine"></div>
+          <div class="cblob c1"></div><div class="cblob c2"></div><div class="cblob c3"></div>
+          <canvas id="starCanvasPreview" style="position:absolute;inset:0;width:100%;height:100%;z-index:9;pointer-events:none;border-radius:22px;"></canvas>
+          <div class="cc">
+            <div class="pop-tag">✦ Most Chosen</div>
+            <div class="plan-name">${this.esc(scale.name)}</div>
+            <p class="plan-hook">${this.esc(scale.hook)}</p>
+            <div class="price-row">
+              <span class="psym">$</span><span class="pnum">${this.esc(scale.price)}</span><span class="pmo">/mo</span>
+            </div>
+            <div class="ptot">${scale.total}</div>
+            <div class="div"></div>
+            <ul class="flist">${scaleHtml}</ul>
+            <div class="bonus-wrap"><div class="bonus-inner"><div class="b-label">Exclusives</div>${bonusHtml}</div></div>
+            <a href="#" class="btn btn-r">Start Scale Plan ✦</a>
+          </div>
+        </div>
+      </div>`;
   }
 }
 
