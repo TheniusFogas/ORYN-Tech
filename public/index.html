@@ -11,6 +11,2192 @@
 
 :root {
   --bg1: #0d0720;
+  --purple: #7c3aed;
+  --violet: #6d28d9;
+  --text:   #f1eeff;
+  --muted:  #b8b2d8;
+  --dim:    #8a84aa;
+}
+
+html { scroll-behavior:smooth; }
+
+body {
+  font-family:'Outfit', sans-serif;
+  background: var(--bg1);
+  color: var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  padding: 36px 0 44px;
+}
+
+@keyframes rise    { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+@keyframes gradFlow{ 0%{background-position:0%} 100%{background-position:200%} }
+@keyframes bf {
+  0%,100%{transform:translate(0,0) scale(1)}
+  40%{transform:translate(8px,-10px) scale(1.04)}
+  70%{transform:translate(-7px,7px) scale(.97)}
+}
+@keyframes activeRim {
+  0%,100%{ box-shadow:inset 0 1px 0 rgba(216,180,254,0.28), 0 0 70px rgba(124,58,237,0.35), 0 16px 50px rgba(0,0,0,0.6); }
+  50%    { box-shadow:inset 0 1px 0 rgba(216,180,254,0.45), 0 0 120px rgba(124,58,237,0.6), 0 16px 50px rgba(0,0,0,0.6); }
+}
+
+.page { max-width:1140px; margin:0 auto; padding:0 22px; }
+
+/* ── HEADER ── */
+.section-header {
+  text-align:center; margin-bottom:28px;
+  opacity:0; animation:rise .9s cubic-bezier(.16,1,.3,1) forwards .08s;
+}
+.eyebrow {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:10px; font-weight:500; letter-spacing:3.5px; text-transform:uppercase;
+  color:var(--dim); margin-bottom:14px;
+}
+.ey-line { width:22px; height:1px; background:rgba(255,255,255,0.15); }
+.hl-1 {
+  display:block; font-size:clamp(24px,3.8vw,48px); font-weight:600;
+  line-height:1.04; letter-spacing:-1.2px; color:var(--text); margin-bottom:3px;
+}
+.hl-2 {
+  display:block; font-size:clamp(24px,3.8vw,48px); font-weight:800;
+  line-height:1.04; letter-spacing:-1.2px; margin-bottom:14px;
+  background:linear-gradient(120deg,#c084fc 0%,#e879f9 30%,#818cf8 60%,#60a5fa 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text; background-size:200% auto;
+  animation:gradFlow 5s linear infinite;
+}
+.section-sub {
+  font-size:13.5px; font-weight:300; color:#b0aacf;
+  line-height:1.68; max-width:440px; margin:0 auto;
+}
+
+/* ── CAROUSEL ── */
+.carousel-outer {
+  width:100%;
+  overflow:hidden;
+  position:relative;
+}
+.carousel-scene {
+  position:relative;
+  width:100%;
+  height:340px;
+  opacity:0; animation:rise .7s cubic-bezier(.16,1,.3,1) forwards .28s;
+}
+
+.carousel-outer::before,
+.carousel-outer::after {
+  content:''; position:absolute; top:0; bottom:0; width:100px; z-index:30; pointer-events:none;
+}
+.carousel-outer::before { left:0;  background:linear-gradient(to right, var(--bg1) 0%, rgba(13,7,32,0.80) 45%, transparent 100%); }
+.carousel-outer::after  { right:0; background:linear-gradient(to left,  var(--bg1) 0%, rgba(13,7,32,0.80) 45%, transparent 100%); }
+
+/* each card absolutely positioned, driven by JS */
+.ba-card {
+  position:absolute;
+  top:50%; left:50%;
+  width:190px;
+  height:300px;
+  overflow:hidden;
+  border-radius:10px;
+  outline:none;
+  cursor:pointer;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+  transition: opacity .5s cubic-bezier(.25,1,.35,1),
+              filter  .5s cubic-bezier(.25,1,.35,1),
+              box-shadow .5s ease;
+}
+.ba-card.is-active {
+  box-shadow: 0 14px 44px rgba(0,0,0,0.60), 0 0 50px rgba(124,58,237,0.28);
+}
+
+/* glass */
+.gl { position:absolute; inset:0; pointer-events:none; }
+.gl-base  { background:linear-gradient(145deg,rgba(26,10,62,0.93) 0%,rgba(20,8,48,0.96) 100%); }
+.gl-frost {
+  background:linear-gradient(145deg,rgba(124,58,237,0.09) 0%,rgba(109,40,217,0.05) 50%,transparent 80%);
+  backdrop-filter:blur(40px) saturate(160%); -webkit-backdrop-filter:blur(40px) saturate(160%);
+}
+.gl-rim {
+  box-shadow:inset 0 1px 0 rgba(167,139,250,0.10);
+}
+.ba-card.is-active .gl-rim {
+  box-shadow:inset 0 1px 0 rgba(216,180,254,0.22);
+}
+.gl-shine {
+  top:0; left:10%; right:10%; bottom:auto; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(167,139,250,0.4),rgba(255,255,255,0.13),rgba(167,139,250,0.4),transparent);
+}
+.cblob { position:absolute; border-radius:50%; pointer-events:none; animation:bf 9s ease-in-out infinite; }
+.blob1 { width:140px;height:140px;top:-45px;right:-40px; background:radial-gradient(circle,rgba(124,58,237,0.17) 0%,transparent 70%); filter:blur(38px); }
+.blob2 { width:90px;height:90px;bottom:-28px;left:-22px; background:radial-gradient(circle,rgba(109,40,217,0.13) 0%,transparent 70%); filter:blur(28px); }
+
+/* ── CARD CONTENT ── */
+.cc {
+  position:relative; z-index:10;
+  padding:18px 16px 16px;
+  display:flex; flex-direction:column;
+  height:100%;
+}
+
+.row-label {
+  display:flex; align-items:center; gap:7px;
+  margin-bottom:9px;
+}
+.ms {
+  font-family:'Material Symbols Rounded';
+  font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 20;
+  display:inline-block; font-size:15px; line-height:1; flex-shrink:0;
+}
+.badge {
+  font-size:8px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  padding:3px 9px;
+}
+.before-badge { background:rgba(255,255,255,0.07); border:none; color:rgba(220,225,240,0.88); }
+.before-icon  { color:rgba(200,210,230,0.65); }
+.before-text  {
+  font-size:12px; font-weight:500;
+  color:rgba(215,220,235,0.88);
+  line-height:1.52;
+  margin-bottom:0;
+  flex:1;
+}
+.ba-div {
+  display:flex; align-items:center; gap:6px;
+  margin:14px 0;
+}
+.ba-div-line { flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(100,160,255,0.22),transparent); }
+.ba-div-icon { color:rgba(100,160,255,0.45); font-size:13px; }
+.after-badge { background:rgba(8,145,178,0.14); border:none; color:rgba(103,232,249,0.95); }
+.after-icon  { color:rgba(103,232,249,0.80); }
+.after-text  {
+  font-size:11.5px; font-weight:400;
+  color:rgba(186,242,255,0.85);
+  line-height:1.52;
+  flex:1;
+}
+
+/* ── NAV ── */
+.carousel-nav {
+  display:flex; align-items:center; justify-content:center; gap:18px;
+  margin-top:12px;
+  opacity:0; animation:rise .6s cubic-bezier(.16,1,.3,1) forwards .5s;
+}
+.nav-btn {
+  width:32px; height:32px;
+  background:rgba(255,255,255,0.05);
+  border:none;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  transition:background .2s, transform .18s;
+}
+.nav-btn:hover { background:rgba(124,58,237,0.18); transform:scale(1.08); }
+.nav-btn .ms { font-size:17px; color:rgba(196,132,252,0.85); }
+
+.dots { display:flex; align-items:center; gap:5px; }
+.dot {
+  width:5px; height:5px;
+  background:rgba(139,92,246,0.25);
+  border-radius:0;
+  cursor:pointer;
+  transition:background .32s, width .32s;
+}
+.dot.active { width:18px; background:linear-gradient(90deg,#c084fc,#818cf8); }
+
+.counter {
+  display:none;
+}
+
+/* ── STAT BAR ── */
+.stat-bar {
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08);
+  backdrop-filter:blur(24px);
+  padding:12px 28px; margin-top:12px; flex-wrap:wrap;
+  box-shadow:0 0 40px rgba(124,58,237,0.09), inset 0 1px 0 rgba(255,255,255,0.05);
+  opacity:0; animation:rise .7s cubic-bezier(.16,1,.3,1) forwards .7s;
+}.st { text-align:center; padding:0 20px; }
+.st+.st { border-left:1px solid rgba(255,255,255,0.08); }
+.st-v {
+  font-size:24px; font-weight:700; line-height:1; margin-bottom:2px;
+  background:linear-gradient(120deg,#c084fc 0%,#e879f9 40%,#818cf8 80%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.st-l { font-size:9px; color:var(--dim); letter-spacing:.5px; text-transform:uppercase; }
+
+@media(max-width:600px){
+  .carousel-scene{ height:270px; }
+  .st{ padding:8px 12px; }
+  .st+.st{ border-left:none; border-top:1px solid rgba(255,255,255,0.07); }
+  .stat-bar{ flex-direction:column; }
+  .carousel-scene::before,.carousel-scene::after{ width:60px; }
+}
+</style><style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg1: #0d0720;
+  --bg2: #150c2e;
+  --purple: #7c3aed;
+  --violet: #6d28d9;
+  --indigo: #4338ca;
+  --pink:   #db2777;
+  --blue:   #2563eb;
+  --cyan:   #0891b2;
+  --glow1:  rgba(124,58,237,0.35);
+  --glow2:  rgba(109,40,217,0.25);
+  --glow3:  rgba(219,39,119,0.18);
+  --text:   #f1eeff;
+  --muted:  #b8b2d8;
+  --dim:    #8a84aa;
+  --hair:   rgba(255,255,255,0.08);
+}
+
+html { scroll-behavior:smooth; }
+
+body {
+  font-family:'Outfit', sans-serif;
+  background: var(--bg1);
+  color: var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ════ HEADER ════ */
+.headbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:56px;
+  background:rgba(13,7,32,0.82);
+  border-bottom:1px solid rgba(139,92,246,.18);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:0 2px 32px rgba(124,58,237,.1);
+}
+.hb-logo{
+  text-decoration:none;color:var(--text);display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.hb-logo-text{font-family:'Outfit',sans-serif;font-size:22px;color:#fff;line-height:1;position:relative;}
+.hb-logo-text .oryn{font-weight:700;letter-spacing:2px;text-transform:uppercase;position:relative;}
+.hb-logo-text .tech{font-weight:500;letter-spacing:1.2px;}
+.oryn-comet{
+  position:absolute;inset:0;
+  pointer-events:none;
+  width:100%;height:100%;
+}
+.globe-wrap{
+  position:relative;width:48px;height:48px;flex-shrink:0;
+}
+.globe-canvas{
+  position:absolute;inset:0;width:44px;height:44px;display:block;
+}
+.hb-nav{display:flex;align-items:center;gap:4px;}
+.hb-nav a{
+  font-size:12px;font-weight:500;color:#b0aacf;text-decoration:none;
+  padding:6px 14px;border-radius:8px;
+  transition:color .2s,background .2s;letter-spacing:.3px;
+  display:flex;align-items:center;gap:5px;
+}
+.hb-nav a .material-symbols-rounded{font-size:14px;}
+.hb-nav a:hover{color:var(--text);background:rgba(139,92,246,.12);}
+.hb-nav a.active{color:var(--text);background:rgba(139,92,246,.12);}
+.hb-login{
+  font-size:11.5px;font-weight:600;letter-spacing:.5px;color:var(--text);
+  text-decoration:none;padding:7px 16px;border-radius:9px;
+  border:1px solid rgba(139,92,246,.35);
+  background:rgba(124,58,237,.12);
+  transition:all .2s;display:flex;align-items:center;gap:5px;flex-shrink:0;
+}
+.hb-login .material-symbols-rounded{font-size:14px;color:rgba(167,139,250,.8);}
+.hb-login:hover{background:rgba(124,58,237,.25);border-color:rgba(167,139,250,.6);box-shadow:0 0 20px rgba(124,58,237,.2);}
+.hb-mobile-btn{display:none;background:none;border:none;cursor:pointer;color:#b0aacf;padding:4px;}
+.hb-mobile-btn .material-symbols-rounded{font-size:22px;}
+@media(max-width:700px){
+  .headbar{padding:0 16px;}
+  .hb-nav{display:none;position:fixed;top:56px;left:0;right:0;
+    flex-direction:column;align-items:stretch;gap:2px;
+    background:rgba(13,7,32,.97);border-bottom:1px solid rgba(139,92,246,.2);
+    padding:10px 12px 14px;backdrop-filter:blur(20px);}
+  .hb-nav.open{display:flex;}
+  .hb-nav a{font-size:13px;padding:10px 14px;}
+  .hb-mobile-btn{display:flex;align-items:center;}
+}
+
+/* ── PAGE ── */
+.page { position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:56px 22px 80px; }
+
+/* ════ HERO ════ */
+.hero { text-align:center; margin-bottom:44px; opacity:0; animation:rise .9s cubic-bezier(.16,1,.3,1) forwards .1s; }
+
+.eyebrow {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:10px; font-weight:500; letter-spacing:3.5px; text-transform:uppercase;
+  color:#8a84aa; margin-bottom:18px;
+}
+.ey-line { width:22px; height:1px; background:rgba(255,255,255,0.15); }
+
+.hl-1 {
+  display:block; font-size:clamp(34px,5vw,68px); font-weight:600;
+  line-height:1.0; letter-spacing:-1.5px; color:var(--text);
+}
+.hl-2 {
+  display:block; font-size:clamp(34px,5vw,68px); font-weight:800;
+  line-height:1.0; letter-spacing:-1.5px; margin-bottom:18px;
+  background:linear-gradient(120deg, #c084fc 0%, #e879f9 30%, #818cf8 60%, #60a5fa 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text; background-size:200% auto;
+  animation:gradFlow 5s linear infinite;
+}
+@keyframes gradFlow { 0%{background-position:0%} 100%{background-position:200%} }
+
+.hero-sub {
+  font-size:15px; font-weight:300; color:#b0aacf;
+  line-height:1.72; max-width:480px; margin:0 auto 18px;
+}
+.hero-sub strong { color:var(--text); font-weight:500; }
+
+.bdgs { display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; }
+.bdg {
+  display:inline-flex; align-items:center; gap:5px; padding:5px 14px;
+  border-radius:100px; font-size:11px; font-weight:500;
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+  color:#b0aacf; backdrop-filter:blur(10px);
+}
+
+/* ════ STATS ════ */
+.stats {
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+  backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+  border-radius:14px; padding:14px 32px; margin-bottom:32px; flex-wrap:wrap;
+  box-shadow: 0 0 40px rgba(124,58,237,0.12), inset 0 1px 0 rgba(255,255,255,0.08);
+  opacity:0; animation:rise .7s cubic-bezier(.16,1,.3,1) forwards .3s;
+}
+.st { text-align:center; padding:0 20px; }
+.st+.st { border-left:1px solid rgba(255,255,255,0.08); }
+.st-v { font-size:24px; font-weight:600; color:var(--text); line-height:1; margin-bottom:2px; }
+.st-l { font-size:9.5px; color:#8a84aa; letter-spacing:.5px; text-transform:uppercase; }
+
+@keyframes rise { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+/* ════ BENTO GRID ════ */
+.bento { display:grid; grid-template-columns:1fr 1.08fr; gap:14px; align-items:stretch; max-width:900px; margin:0 auto; }
+.bento > .card { display:flex; flex-direction:column; }
+.bento > .card .cc { display:flex; flex-direction:column; flex:1; }
+.bento > .card .btn { margin-top:auto; }
+.bento > .card .cta-n { flex-shrink:0; }
+.bento .card { display:flex; flex-direction:column; }
+.bento .card .cc { display:flex; flex-direction:column; flex:1; }
+@media(max-width:780px){
+  .bento { grid-template-columns:1fr; }
+  .st { padding:8px 14px; }
+  .st+.st { border-left:none; border-top:1px solid rgba(255,255,255,0.07); }
+  .stats { flex-direction:column; }
+}
+
+/* ════ ELITE CARD ════ */
+.ce .gl.base {
+  background:linear-gradient(145deg, rgba(8,4,22,0.98) 0%, rgba(5,2,15,1) 100%);
+}
+.ce .gl.frost {
+  background:linear-gradient(145deg, rgba(15,200,150,0.07) 0%, rgba(124,58,237,0.1) 40%, rgba(255,200,50,0.05) 80%);
+  backdrop-filter:blur(40px) saturate(200%); -webkit-backdrop-filter:blur(40px) saturate(200%);
+}
+.ce .gl.rim {
+  border:1px solid rgba(255,215,100,0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255,215,100,0.2),
+    inset 0 -1px 0 rgba(200,150,0,0.1),
+    0 0 70px rgba(200,150,0,0.2),
+    0 0 35px rgba(15,200,150,0.08),
+    0 22px 70px rgba(0,0,0,0.7);
+}
+.ce .gl.shine {
+  top:0; left:8%; right:8%; bottom:auto; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,215,100,0.55),rgba(255,240,180,0.35),rgba(255,215,100,0.55),transparent);
+}
+.ce .cblob.c1 { width:300px;height:300px;top:-90px;right:-70px; background:radial-gradient(circle,rgba(200,150,0,0.18) 0%,rgba(124,58,237,0.1) 45%,transparent 70%); filter:blur(55px);animation-delay:-1s; }
+.ce .cblob.c2 { width:220px;height:220px;bottom:-60px;left:-50px; background:radial-gradient(circle,rgba(15,200,150,0.12) 0%,transparent 70%); filter:blur(45px);animation-delay:-5s; }
+.ce .cblob.c3 { width:150px;height:150px;top:30%;left:10%; background:radial-gradient(circle,rgba(255,180,50,0.15) 0%,transparent 70%); filter:blur(35px);animation-delay:-3s; }
+.ce .cblob.c4 { width:100px;height:100px;bottom:25%;right:15%; background:radial-gradient(circle,rgba(124,58,237,0.15) 0%,transparent 70%); filter:blur(28px);animation-delay:-7s; }
+.ce:hover .gl.rim { box-shadow: inset 0 1px 0 rgba(255,215,100,0.28), 0 0 90px rgba(200,150,0,0.3), 0 26px 80px rgba(0,0,0,0.7); }
+
+.ce .pop-tag {
+  background:linear-gradient(135deg, #b8860b 0%, #ffd700 30%, #fffacd 55%, #ffd700 75%, #b8860b 100%);
+  background-size:300% auto;
+  border:none;
+  color:rgba(10,6,0,0.92);
+  letter-spacing:2px;
+  box-shadow: 0 2px 14px rgba(200,150,0,0.5), 0 1px 6px rgba(255,215,100,0.3);
+  animation: eliteBadgeGrad 4s linear infinite;
+}
+@keyframes eliteBadgeGrad { 0%{background-position:0%} 100%{background-position:300%} }
+
+.ce .plan-name {
+  font-size:32px;
+  background:linear-gradient(120deg, #ffd700 0%, #fffacd 35%, #ffc107 65%, #ffd700 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation: gradFlow 5s linear infinite;
+}
+.ce .pnum {
+  background:linear-gradient(120deg, #ffd700, #fffacd, #ffc107);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.ce .fi-ms { color:rgba(255,215,100,0.5); }
+.ce .drop-body { background:rgba(200,150,0,0.08); border-color:rgba(255,215,100,0.18); color:#e8e0c0; }
+
+.price-hidden {
+  display:flex; flex-direction:column; gap:4px; margin-bottom:16px;
+}
+.price-hidden-label {
+  font-size:13px; font-weight:500; color:rgba(255,215,100,0.7); letter-spacing:.3px;
+}
+.price-hidden-sub {
+  font-size:11px; color:#9a94ba; line-height:1.5;
+}
+
+.btn-elite {
+  background:linear-gradient(135deg, #b8860b 0%, #ffd700 30%, #fffacd 55%, #ffd700 75%, #b8860b 100%);
+  background-size:300% auto;
+  color:rgba(5,2,10,0.92); font-weight:700;
+  box-shadow:0 6px 30px rgba(200,150,0,0.45), 0 2px 12px rgba(255,215,100,0.2), inset 0 1px 0 rgba(255,255,255,0.3);
+  animation:eliteBtnGrad 4s linear infinite;
+}
+@keyframes eliteBtnGrad { 0%{background-position:0%} 100%{background-position:300%} }
+.btn-elite:hover { box-shadow:0 10px 44px rgba(200,150,0,0.6), 0 4px 18px rgba(255,215,100,0.3), inset 0 1px 0 rgba(255,255,255,0.35); }
+
+/* Elite bonus block */
+.ce .bonus-wrap::before {
+  background:linear-gradient(135deg, #b8860b, #ffd700, #fffacd, #ffc107, #b8860b);
+}
+.ce .bonus-wrap::after {
+  background:linear-gradient(135deg,rgba(184,134,11,0.35),rgba(255,215,100,0.3),rgba(255,193,7,0.28));
+}
+.ce .bonus-inner {
+  background:linear-gradient(145deg, rgba(20,14,4,0.97) 0%, rgba(12,8,2,0.99) 100%);
+}
+.ce .bonus-inner::before {
+  background:linear-gradient(90deg,transparent,rgba(255,215,100,0.6),rgba(255,240,180,0.45),rgba(255,215,100,0.6),transparent);
+}
+.ce .b-label {
+  background:linear-gradient(90deg, #ffd700, #fffacd, #ffc107);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.ce .bi-ms { color:rgba(255,215,100,0.5); }
+.ce .bi-drop { background:rgba(200,150,0,0.1); border-color:rgba(255,215,100,0.18); color:#e0d8b0; }
+
+/* Elite card animation delay removed — only 2 cards now */
+
+/* ════ CARD BASE ════ */
+.card {
+  border-radius:22px; position:relative; overflow:hidden;
+  opacity:0; transform:translateY(24px);
+  transition:transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s ease;
+}
+.card:nth-child(1){animation:rise .72s cubic-bezier(.16,1,.3,1) forwards .28s}
+.card:nth-child(2){animation:rise .72s cubic-bezier(.16,1,.3,1) forwards .44s}
+.card:hover { transform:translateY(-6px); }
+
+.gl { position:absolute; inset:0; border-radius:22px; pointer-events:none; }
+.cblob { position:absolute; border-radius:50%; pointer-events:none; animation:bf 9s ease-in-out infinite; }
+@keyframes bf {
+  0%,100%{transform:translate(0,0) scale(1)}
+  40%{transform:translate(12px,-16px) scale(1.06)}
+  70%{transform:translate(-10px,10px) scale(.95)}
+}
+.cc { position:relative; z-index:10; padding:28px 28px 24px; }
+
+/* ════ LEFT CARD — Starter $299 (lighter purple glass) ════ */
+.cl .gl.base {
+  background:linear-gradient(145deg, rgba(26,10,62,0.92) 0%, rgba(20,8,48,0.95) 100%);
+}
+.cl .gl.frost {
+  background:linear-gradient(145deg, rgba(124,58,237,0.1) 0%, rgba(109,40,217,0.06) 50%, transparent 80%);
+  backdrop-filter:blur(40px) saturate(160%); -webkit-backdrop-filter:blur(40px) saturate(160%);
+}
+.cl .gl.rim {
+  border:1px solid rgba(139,92,246,0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(167,139,250,0.15),
+    inset 0 -1px 0 rgba(109,40,217,0.08),
+    0 0 60px rgba(124,58,237,0.15),
+    0 20px 60px rgba(0,0,0,0.5);
+}
+.cl .gl.shine {
+  top:0; left:10%; right:10%; bottom:auto; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(167,139,250,0.5),rgba(255,255,255,0.2),rgba(167,139,250,0.5),transparent);
+}
+.cl .cblob.c1 { width:260px;height:260px;top:-70px;right:-60px; background:radial-gradient(circle,rgba(124,58,237,0.22) 0%,transparent 70%); filter:blur(50px); }
+.cl .cblob.c2 { width:180px;height:180px;bottom:-50px;left:-40px; background:radial-gradient(circle,rgba(37,99,235,0.15) 0%,transparent 70%); filter:blur(40px);animation-delay:-4s; }
+.cl .cblob.c3 { width:120px;height:120px;top:45%;left:55%; background:radial-gradient(circle,rgba(219,39,119,0.12) 0%,transparent 70%); filter:blur(30px);animation-delay:-7s; }
+.cl:hover .gl.rim { box-shadow:inset 0 1px 0 rgba(167,139,250,0.22),0 0 80px rgba(124,58,237,0.22),0 26px 80px rgba(0,0,0,0.6); }
+
+/* ════ RIGHT CARD — Scale $199 (deeper dark + more glow) ════ */
+.cr .gl.base {
+  background:linear-gradient(145deg, rgba(15,6,38,0.96) 0%, rgba(10,4,26,0.98) 100%);
+}
+.cr .gl.frost {
+  background:linear-gradient(145deg, rgba(219,39,119,0.08) 0%, rgba(124,58,237,0.12) 40%, rgba(37,99,235,0.06) 80%);
+  backdrop-filter:blur(40px) saturate(180%); -webkit-backdrop-filter:blur(40px) saturate(180%);
+}
+.cr .gl.rim {
+  border:1px solid rgba(216,180,254,0.5);
+  animation: cardPulse 3s ease-in-out infinite, outlinePulse 2s ease-in-out infinite;
+}
+@keyframes outlinePulse {
+  0%,100% {
+    border-color: rgba(216,180,254,0.25);
+    outline: 1.5px solid rgba(167,139,250,0);
+    outline-offset: 0px;
+  }
+  50% {
+    border-color: rgba(216,180,254,0.85);
+    outline: 1.5px solid rgba(167,139,250,0.35);
+    outline-offset: 3px;
+  }
+}
+@keyframes cardPulse {
+  0%,100% {
+    box-shadow:
+      inset 0 1px 0 rgba(216,180,254,0.28),
+      inset 0 -1px 0 rgba(124,58,237,0.15),
+      0 0 0 1px rgba(196,132,252,0.1),
+      0 0 80px rgba(124,58,237,0.28),
+      0 0 40px rgba(219,39,119,0.12),
+      0 22px 70px rgba(0,0,0,0.65);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(216,180,254,0.38),
+      inset 0 -1px 0 rgba(124,58,237,0.22),
+      0 0 0 2px rgba(196,132,252,0.22),
+      0 0 150px rgba(124,58,237,0.58),
+      0 0 90px rgba(219,39,119,0.3),
+      0 0 55px rgba(99,102,241,0.22),
+      0 22px 70px rgba(0,0,0,0.65);
+  }
+}
+.cr .gl.shine {
+  top:0; left:8%; right:8%; bottom:auto; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(216,180,254,0.6),rgba(240,171,252,0.4),rgba(216,180,254,0.6),transparent);
+}
+.cr .cblob.c1 { width:300px;height:300px;top:-90px;right:-70px; background:radial-gradient(circle,rgba(219,39,119,0.2) 0%,rgba(124,58,237,0.12) 45%,transparent 70%); filter:blur(55px);animation-delay:-2s; }
+.cr .cblob.c2 { width:220px;height:220px;bottom:-60px;left:-50px; background:radial-gradient(circle,rgba(37,99,235,0.18) 0%,transparent 70%); filter:blur(45px);animation-delay:-6s; }
+.cr .cblob.c3 { width:150px;height:150px;top:30%;left:10%; background:radial-gradient(circle,rgba(124,58,237,0.2) 0%,transparent 70%); filter:blur(35px);animation-delay:-3s; }
+.cr .cblob.c4 { width:100px;height:100px;bottom:25%;right:15%; background:radial-gradient(circle,rgba(8,145,178,0.15) 0%,transparent 70%); filter:blur(28px);animation-delay:-8s; }
+.cr:hover .gl.rim { animation-duration:2s; }
+
+/* ════ SHARED CARD TEXT ════ */
+.pop-tag {
+  display:inline-flex; align-items:center; gap:5px;
+  border-radius:100px; padding:4px 13px; margin-bottom:12px;
+  font-size:9.5px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+}
+.cl .pop-tag { background:rgba(139,92,246,0.10); border:1px solid rgba(139,92,246,0.2); color:rgba(196,132,252,0.7); }
+.cr .pop-tag {
+  background:linear-gradient(135deg, #7c3aed 0%, #a855f7 35%, #db2777 70%, #7c3aed 100%);
+  background-size:300% auto;
+  border:none;
+  color:rgba(255,255,255,0.92);
+  letter-spacing:2px;
+  box-shadow: 0 2px 14px rgba(124,58,237,0.4), 0 1px 6px rgba(219,39,119,0.2);
+  animation: btnGrad 4s linear infinite;
+}
+
+.plan-name { font-size:28px; font-weight:700; line-height:1; letter-spacing:-.5px; margin-bottom:5px; color:var(--text); }
+.cr .plan-name {
+  font-size:32px;
+  background:linear-gradient(120deg, #e0c4ff 0%, #f0aaff 40%, #a5b4fc 80%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.plan-hook { font-size:12.5px; font-weight:400; font-style:italic; line-height:1.55; margin-bottom:20px; color:#c8c2e8; }
+
+/* price */
+.price-row { display:flex; align-items:baseline; gap:2px; margin-bottom:3px; }
+.psym { font-size:19px; font-weight:300; color:var(--muted); margin-bottom:4px; }
+.pnum { font-size:58px; font-weight:300; line-height:1; letter-spacing:-2.5px; color:var(--text); }
+.cr .pnum {
+  background:linear-gradient(120deg, #c084fc, #e879f9, #818cf8);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.pmo   { font-size:12px; font-weight:300; color:var(--muted); }
+.pmeta { font-size:11px; color:#9a94ba; margin-bottom:3px; letter-spacing:.2px; }
+.ptot  { font-size:12px; color:#9a94ba; margin-bottom:16px; }
+.ptot strong { font-weight:600; color:var(--text); }
+
+/* savings */
+.sav {
+  background:rgba(139,92,246,0.08); border:1px solid rgba(139,92,246,0.18);
+  border-radius:9px; padding:10px 13px; margin-bottom:18px;
+}
+.sav-m { font-size:12.5px; font-weight:600; color:rgba(216,180,254,0.95); margin-bottom:2px; }
+.sav-s { font-size:11px; color:rgba(192,160,240,0.75); }
+
+/* divider */
+.div {
+  height:1px; margin:14px 0;
+  background:linear-gradient(90deg,transparent,rgba(139,92,246,0.25),transparent);
+}
+
+/* section label */
+.slbl { font-size:9px; letter-spacing:2.5px; text-transform:uppercase; font-weight:600; margin-bottom:12px; color:#8a84aa; }
+
+/* ── FEATURE LIST with DROPDOWN ── */
+.flist { list-style:none; display:flex; flex-direction:column; margin-bottom:18px; }
+
+.fi { border-bottom:1px solid rgba(255,255,255,0.06); }
+.fi:last-child { border-bottom:none; }
+
+.fi-row {
+  display:flex; align-items:center; gap:9px;
+  padding:7px 0; cursor:pointer; user-select:none;
+  transition:padding .15s;
+}
+.fi-row:hover { padding-left:3px; }
+
+.fi-ms {
+  flex-shrink:0; font-size:16px; line-height:1;
+  color:rgba(167,139,250,0.6);
+}
+.cr .fi-ms { color:rgba(216,180,254,0.55); }
+
+.fi-name { flex:1; font-size:12.5px; font-weight:500; color:var(--text); line-height:1.3; }
+.fi-chev { flex-shrink:0; font-size:14px; color:#8a84aa; transition:transform .25s cubic-bezier(.16,1,.3,1); }
+.fi.open .fi-chev { transform:rotate(180deg); }
+
+.drop-body {
+  font-size:11.5px; font-weight:400; line-height:1.58; color:#c0bae0;
+  background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.18);
+  border-radius:8px; padding:0 10px; margin-bottom:4px;
+  overflow:hidden; max-height:0; opacity:0;
+  transition:max-height .3s cubic-bezier(.16,1,.3,1), opacity .25s ease, padding .3s ease;
+}
+.fi.open .drop-body { max-height:120px; opacity:1; padding:8px 10px; }
+.cr .drop-body { background:rgba(196,132,252,0.1); border-color:rgba(216,180,254,0.2); color:#d0caf0; }
+
+/* ── BONUS BLOCK ── */
+.bonus-wrap {
+  border-radius:14px; overflow:visible; margin-bottom:20px;
+  position:relative;
+}
+/* outer glow ring */
+.bonus-wrap::before {
+  content:'';
+  position:absolute; inset:-2px; border-radius:16px; z-index:0;
+  background:linear-gradient(135deg, #a855f7, #db2777, #6366f1, #a855f7);
+  background-size:300% 300%;
+  animation:bonusRingAnim 4s linear infinite;
+  filter:blur(0px);
+}
+/* outer soft glow layer */
+.bonus-wrap::after {
+  content:'';
+  position:absolute; inset:-12px; border-radius:22px; z-index:-1;
+  background:linear-gradient(135deg,rgba(168,85,247,0.35),rgba(219,39,119,0.3),rgba(99,102,241,0.28));
+  background-size:300% 300%;
+  animation:bonusRingAnim 4s linear infinite;
+  filter:blur(18px);
+}
+@keyframes bonusRingAnim {
+  0%   { background-position:0% 50%; }
+  50%  { background-position:100% 50%; }
+  100% { background-position:0% 50%; }
+}
+
+.bonus-inner {
+  border-radius:13px; padding:16px 16px 12px; position:relative; z-index:1;
+  background:linear-gradient(145deg, rgba(30,12,60,0.96) 0%, rgba(20,8,42,0.98) 100%);
+  border:none;
+  box-shadow: inset 0 1px 0 rgba(200,160,255,0.15);
+}
+.bonus-inner::before {
+  content:''; position:absolute; top:0; left:10%; right:10%; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(216,180,254,0.7),rgba(240,171,252,0.5),rgba(216,180,254,0.7),transparent);
+  animation: shineSweep 3s ease-in-out infinite;
+}
+@keyframes shineSweep {
+  0%,100% { opacity:.6; transform:scaleX(.7); }
+  50%      { opacity:1; transform:scaleX(1); }
+}
+.b-label {
+  font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+  display:flex; align-items:center; gap:8px; margin-bottom:12px;
+  background:linear-gradient(90deg, #e0aaff, #f9a8d4, #c7d2fe);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.b-label::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,rgba(196,132,252,0.35),transparent); }
+
+.bi { border-bottom:1px solid rgba(196,132,252,0.07); }
+.bi:last-child { border-bottom:none; }
+
+.bi-row {
+  display:flex; align-items:center; gap:9px;
+  padding:6px 0; cursor:pointer; user-select:none; transition:padding .15s;
+}
+.bi-row:hover { padding-left:3px; }
+.bi-ms { flex-shrink:0; font-size:15px; color:rgba(216,180,254,0.5); }
+.bi-name { flex:1; font-size:12px; font-weight:500; color:rgba(236,234,255,0.82); }
+.bi-chev { flex-shrink:0; font-size:13px; color:var(--dim); transition:transform .25s cubic-bezier(.16,1,.3,1); }
+.bi.open .bi-chev { transform:rotate(180deg); }
+
+.bi-drop {
+  font-size:11px; font-weight:400; line-height:1.55; color:#cac4e8;
+  background:rgba(124,58,237,0.1); border:1px solid rgba(196,132,252,0.18);
+  border-radius:7px; padding:0 9px; margin-bottom:3px;
+  overflow:hidden; max-height:0; opacity:0;
+  transition:max-height .3s cubic-bezier(.16,1,.3,1), opacity .25s ease, padding .3s ease;
+}
+.bi.open .bi-drop { max-height:100px; opacity:1; padding:7px 9px; }
+
+/* ── CTA ── */
+.btn {
+  display:block; width:100%; padding:15px; border-radius:11px; border:none;
+  font-family:'Outfit',sans-serif; font-size:13.5px; font-weight:600; letter-spacing:.3px;
+  text-align:center; cursor:pointer; text-decoration:none;
+  position:relative; overflow:hidden;
+  transition:transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s;
+}
+.btn::before {
+  content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);
+  transition:left .4s ease;
+}
+.btn:hover::before { left:100%; }
+.btn:hover  { transform:translateY(-2px); }
+.btn:active { transform:scale(.98); }
+
+.btn-l {
+  background:rgba(139,92,246,0.18); color:var(--text);
+  border:1px solid rgba(139,92,246,0.3);
+  box-shadow:0 0 30px rgba(124,58,237,0.12), inset 0 1px 0 rgba(167,139,250,0.12);
+}
+.btn-l:hover { background:rgba(139,92,246,0.25); box-shadow:0 0 50px rgba(124,58,237,0.2),0 8px 28px rgba(0,0,0,0.4); }
+
+.btn-r {
+  background:linear-gradient(135deg, #7c3aed 0%, #a855f7 35%, #db2777 70%, #7c3aed 100%);
+  background-size:300% auto;
+  color:#fff; font-weight:700;
+  box-shadow:0 6px 30px rgba(124,58,237,0.5), 0 2px 12px rgba(219,39,119,0.25), inset 0 1px 0 rgba(255,255,255,0.2);
+  animation:btnGrad 4s linear infinite;
+}
+@keyframes btnGrad { 0%{background-position:0%} 100%{background-position:300%} }
+.btn-r:hover { box-shadow:0 10px 44px rgba(124,58,237,0.65), 0 4px 18px rgba(219,39,119,0.3), inset 0 1px 0 rgba(255,255,255,0.25); }
+
+.cta-n { text-align:center; font-size:10.5px; margin-top:8px; font-style:italic; font-weight:300; color:#8a84aa; }
+
+/* ── SHOW MORE ── */
+.more-tools-wrap {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.5s cubic-bezier(.16,1,.3,1), opacity 0.35s ease;
+}
+.more-tools-wrap.open {
+  max-height: 2000px;
+  opacity: 1;
+}
+.more-flist { margin-top: 0; }
+
+.show-more-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  width: 100%; padding: 10px 16px; margin-bottom: 16px;
+  border-radius: 10px; border: none; cursor: pointer;
+  font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600;
+  letter-spacing: .4px; text-transform: uppercase;
+  transition: all .22s cubic-bezier(.16,1,.3,1);
+}
+.show-more-chev {
+  font-size: 16px;
+  transition: transform .3s cubic-bezier(.16,1,.3,1);
+}
+.show-more-btn.open .show-more-chev { transform: rotate(180deg); }
+
+.cl-more {
+  background: rgba(139,92,246,0.10); color: rgba(196,132,252,0.8);
+  border: 1px solid rgba(139,92,246,0.2);
+}
+.cl-more:hover { background: rgba(139,92,246,0.18); color: rgba(216,180,254,0.95); }
+
+.cr-more {
+  background: rgba(196,132,252,0.10); color: rgba(216,180,254,0.8);
+  border: 1px solid rgba(196,132,252,0.22);
+}
+.cr-more:hover { background: rgba(196,132,252,0.18); color: rgba(236,200,255,0.95); }
+
+.ce-more {
+  background: rgba(200,150,0,0.10); color: rgba(255,215,100,0.8);
+  border: 1px solid rgba(255,215,100,0.2);
+}
+.ce-more:hover { background: rgba(200,150,0,0.18); color: rgba(255,230,120,0.95); }
+
+.kickstart-tagline-wrap {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; padding: 13px 16px; margin-bottom: 12px;
+  font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700;
+  letter-spacing: .4px; text-transform: uppercase;
+  color: rgba(196,132,252,0.85);
+}
+
+/* ── DFY ROW ── */
+.dfy-row {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+}
+.dfy-row .btn-dfy {
+  flex: 1; margin-bottom: 0;
+}
+.dfy-tagline {
+  flex-shrink: 0;
+  font-size: 10.5px; font-weight: 500; line-height: 1.45;
+  color: rgba(167,139,250,0.7); text-align: right;
+  font-style: italic;
+}
+
+/* ── DFY BUTTON + DROPDOWN ── */
+.btn-dfy {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 13px 16px; margin-bottom: 12px;
+  border-radius: 11px; border: none; cursor: pointer;
+  font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700;
+  letter-spacing: .4px; text-transform: uppercase;
+  background: linear-gradient(135deg, rgba(30,12,60,0.95) 0%, rgba(20,8,42,0.98) 100%);
+  border: 1.5px solid rgba(216,180,254,0.35);
+  color: rgba(216,180,254,0.9);
+  box-shadow: 0 0 30px rgba(124,58,237,0.2), inset 0 1px 0 rgba(216,180,254,0.12);
+  transition: all .25s cubic-bezier(.16,1,.3,1);
+  position: relative; overflow: hidden;
+}
+.btn-dfy::before {
+  content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(216,180,254,0.06), transparent);
+  transition: left .4s ease;
+}
+.btn-dfy:hover::before { left: 100%; }
+.btn-dfy:hover {
+  border-color: rgba(216,180,254,0.6);
+  color: rgba(236,210,255,1);
+  box-shadow: 0 0 55px rgba(124,58,237,0.38), inset 0 1px 0 rgba(216,180,254,0.2);
+  transform: translateY(-1px);
+}
+.btn-dfy.open {
+  background: linear-gradient(135deg, rgba(124,58,237,0.22) 0%, rgba(30,12,60,0.98) 100%);
+  border-color: rgba(196,132,252,0.55);
+  box-shadow: 0 0 60px rgba(124,58,237,0.35), inset 0 1px 0 rgba(216,180,254,0.18);
+}
+.dfy-chev { font-size: 18px; transition: transform .3s cubic-bezier(.16,1,.3,1); }
+.btn-dfy.open .dfy-chev { transform: rotate(180deg); }
+
+.dfy-dropdown {
+  overflow: hidden; max-height: 0; opacity: 0;
+  transition: max-height 0.5s cubic-bezier(.16,1,.3,1), opacity 0.35s ease, margin .35s ease;
+  margin-bottom: 0;
+}
+.dfy-dropdown.open {
+  max-height: 800px; opacity: 1; margin-bottom: 16px;
+}
+.dfy-dropdown .bonus-inner {
+  margin-top: 8px;
+}
+
+/* footer */
+.footer {
+  text-align:center; margin-top:44px;
+  font-size:12px; font-weight:300; color:#8a84aa; line-height:1.7;
+  opacity:0; animation:rise .7s ease forwards 1.1s;
+}
+.footer a { color:rgba(167,139,250,0.8); text-decoration:none; font-weight:500; }
+.footer strong { color:var(--muted); font-weight:500; }
+
+/* ── PRINT BUTTON ── */
+.print-btn {
+  display:flex; align-items:center; gap:8px;
+  margin:0 auto 28px; padding:10px 24px;
+  background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.3);
+  border-radius:10px; color:rgba(220,214,255,0.85);
+  font-family:'Outfit',sans-serif; font-size:13px; font-weight:500;
+  cursor:pointer; transition:all .2s ease;
+  letter-spacing:.3px;
+}
+.print-btn:hover {
+  background:rgba(139,92,246,0.28); border-color:rgba(167,139,250,0.5);
+  color:#fff; transform:translateY(-1px);
+  box-shadow:0 4px 20px rgba(124,58,237,0.25);
+}
+.print-btn span { font-size:16px; }
+
+/* ── PRINT STYLES ── */
+@media print {
+  /* Page setup */
+  @page {
+    size: A4 landscape;
+    margin: 15mm 12mm;
+  }
+
+  /* Hide everything except cards */
+  body { background: #fff !important; color: #000 !important; }
+  .hero, .footer, .print-btn { display: none !important; }
+
+  /* Reset container */
+  body, .wrap {
+    all: unset;
+    display: block;
+    width: 100%;
+  }
+
+  .pricing-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+    width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  /* Both cards — white bg, black text */
+  .card {
+    all: unset !important;
+    display: block !important;
+    background: #ffffff !important;
+    border: 1.5px solid #d0d0d0 !important;
+    border-radius: 14px !important;
+    padding: 20px !important;
+    box-shadow: none !important;
+    color: #000 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* All text black */
+  .card * {
+    color: #000 !important;
+    background: none !important;
+    -webkit-text-fill-color: #000 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    animation: none !important;
+    border-color: #ccc !important;
+  }
+
+  /* Plan name */
+  .plan-name {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    margin-bottom: 4px !important;
+    color: #000 !important;
+    -webkit-text-fill-color: #000 !important;
+  }
+
+  /* Price */
+  .price-wrap { margin-bottom: 10px !important; }
+  .price { font-size: 36px !important; font-weight: 800 !important; color: #000 !important; -webkit-text-fill-color: #000 !important; }
+  .price-period, .price-note { color: #444 !important; -webkit-text-fill-color: #444 !important; }
+
+  /* Section labels */
+  .slbl { color: #555 !important; -webkit-text-fill-color: #555 !important; }
+
+  /* Feature rows */
+  .fi { border-bottom: 1px solid #e0e0e0 !important; }
+  .fi-row { padding: 5px 0 !important; cursor: default !important; }
+  .fi-name { font-size: 11.5px !important; color: #111 !important; -webkit-text-fill-color: #111 !important; }
+  .fi-ms { color: #555 !important; -webkit-text-fill-color: #555 !important; }
+
+  /* FORCE ALL DROPDOWNS OPEN for print */
+  .drop-body {
+    max-height: none !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+    padding: 6px 10px !important;
+    display: block !important;
+    font-size: 10.5px !important;
+    line-height: 1.5 !important;
+    color: #444 !important;
+    -webkit-text-fill-color: #444 !important;
+    background: #f7f7f7 !important;
+    border: 1px solid #ddd !important;
+    border-radius: 6px !important;
+    margin-bottom: 4px !important;
+  }
+
+  /* Chevrons hidden in print */
+  .fi-chev, .bi-chev { display: none !important; }
+
+  /* Bonus block */
+  .bonus-wrap::before, .bonus-wrap::after { display: none !important; }
+  .bonus-inner {
+    background: #f5f5f5 !important;
+    border: 1.5px solid #ccc !important;
+    border-radius: 10px !important;
+    padding: 14px !important;
+  }
+  .b-label {
+    color: #333 !important;
+    -webkit-text-fill-color: #333 !important;
+    font-size: 9px !important;
+    margin-bottom: 8px !important;
+  }
+  .b-label::after { background: #ccc !important; }
+
+  .bi { border-bottom: 1px solid #e0e0e0 !important; }
+  .bi-name { font-size: 11px !important; color: #111 !important; -webkit-text-fill-color: #111 !important; }
+  .bi-drop {
+    max-height: none !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+    padding: 5px 9px !important;
+    display: block !important;
+    font-size: 10px !important;
+    color: #444 !important;
+    -webkit-text-fill-color: #444 !important;
+    background: #f0f0f0 !important;
+    border: 1px solid #ddd !important;
+    border-radius: 5px !important;
+    margin-bottom: 3px !important;
+  }
+
+  /* Hide CTA buttons */
+  .btn { display: none !important; }
+
+  /* Hook text */
+  .plan-hook { font-size: 11px !important; color: #555 !important; -webkit-text-fill-color: #555 !important; margin-bottom: 12px !important; }
+
+  /* Hide badge glow effects */
+  .badge-wrap, .badge { box-shadow: none !important; }
+</style>
+</head>
+<body>
+
+<header class="headbar">
+  <a href="/" class="hb-logo">
+    <div class="globe-wrap">
+      <canvas class="globe-canvas" id="logoCanvas" width="72" height="72"></canvas>
+    </div>
+    <span class="hb-logo-text"><span class="oryn" id="orynSpan"><canvas class="oryn-comet" id="orynComet"></canvas>ORYN</span><span class="tech">Tech</span></span>
+  </a>
+  <nav class="hb-nav" id="hbNav">
+    <a href="trial.html">
+      <span class="material-symbols-rounded">rocket_launch</span>
+      Try for free
+    </a>
+    <a href="tutorials.html">
+      <span class="material-symbols-rounded">play_circle</span>
+      Tutoriale
+    </a>
+  </nav>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <a href="http://client.oryntech.ai" class="hb-login" target="_blank">
+      <span class="material-symbols-rounded">lock_open</span>
+      Login Clienți
+    </a>
+    <button class="hb-mobile-btn" id="hbToggle" aria-label="Menu">
+      <span class="material-symbols-rounded" id="hbIcon">menu</span>
+    </button>
+  </div>
+</header>
+
+<!-- parallax galaxy canvas -->
+<canvas id="galaxyCanvas" style="position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="eyebrow">
+      <span class="ey-line"></span>
+      ORYNTECH — AI Automation Agency
+      <span class="ey-line"></span>
+    </div>
+    <span class="hl-1">Print Money Like A</span>
+    <span class="hl-2">F*cking Machine.</span>
+    <p class="hero-sub">
+      Leads slipping. Replies late. Follow-ups skipped. Your competitors are automating.
+      <strong>One payment. 30+ AI tools. A business that runs without you.</strong>
+    </p>
+    <div class="bdgs">
+      <div class="bdg">⚡ One-time payment</div>
+      <div class="bdg">🤖 AI running 24/7</div>
+      <div class="bdg">🔒 Zero hidden fees</div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="st"><div class="st-v">30+</div><div class="st-l">AI Tools</div></div>
+    <div class="st"><div class="st-v">1×</div><div class="st-l">Payment</div></div>
+    <div class="st"><div class="st-v">24/7</div><div class="st-l">AI Active</div></div>
+    <div class="st"><div class="st-v">$0</div><div class="st-l">Hidden Fees</div></div>
+    <div class="st"><div class="st-v">∞</div><div class="st-l">Leads Automated</div></div>
+  </div>
+
+  <!-- Print Button -->
+  <button class="print-btn" onclick="window.print()">
+    <span>🖨️</span> Printează planurile
+  </button>
+
+<div class="carousel-outer" id="carouselOuter">
+<div class="carousel-scene" id="scene">
+
+  <!-- CARD 1 -->
+  <div class="ba-card" data-i="0">
+    <div class="gl gl-base"></div><div class="gl gl-frost"></div><div class="gl gl-rim"></div><div class="gl gl-shine"></div>
+    <div class="cblob blob1"></div><div class="cblob blob2" style="animation-delay:-3s"></div>
+    <div class="cc">
+      <div class="row-label"><span class="ms before-icon">sentiment_dissatisfied</span><span class="badge before-badge">Problema</span></div>
+      <p class="before-text">Lead-urile nu răspund după prima zi și le pierzi pentru totdeauna</p>
+      <div class="ba-div"><span class="ba-div-line"></span><span class="ms ba-div-icon">arrow_downward</span><span class="ba-div-line"></span></div>
+      <div class="row-label"><span class="ms after-icon">mark_email_read</span><span class="badge after-badge">Cu ORYNTECH</span></div>
+      <p class="after-text">Follow-up automat pe 7+ zile, pe SMS, email și WhatsApp — fără să atingi nimic</p>
+    </div>
+  </div>
+
+  <!-- CARD 2 -->
+  <div class="ba-card" data-i="1">
+    <div class="gl gl-base"></div><div class="gl gl-frost"></div><div class="gl gl-rim"></div><div class="gl gl-shine"></div>
+    <div class="cblob blob1" style="animation-delay:-2s"></div><div class="cblob blob2" style="animation-delay:-6s"></div>
+    <div class="cc">
+      <div class="row-label"><span class="ms before-icon">calendar_today</span><span class="badge before-badge">Problema</span></div>
+      <p class="before-text">Calendarul e gol și programările se fac manual, cu înainte și înapoi</p>
+      <div class="ba-div"><span class="ba-div-line"></span><span class="ms ba-div-icon">arrow_downward</span><span class="ba-div-line"></span></div>
+      <div class="row-label"><span class="ms after-icon">event_available</span><span class="badge after-badge">Cu ORYNTECH</span></div>
+      <p class="after-text">Booking 24/7, reminder-e automate și zero no-show — calendarul se umple singur</p>
+    </div>
+  </div>
+
+  <!-- CARD 3 -->
+  <div class="ba-card" data-i="2">
+    <div class="gl gl-base"></div><div class="gl gl-frost"></div><div class="gl gl-rim"></div><div class="gl gl-shine"></div>
+    <div class="cblob blob1" style="animation-delay:-4s"></div><div class="cblob blob2" style="animation-delay:-1s"></div>
+    <div class="cc">
+      <div class="row-label"><span class="ms before-icon">bedtime</span><span class="badge before-badge">Problema</span></div>
+      <p class="before-text">Răspunzi tu la mesaje noaptea, în weekend — epuizant și nesustenabil</p>
+      <div class="ba-div"><span class="ba-div-line"></span><span class="ms ba-div-icon">arrow_downward</span><span class="ba-div-line"></span></div>
+      <div class="row-label"><span class="ms after-icon">support_agent</span><span class="badge after-badge">Cu ORYNTECH</span></div>
+      <p class="after-text">AI Receptionist activ 24/7 — răspunde, califică și programează în locul tău</p>
+    </div>
+  </div>
+
+  <!-- CARD 4 -->
+  <div class="ba-card" data-i="3">
+    <div class="gl gl-base"></div><div class="gl gl-frost"></div><div class="gl gl-rim"></div><div class="gl gl-shine"></div>
+    <div class="cblob blob1" style="animation-delay:-7s"></div><div class="cblob blob2" style="animation-delay:-2s"></div>
+    <div class="cc">
+      <div class="row-label"><span class="ms before-icon">star_border</span><span class="badge before-badge">Problema</span></div>
+      <p class="before-text">Zero recenzii online — clienții te caută, nu te găsesc și aleg concurentul</p>
+      <div class="ba-div"><span class="ba-div-line"></span><span class="ms ba-div-icon">arrow_downward</span><span class="ba-div-line"></span></div>
+      <div class="row-label"><span class="ms after-icon">grade</span><span class="badge after-badge">Cu ORYNTECH</span></div>
+      <p class="after-text">Review requests automate după fiecare interacțiune — reputația crește fără efort</p>
+    </div>
+  </div>
+
+  <!-- CARD 5 -->
+  <div class="ba-card" data-i="4">
+    <div class="gl gl-base"></div><div class="gl gl-frost"></div><div class="gl gl-rim"></div><div class="gl gl-shine"></div>
+    <div class="cblob blob1" style="animation-delay:-1s"></div><div class="cblob blob2" style="animation-delay:-8s"></div>
+    <div class="cc">
+      <div class="row-label"><span class="ms before-icon">phonelink_off</span><span class="badge before-badge">Problema</span></div>
+      <p class="before-text">Social media inexistentă sau inconsistentă — brandul tău e invizibil online</p>
+      <div class="ba-div"><span class="ba-div-line"></span><span class="ms ba-div-icon">arrow_downward</span><span class="ba-div-line"></span></div>
+      <div class="row-label"><span class="ms after-icon">campaign</span><span class="badge after-badge">Cu ORYNTECH</span></div>
+      <p class="after-text">Content planificat și publicat automat pe toate platformele dintr-un singur loc</p>
+    </div>
+  </div>
+
+  <!-- CARD 6 -->
+  <div class="ba-card" data-i="5">
+    <div class="gl gl-base"></div><div class="gl gl-frost"></div><div class="gl gl-rim"></div><div class="gl gl-shine"></div>
+    <div class="cblob blob1" style="animation-delay:-5s"></div><div class="cblob blob2" style="animation-delay:-3s"></div>
+    <div class="cc">
+      <div class="row-label"><span class="ms before-icon">payments</span><span class="badge before-badge">Problema</span></div>
+      <p class="before-text">Plătești 5+ tool-uri separate care nu vorbesc între ele — cost ridicat, haos total</p>
+      <div class="ba-div"><span class="ba-div-line"></span><span class="ms ba-div-icon">arrow_downward</span><span class="ba-div-line"></span></div>
+      <div class="row-label"><span class="ms after-icon">hub</span><span class="badge after-badge">Cu ORYNTECH</span></div>
+      <p class="after-text">Un singur sistem integrat care înlocuiește tot — la o fracțiune din costul stivei actuale</p>
+    </div>
+  </div>
+
+  <!-- CARD 7 — EMOTIONAL -->
+  <div class="ba-card" data-i="6">
+    <div class="gl gl-base"></div><div class="gl gl-frost"></div><div class="gl gl-rim"></div><div class="gl gl-shine"></div>
+    <div class="cblob blob1" style="animation-delay:-6s"></div><div class="cblob blob2" style="animation-delay:-4s"></div>
+    <div class="cc">
+      <div class="row-label"><span class="ms before-icon">heart_broken</span><span class="badge before-badge">Problema</span></div>
+      <p class="before-text">Ai construit un business ca să fii liber. Dar ești primul la muncă și ultimul care pleacă</p>
+      <div class="ba-div"><span class="ba-div-line"></span><span class="ms ba-div-icon">arrow_downward</span><span class="ba-div-line"></span></div>
+      <div class="row-label"><span class="ms after-icon">self_improvement</span><span class="badge after-badge">Cu ORYNTECH</span></div>
+      <p class="after-text">Sistemul lucrează în locul tău. Tu îți recapeți timpul, energia și motivul pentru care ai început</p>
+    </div>
+  </div>
+
+  <!-- CARD 8 -->
+  <div class="ba-card" data-i="7">
+    <div class="gl gl-base"></div><div class="gl gl-frost"></div><div class="gl gl-rim"></div><div class="gl gl-shine"></div>
+    <div class="cblob blob1" style="animation-delay:-9s"></div><div class="cblob blob2" style="animation-delay:-2s"></div>
+    <div class="cc">
+      <div class="row-label"><span class="ms before-icon">hourglass_empty</span><span class="badge before-badge">Problema</span></div>
+      <p class="before-text">Echipa ta pierde ore zilnic pe taskuri repetitive care nu generează niciun venit</p>
+      <div class="ba-div"><span class="ba-div-line"></span><span class="ms ba-div-icon">arrow_downward</span><span class="ba-div-line"></span></div>
+      <div class="row-label"><span class="ms after-icon">auto_mode</span><span class="badge after-badge">Cu ORYNTECH</span></div>
+      <p class="after-text">Workflows automate preiau tot ce e repetitiv — echipa ta se concentrează pe ce contează</p>
+    </div>
+  </div>
+
+</div><!-- /scene -->
+</div><!-- /carousel-outer -->
+
+<div class="page">
+  <div class="carousel-nav" id="nav">
+    <div class="nav-btn" id="btnPrev"><span class="ms">chevron_left</span></div>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 8</span>
+    <div class="nav-btn" id="btnNext"><span class="ms">chevron_right</span></div>
+  </div>
+
+  <div class="stat-bar">
+    <div class="st"><p class="st-v">8</p><p class="st-l">Probleme rezolvate</p></div>
+    <div class="st"><p class="st-v">1</p><p class="st-l">Sistem integrat</p></div>
+    <div class="st"><p class="st-v">24/7</p><p class="st-l">Funcțional non-stop</p></div>
+    <div class="st"><p class="st-v">$199</p><p class="st-l">Începând de la / lună</p></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const scene   = document.getElementById('scene');
+  const cards   = Array.from(scene.querySelectorAll('.ba-card'));
+  const dotsEl  = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const N       = cards.length;
+
+  /* ── Layout constants ── */
+  const CARD_W      = 190;   // toate cardurile aceeași lățime fixă
+  const CARD_H      = 300;   // toate cardurile aceeași înălțime fixă
+  const ACTIVE_W    = 190;   // identic — scale se ocupă de diferența vizuală
+  const ACTIVE_H    = 300;
+  const GAP         = -18;   // suprapunere
+  const AUTO_MS     = 3000;
+
+  let active   = 0;
+  let hovered  = false;
+  let autoTimer = null;
+
+  /* ── Dots ── */
+  cards.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  });
+
+  /* ── Position math ──
+     We place all N cards in a circular arrangement relative to the active index.
+     slot 0 = center (active), slot ±1 = adjacent, etc.
+     For N=8, slots go -3, -2, -1, 0, +1, +2, +3, +4 (wrap).
+  */
+  function slotForIndex(i) {
+    let d = ((i - active) % N + N) % N;
+    if (d > N / 2) d -= N;
+    return d;
+  }
+
+  /* ── Per-card animated state (lerped each frame) ── */
+  const state = cards.map((_, i) => {
+    const slot = slotForIndex(i);
+    const t    = targetForSlot(slot);
+    return { x: t.x, vx: 0 };
+  });
+
+  function targetForSlot(slot) {
+    const abs = Math.abs(slot);
+    const x   = slot * (CARD_W + GAP);
+
+    let opacity, brightness, saturate;
+    if      (abs===0){ opacity=1;    brightness=1;    saturate=1;    }
+    else if (abs===1){ opacity=0.75; brightness=0.80; saturate=0.82; }
+    else if (abs===2){ opacity=0.50; brightness=0.58; saturate=0.58; }
+    else if (abs===3){ opacity=0.28; brightness=0.40; saturate=0.38; }
+    else             { opacity=0.13; brightness=0.25; saturate=0.22; }
+
+    return { x, opacity, brightness, saturate };
+  }
+
+  /* ── Gravitational pull ──
+     Cardurile apropiate de centru pleacă cu delay mic (atrase rapid),
+     cele depărtate pleacă mai târziu — ca și cum gravitația le ajunge mai greu.
+     cubic-bezier(.55,0,.1,1) = ease-in puternic → accelerează spre destinație.
+  */
+  const GRAV_DURATION = 600;  /* ms — durata tranziției */
+  const GRAV_DELAY_PER_SLOT = 28; /* ms delay suplimentar per slot distanță */
+
+  function applyGravity() {
+    cards.forEach((card, i) => {
+      const slot    = slotForIndex(i);
+      const abs     = Math.abs(slot);
+      const tgt     = targetForSlot(slot);
+      const delay   = Math.max(0, (4 - abs)) * GRAV_DELAY_PER_SLOT;
+
+      /* ── Infinite loop fix ──
+         Dacă un card trebuie să sară mai mult de N/2 sloturi față de poziția
+         sa curentă, înseamnă că face wrap-ul (ex: de la slot +4 la slot -4).
+         Îl teleportăm instant la noua poziție fără tranziție, apoi aplicăm
+         tranziția normală — elimină sacadatura la loop.
+      */
+      const currentX = state[i].x;
+      const targetX  = tgt.x;
+      const jumpDist = Math.abs(targetX - currentX);
+      const maxNormal = (N / 2) * (CARD_W + Math.abs(GAP));
+
+      if (jumpDist > maxNormal) {
+        /* Teleport instant — fără tranziție */
+        card.style.transition = 'none';
+        card.style.transform  = `translate(calc(-50% + ${targetX}px), -50%)`;
+        card.style.opacity    = tgt.opacity;
+        card.style.filter     = `brightness(${tgt.brightness}) saturate(${tgt.saturate})`;
+        card.style.zIndex     = 20 - abs;
+        card.classList.toggle('is-active', slot === 0);
+        state[i].x = targetX;
+        /* Două rAF-uri garantează că browser-ul a pictat frame-ul fără tranziție
+           înainte de a reactiva tranziția — elimină complet blip-ul de la wrap */
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            card.style.transition = '';
+          });
+        });
+        return;
+      }
+
+      card.style.transition = [
+        `transform ${GRAV_DURATION}ms ${delay}ms cubic-bezier(.55,0,.1,1)`,
+        `opacity   ${GRAV_DURATION * 0.7}ms ${delay}ms ease`,
+        `filter    ${GRAV_DURATION * 0.7}ms ${delay}ms ease`,
+      ].join(', ');
+
+      card.style.transform = `translate(calc(-50% + ${targetX}px), -50%)`;
+      card.style.opacity   = tgt.opacity;
+      card.style.filter    = `brightness(${tgt.brightness}) saturate(${tgt.saturate})`;
+      card.style.zIndex    = 20 - abs;
+      card.classList.toggle('is-active', slot === 0);
+      state[i].x = targetX;
+    });
+  }
+
+  function startAnimate() {} /* no-op — CSS transition se ocupă */
+
+  function render() {
+    applyGravity();
+    dotsEl.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === active));
+    counter.textContent = (active + 1) + ' / ' + N;
+  }
+
+  function goTo(i) {
+    active = ((i % N) + N) % N;
+    render();
+  }
+
+  function next() { goTo(active + 1); }
+  function prev() { goTo(active - 1); }
+
+  /* ── Autoplay ── */
+  function startAuto() {
+    stopAuto();
+    autoTimer = setInterval(() => { if (!hovered) next(); }, AUTO_MS);
+  }
+  function stopAuto() {
+    if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+  }
+
+  scene.addEventListener('mouseenter', () => { hovered = true; });
+  scene.addEventListener('mouseleave', () => { hovered = false; });
+
+  /* ── Click on non-active card ── */
+  cards.forEach((c, i) => {
+    c.addEventListener('click', () => { if (!c.classList.contains('is-active')) goTo(i); });
+  });
+
+  /* ── Arrow buttons ── */
+  document.getElementById('btnPrev').addEventListener('click', prev);
+  document.getElementById('btnNext').addEventListener('click', next);
+
+  /* ── Keyboard ── */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  prev();
+    if (e.key === 'ArrowRight') next();
+  });
+
+  /* ── Swipe ── */
+  let touchX = 0;
+  scene.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, {passive:true});
+  scene.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 40) dx < 0 ? next() : prev();
+  });
+
+  /* ── Mouse wheel scroll ── */
+  let wheelCooldown = false;
+  document.getElementById('carouselOuter').addEventListener('wheel', e => {
+    e.preventDefault();
+    if (wheelCooldown) return;
+    wheelCooldown = true;
+    if (e.deltaX > 0 || e.deltaY > 0) next();
+    else prev();
+    setTimeout(() => { wheelCooldown = false; }, 500);
+  }, { passive: false });
+
+  /* ── Init ── */
+  render();
+  startAuto();
+  window.addEventListener('resize', render);
+})();
+</script>
+  <!-- BENTO: LEFT = Starter $299, RIGHT = Scale $199 -->
+  <div class="bento pricing-grid">
+
+    <!-- ══ LEFT — Starter $299 ══ -->
+    <div class="card cl">
+      <div class="gl base"></div><div class="gl frost"></div>
+      <div class="gl rim"></div><div class="gl shine"></div>
+      <div class="cblob c1"></div><div class="cblob c2"></div><div class="cblob c3"></div>
+      <div class="cc">
+        <div class="pop-tag align-spacer" style="visibility:hidden;pointer-events:none;">placeholder</div>
+        <div class="plan-name">Kickstart</div>
+        <p class="plan-hook">Every core AI tool to stop the bleeding and put your business on autopilot from day one.</p>
+        <div class="price-row">
+          <span class="psym">$</span><span class="pnum">299</span><span class="pmo">/mo</span>
+        </div>
+        <div class="pmeta">6-Month Plan · Paid Once</div>
+        <div class="ptot">Billed today: <strong>$1,794</strong></div>
+        <div class="sav">
+          <div class="sav-m">Everything you need to start automating today</div>
+          <div class="sav-s">6 months · Full platform access · Zero setup fees</div>
+        </div>
+        <div class="div"></div>
+        <div class="slbl">Tap any feature to expand</div>
+        <ul class="flist">
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">smart_toy</span><span class="fi-name">Your AI Employee</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">AI answers clients, books calls, qualifies clients — 24/7. Never tired. Never asks for a raise. Works while you sleep.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">calendar_month</span><span class="fi-name">AI Books Appointments For You</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Booked clients get reminders, show up more, and keep your calendar moving.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">schedule_send</span><span class="fi-name">Your Social Media Engine</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Schedule Posts &amp; Run Ads. Plan your content and manage your ads across every platform. Increase revenue!</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">forum</span><span class="fi-name">Ai agent handles all channels.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">WhatsApp, TikTok, Facebook, Email, SMS, Instagram. All your messages in one place. Ai responds instantly. Every client gets an answer.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">star_rate</span><span class="fi-name">A Reputation That Sells Before You Do</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">AI auto-requests happy clients reviews for Google, Facebook, Booking.com. More stars, more clients. Hands-free!</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">receipt_long</span><span class="fi-name">Invoice sent. Money in.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Payments links, contracts, invoices, subscriptions, coupons — All automagically!</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">web</span><span class="fi-name">AI Website Builder</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Chat Bot, Stores, Funnels that turn visitors into clients. No coding needed.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">rocket_launch</span><span class="fi-name">Business runs on autopilot</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">AI responds to every new lead in seconds and keeps the follow-up moving.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">call_missed</span><span class="fi-name">Missed Call? AI texts back instantly</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Every missed call is a lost deal. AI fires a text before they dial your competitor. You never lose a lead to voicemail again.</div></li>
+        </ul>
+        <div class="more-tools-wrap" id="more-starter">
+          <ul class="flist more-flist">
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">contacts</span><span class="fi-name">Every Lead. One Place.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">All your contacts, conversations, history and notes — organized and searchable. Never lose track of a lead again.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">manage_accounts</span><span class="fi-name">See Every Deal. Close More.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Visual sales pipeline that shows exactly where every lead stands. Move deals forward automatically.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">mark_email_read</span><span class="fi-name">Emails That Sell While You Sleep</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Automated email sequences that nurture, follow up and convert — without you lifting a finger.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">quiz</span><span class="fi-name">Capture Leads. Qualify Instantly.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Smart forms that collect the right info and automatically push leads into your system — ready to follow up.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">article</span><span class="fi-name">Content That Brings Clients To You.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Publish SEO-ready content that attracts leads organically. No extra tools. No extra cost.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">school</span><span class="fi-name">Your Knowledge. Sold on Autopilot.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Deliver courses, training or onboarding content inside the same platform. Gate access, charge automatically.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">diversity_3</span><span class="fi-name">Build Your Audience. Own the Space.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">A branded community for your clients or members — inside your platform. No Facebook groups needed.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">bar_chart</span><span class="fi-name">Numbers That Tell You What to Fix.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Custom dashboards showing leads, conversions, revenue and ad performance — all in one view.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">phone_in_talk</span><span class="fi-name">Know Which Ads Bring Real Calls.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Track every inbound call to its source. Record conversations. Know what works and what doesn't.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">replay</span><span class="fi-name">Dead Leads Aren't Dead.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Re-engage old leads automatically. One campaign can recover clients you thought were gone forever.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">campaign</span><span class="fi-name">Run Ads. Track Results. All Here.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Launch and manage Meta, Google and YouTube ads from one dashboard. See exactly what each ad earns.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">travel_explore</span><span class="fi-name">Find Clients Before They Find You.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Built-in prospecting that finds and qualifies potential clients using real data — at scale.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">bolt</span><span class="fi-name">Connects With Everything You Use.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Zapier, Make, webhooks, API — your system talks to any tool you already have. No data silos.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">auto_awesome</span><span class="fi-name">AI Writes. You Approve. Done.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Generate emails, social posts, ad copy and blog content in seconds. Always on-brand, always ready.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">rate_review</span><span class="fi-name">Every Review Gets a Response.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">AI replies to Google and Facebook reviews automatically. Looks personal. Runs on autopilot.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">share</span><span class="fi-name">Let Others Sell For You.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Build an affiliate program, track referrals and pay commissions automatically. More sales, zero extra effort.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">chat</span><span class="fi-name">Your Website Talks Back.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Live chat on your site handled by AI or your team. Every visitor becomes a conversation. Every conversation becomes a lead.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">web</span><span class="fi-name">Your Website. Built Inside. Ready to Convert.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Build a professional website without code, without designers, without extra tools. Everything live from one platform.</div></li>
+          </ul>
+        </div>
+        <button class="show-more-btn cl-more" onclick="toggleMore('starter', this)">
+          <span class="show-more-text">Much More</span>
+          <span class="material-symbols-rounded show-more-chev">expand_more</span>
+        </button>
+        <div class="kickstart-tagline-wrap">Shorter commitment, faster start</div>
+        <a href="#" class="btn btn-l">Start 6-Month Plan →</a>
+        <p class="cta-n">Immediate access · No setup fees · No surprises</p>
+      </div>
+    </div>
+
+    <!-- ══ RIGHT — Scale $199 ══ -->
+    <div class="card cr" id="scaleCard">
+      <div class="gl base"></div><div class="gl frost"></div>
+      <div class="gl rim"></div><div class="gl shine"></div>
+      <div class="cblob c1"></div><div class="cblob c2"></div>
+      <div class="cblob c3"></div><div class="cblob c4"></div>
+      <canvas id="starCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:9;pointer-events:none;border-radius:22px;"></canvas>
+      <div class="cc">
+        <div class="pop-tag">✦ Most Chosen — Highest Return</div>
+        <div class="plan-name">Dominate</div>
+        <p class="plan-hook">The closest legal thing to a money-printing machine — a complete AI system, built and launched for you.</p>
+        <div class="price-row">
+          <span class="psym">$</span><span class="pnum">199</span><span class="pmo">/mo</span>
+        </div>
+        <div class="pmeta">12-Month Plan · Paid Once</div>
+        <div class="ptot">Billed today: <strong>$2,388</strong></div>
+        <div class="sav">
+          <div class="sav-m">You save $1,200 / year vs. Kickstart</div>
+          <div class="sav-s">12 months · $6 less per month · Full setup done for you</div>
+        </div>
+        <div class="div"></div>
+        <div class="slbl">Everything in Kickstart — all 30+ features unlocked</div>
+        <ul class="flist">
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">smart_toy</span><span class="fi-name">Your AI Employee</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">AI answers clients, books calls, qualifies clients — 24/7. Never tired. Never asks for a raise. Works while you sleep.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">calendar_month</span><span class="fi-name">AI Books Appointments For You</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Booked clients get reminders, show up more, and keep your calendar moving.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">schedule_send</span><span class="fi-name">Your Social Media Engine</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Schedule Posts &amp; Run Ads. Plan your content and manage your ads across every platform. Increase revenue!</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">forum</span><span class="fi-name">Ai agent handles all channels.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">WhatsApp, TikTok, Facebook, Email, SMS, Instagram. All your messages in one place. Ai responds instantly. Every client gets an answer.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">star_rate</span><span class="fi-name">A Reputation That Sells Before You Do</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">AI auto-requests happy clients reviews for Google, Facebook, Booking.com. More stars, more clients. Hands-free!</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">receipt_long</span><span class="fi-name">Invoice sent. Money in.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Payments links, contracts, invoices, subscriptions, coupons — All automagically!</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">web</span><span class="fi-name">AI Website Builder</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Chat Bot, Stores, Funnels that turn visitors into clients. No coding needed.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">rocket_launch</span><span class="fi-name">Business runs on autopilot</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">AI responds to every new lead in seconds and keeps the follow-up moving.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">call_missed</span><span class="fi-name">Missed Call? AI texts back instantly</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Every missed call is a lost deal. AI fires a text before they dial your competitor. You never lose a lead to voicemail again.</div></li>
+        </ul>
+        <div class="more-tools-wrap" id="more-scale">
+          <ul class="flist more-flist">
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">contacts</span><span class="fi-name">Every Lead. One Place.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">All your contacts, conversations, history and notes — organized and searchable. Never lose track of a lead again.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">manage_accounts</span><span class="fi-name">See Every Deal. Close More.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Visual sales pipeline that shows exactly where every lead stands. Move deals forward automatically.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">mark_email_read</span><span class="fi-name">Emails That Sell While You Sleep</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Automated email sequences that nurture, follow up and convert — without you lifting a finger.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">quiz</span><span class="fi-name">Capture Leads. Qualify Instantly.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Smart forms that collect the right info and automatically push leads into your system — ready to follow up.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">article</span><span class="fi-name">Content That Brings Clients To You.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Publish SEO-ready content that attracts leads organically. No extra tools. No extra cost.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">school</span><span class="fi-name">Your Knowledge. Sold on Autopilot.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Deliver courses, training or onboarding content inside the same platform. Gate access, charge automatically.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">diversity_3</span><span class="fi-name">Build Your Audience. Own the Space.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">A branded community for your clients or members — inside your platform. No Facebook groups needed.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">bar_chart</span><span class="fi-name">Numbers That Tell You What to Fix.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Custom dashboards showing leads, conversions, revenue and ad performance — all in one view.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">phone_in_talk</span><span class="fi-name">Know Which Ads Bring Real Calls.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Track every inbound call to its source. Record conversations. Know what works and what doesn't.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">replay</span><span class="fi-name">Dead Leads Aren't Dead.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Re-engage old leads automatically. One campaign can recover clients you thought were gone forever.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">campaign</span><span class="fi-name">Run Ads. Track Results. All Here.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Launch and manage Meta, Google and YouTube ads from one dashboard. See exactly what each ad earns.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">travel_explore</span><span class="fi-name">Find Clients Before They Find You.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Built-in prospecting that finds and qualifies potential clients using real data — at scale.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">bolt</span><span class="fi-name">Connects With Everything You Use.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Zapier, Make, webhooks, API — your system talks to any tool you already have. No data silos.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">auto_awesome</span><span class="fi-name">AI Writes. You Approve. Done.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Generate emails, social posts, ad copy and blog content in seconds. Always on-brand, always ready.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">rate_review</span><span class="fi-name">Every Review Gets a Response.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">AI replies to Google and Facebook reviews automatically. Looks personal. Runs on autopilot.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">share</span><span class="fi-name">Let Others Sell For You.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Build an affiliate program, track referrals and pay commissions automatically. More sales, zero extra effort.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">chat</span><span class="fi-name">Your Website Talks Back.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Live chat on your site handled by AI or your team. Every visitor becomes a conversation. Every conversation becomes a lead.</div></li>
+          <li class="fi"><div class="fi-row"><span class="fi-ms material-symbols-rounded">web</span><span class="fi-name">Your Website. Built Inside. Ready to Convert.</span><span class="fi-chev material-symbols-rounded">expand_more</span></div><div class="drop-body">Build a professional website without code, without designers, without extra tools. Everything live from one platform.</div></li>
+          </ul>
+        </div>
+        <button class="show-more-btn cr-more" onclick="toggleMore('scale', this)">
+          <span class="show-more-text">Much More</span>
+          <span class="material-symbols-rounded show-more-chev">expand_more</span>
+        </button>
+
+
+
+        <!-- DONE FOR YOU EXCLUSIVES — button triggers dropdown -->
+        <div class="dfy-row">
+          <button class="btn btn-dfy" id="dfyToggleBtn" onclick="toggleDFY(this)">
+            ✦ Done For You Exclusives
+            <span class="material-symbols-rounded dfy-chev">expand_more</span>
+          </button>
+        </div>
+
+        <div class="dfy-dropdown" id="dfyDropdown">
+          <div class="bonus-inner">
+            <div class="b-label">✦ Done-For-You Exclusives</div>
+            <div class="bi"><div class="bi-row"><span class="bi-ms material-symbols-rounded">psychology</span><span class="bi-name">We Build Your AI Agents For You</span><span class="bi-chev material-symbols-rounded">expand_more</span></div><div class="bi-drop">Custom AI bots trained on your business, tone, and offers. Revenue-generating from day one — not "when you figure it out."</div></div>
+            <div class="bi"><div class="bi-row"><span class="bi-ms material-symbols-rounded">build</span><span class="bi-name">Full System Setup — Done For You</span><span class="bi-chev material-symbols-rounded">expand_more</span></div><div class="bi-drop">We build your entire automation infrastructure. You log in to a machine already running. Zero setup frustration.</div></div>
+            <div class="bi"><div class="bi-row"><span class="bi-ms material-symbols-rounded">folder_special</span><span class="bi-name">Premium AI Campaign Templates</span><span class="bi-chev material-symbols-rounded">expand_more</span></div><div class="bi-drop">Battle-tested funnels, email flows, SMS sequences — pre-built and ready to launch immediately.</div></div>
+            <div class="bi"><div class="bi-row"><span class="bi-ms material-symbols-rounded">support_agent</span><span class="bi-name">1-on-1 Onboarding Session</span><span class="bi-chev material-symbols-rounded">expand_more</span></div><div class="bi-drop">We walk through your entire setup personally. Dialed in for results from week one — not month three.</div></div>
+            <div class="bi"><div class="bi-row"><span class="bi-ms material-symbols-rounded">electric_bolt</span><span class="bi-name">Priority Support — 4-Hour Response</span><span class="bi-chev material-symbols-rounded">expand_more</span></div><div class="bi-drop">Skip the queue. When your revenue machine breaks, you can't afford to wait 48 hours for a reply.</div></div>
+            <div class="bi"><div class="bi-row"><span class="bi-ms material-symbols-rounded">new_releases</span><span class="bi-name">First Access to Every New AI Feature</span><span class="bi-chev material-symbols-rounded">expand_more</span></div><div class="bi-drop">New tools, new automations — Scale members get them first, automatically. At no extra cost. Ever.</div></div>
+          </div>
+        </div>
+
+        <a href="#" class="btn btn-r">Start Annual Plan — Best Investment ✦</a>
+        <p class="cta-n">Cancel renewal anytime · Keep your setup · No risk</p>
+      </div>
+    </div>
+
+
+  </div><!-- /bento -->
+
+  <div class="footer">
+    Powered by <strong>ORYNTECH</strong> — AI Automation Agency.<br>
+    Questions? <a href="#">Talk to our team</a> — we reply fast.
+  </div>
+
+</div>
+
+<script>
+function bindFiRow(row) {
+  if (row._fiBound) return;
+  row._fiBound = true;
+  row.addEventListener('click', () => {
+    const fi = row.closest('.fi');
+    if (!fi) return;
+    const wasOpen = fi.classList.contains('open');
+    // close all siblings in same list
+    const list = fi.parentElement;
+    list.querySelectorAll('.fi.open').forEach(el => el.classList.remove('open'));
+    if (!wasOpen) fi.classList.add('open');
+  });
+}
+
+document.querySelectorAll('.fi-row').forEach(bindFiRow);
+
+document.querySelectorAll('.bi-row').forEach(row => {
+  row.addEventListener('click', () => {
+    const bi = row.closest('.bi');
+    const wasOpen = bi.classList.contains('open');
+    const inner = bi.closest('.bonus-inner') || bi.parentElement;
+    inner.querySelectorAll('.bi.open').forEach(el => el.classList.remove('open'));
+    if (!wasOpen) bi.classList.add('open');
+  });
+});
+
+function toggleMore(cardId, btn) {
+  const wrap = document.getElementById('more-' + cardId);
+  const isOpen = wrap.classList.contains('open');
+  wrap.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+  btn.querySelector('.show-more-text').textContent = isOpen ? 'Much More' : 'Show Less';
+  // bind any newly visible fi-rows
+  wrap.querySelectorAll('.fi-row').forEach(bindFiRow);
+}
+
+function toggleDFY(btn) {
+  const dropdown = document.getElementById('dfyDropdown');
+  const isOpen = dropdown.classList.contains('open');
+  dropdown.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+  if (!isOpen) {
+    dropdown.querySelectorAll('.bi-row').forEach(row => {
+      if (!row._dfyBound) {
+        row._dfyBound = true;
+        row.addEventListener('click', () => {
+          const bi = row.closest('.bi');
+          const wasOpen = bi.classList.contains('open');
+          dropdown.querySelectorAll('.bi.open').forEach(el => el.classList.remove('open'));
+          if (!wasOpen) bi.classList.add('open');
+        });
+      }
+    });
+  }
+}
+
+
+(function() {
+  const card = document.getElementById('scaleCard');
+  const canvas = document.getElementById('starCanvas');
+  if (!card || !canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  const R = 22; // border-radius matches card
+  const TAIL = 320; // tail length in perimeter units — long and lost
+  const SPEED = 2.4; // px per frame along perimeter — 2× faster
+  const STAR_R = 3; // head radius
+
+  // Colors cycling purple → pink → indigo
+  const COLORS = [
+    [196,132,252],
+    [240,171,252],
+    [219,39,119],
+    [167,139,250],
+    [99,102,241],
+  ];
+  let colorIdx = 0;
+  let colorT = 0;
+
+  function lerpColor(a, b, t) {
+    return [
+      Math.round(a[0]+(b[0]-a[0])*t),
+      Math.round(a[1]+(b[1]-a[1])*t),
+      Math.round(a[2]+(b[2]-a[2])*t),
+    ];
+  }
+
+  function resize() {
+    const rect = card.getBoundingClientRect();
+    canvas.width  = rect.width;
+    canvas.height = rect.height;
+  }
+
+  // Build perimeter path points for a rounded-rect
+  function buildPath(w, h, r) {
+    const pts = [];
+    const seg = 3; // px per segment
+
+    function arcPts(cx, cy, startAng, endAng) {
+      const steps = Math.ceil(Math.abs(endAng - startAng) * r / seg);
+      for (let i = 0; i <= steps; i++) {
+        const a = startAng + (endAng - startAng) * (i / steps);
+        pts.push({ x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) });
+      }
+    }
+    function linePts(x0, y0, x1, y1) {
+      const dist = Math.hypot(x1-x0, y1-y0);
+      const steps = Math.ceil(dist / seg);
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        pts.push({ x: x0+(x1-x0)*t, y: y0+(y1-y0)*t });
+      }
+    }
+
+    // top-left corner → go clockwise
+    arcPts(r, r, Math.PI, Math.PI*1.5);
+    linePts(r, 0, w-r, 0);            // top edge
+    arcPts(w-r, r, Math.PI*1.5, 0);
+    linePts(w, r, w, h-r);            // right edge
+    arcPts(w-r, h-r, 0, Math.PI*0.5);
+    linePts(w-r, h, r, h);            // bottom edge
+    arcPts(r, h-r, Math.PI*0.5, Math.PI);
+    linePts(0, h-r, 0, r);            // left edge
+
+    return pts;
+  }
+
+  let pts = [];
+  let pos = 0; // float index along pts
+
+  function init() {
+    resize();
+    pts = buildPath(canvas.width, canvas.height, R);
+    pos = 0;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (!pts.length) return;
+
+    const total = pts.length;
+    const headIdx = Math.floor(pos) % total;
+    const headPt  = pts[headIdx];
+
+    // current star color
+    colorT += 0.004;
+    if (colorT >= 1) { colorT -= 1; colorIdx = (colorIdx + 1) % COLORS.length; }
+    const c = lerpColor(COLORS[colorIdx], COLORS[(colorIdx+1) % COLORS.length], colorT);
+    const rgb = `${c[0]},${c[1]},${c[2]}`;
+
+    // draw tail — fade from 0 opacity at tail end to full at head
+    const tailLen = Math.min(TAIL, total - 1);
+    for (let i = tailLen; i >= 0; i--) {
+      const idx = ((headIdx - i) % total + total) % total;
+      const pt  = pts[idx];
+      const frac = 1 - i / tailLen;          // 0 at tail, 1 at head
+      const alpha = frac * frac * frac * 0.75; // cubic fade — very gradual, "lost" at tail end
+      const size  = 0.5 + frac * 2.0;
+
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${rgb},${alpha})`;
+      ctx.fill();
+    }
+
+    // glowing head
+    const grd = ctx.createRadialGradient(headPt.x, headPt.y, 0, headPt.x, headPt.y, STAR_R * 5);
+    grd.addColorStop(0,   `rgba(255,255,255,0.95)`);
+    grd.addColorStop(0.2, `rgba(${rgb},0.9)`);
+    grd.addColorStop(0.5, `rgba(${rgb},0.4)`);
+    grd.addColorStop(1,   `rgba(${rgb},0)`);
+    ctx.beginPath();
+    ctx.arc(headPt.x, headPt.y, STAR_R * 5, 0, Math.PI * 2);
+    ctx.fillStyle = grd;
+    ctx.fill();
+
+    // solid bright head dot
+    ctx.beginPath();
+    ctx.arc(headPt.x, headPt.y, STAR_R, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,0.98)`;
+    ctx.fill();
+
+    pos = (pos + SPEED) % total;
+    requestAnimationFrame(draw);
+  }
+
+  // wait for layout then start
+  window.addEventListener('load', () => {
+    setTimeout(() => { init(); draw(); }, 300);
+  });
+  window.addEventListener('resize', () => {
+    init();
+  });
+})();
+
+// ══════════════════════════════════════════════
+//  PARALLAX GALAXY BACKGROUND
+// ══════════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('galaxyCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  let W, H, mouse = { x: 0.5, y: 0.5 };
+  let animId;
+
+  // ── Parallax layers ──
+  // Each layer: { stars[], speed (parallax factor), size range, alpha range }
+  const LAYERS = [
+    { count: 280, speed: 0.008, minS: 0.3, maxS: 0.8,  minA: 0.15, maxA: 0.45, color: [255,255,255] },
+    { count: 160, speed: 0.018, minS: 0.5, maxS: 1.2,  minA: 0.25, maxA: 0.65, color: [200,180,255] },
+    { count:  80, speed: 0.035, minS: 0.8, maxS: 1.8,  minA: 0.4,  maxA: 0.85, color: [180,160,255] },
+    { count:  40, speed: 0.055, minS: 1.2, maxS: 2.4,  minA: 0.5,  maxA: 1.0,  color: [220,200,255] },
+  ];
+
+  // Nebula clouds (static large blobs, parallaxed slowly)
+  const NEBULAE = [
+    { nx:0.15, ny:0.12, rx:0.38, ry:0.28, c1:[80,20,160],  c2:[140,40,220], a:0.22, speed:0.004 },
+    { nx:0.78, ny:0.65, rx:0.32, ry:0.24, c1:[160,20,100], c2:[220,60,140], a:0.18, speed:0.006 },
+    { nx:0.50, ny:0.40, rx:0.28, ry:0.20, c1:[20,40,160],  c2:[60,80,220],  a:0.14, speed:0.003 },
+    { nx:0.22, ny:0.75, rx:0.24, ry:0.18, c1:[100,20,180], c2:[160,80,240], a:0.16, speed:0.005 },
+    { nx:0.85, ny:0.20, rx:0.20, ry:0.16, c1:[180,20,120], c2:[240,80,180], a:0.14, speed:0.007 },
+  ];
+
+  // Dust band (galaxy core diagonal sweep)
+  const DUST = [
+    { x:0.0, y:0.35, ex:1.0, ey:0.55, w:0.18, c:[120,60,200], a:0.10, speed:0.002 },
+    { x:0.1, y:0.28, ex:0.9, ey:0.45, w:0.10, c:[200,80,160], a:0.07, speed:0.003 },
+  ];
+
+  // Twinkle state per star
+  function rand(min, max) { return min + Math.random() * (max - min); }
+
+  // ── Constellation definitions (normalized 0-1 coords) ──
+  const CONSTELLATIONS = [
+    { pts:[[0.08,0.12],[0.13,0.08],[0.19,0.11],[0.16,0.17],[0.11,0.19]], edges:[[0,1],[1,2],[2,3],[3,4],[4,0],[1,3]], speed:0.010 },
+    { pts:[[0.72,0.08],[0.78,0.05],[0.83,0.09],[0.80,0.15],[0.74,0.18],[0.76,0.12]], edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[5,2]], speed:0.012 },
+    { pts:[[0.55,0.70],[0.60,0.65],[0.67,0.68],[0.65,0.75],[0.58,0.78]], edges:[[0,1],[1,2],[2,3],[3,4],[4,0],[1,3]], speed:0.008 },
+    { pts:[[0.20,0.55],[0.26,0.50],[0.32,0.53],[0.30,0.60],[0.23,0.62],[0.27,0.56]], edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,1],[5,3]], speed:0.014 },
+    { pts:[[0.85,0.45],[0.90,0.40],[0.94,0.46],[0.91,0.52],[0.86,0.50]], edges:[[0,1],[1,2],[2,3],[3,4],[4,0]], speed:0.009 },
+    { pts:[[0.40,0.20],[0.46,0.15],[0.52,0.18],[0.50,0.25],[0.44,0.27],[0.42,0.22]], edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[1,4]], speed:0.011 },
+  ];
+
+  // ── Shooting stars pool ──
+  const MAX_SHOOTERS = 6;
+  let shooters = [];
+
+  function spawnShooter() {
+    const side = Math.random();
+    let sx, sy, angle;
+    if (side < 0.5) {
+      // from top edge
+      sx = Math.random() * W;
+      sy = -10;
+      angle = Math.PI * 0.25 + Math.random() * Math.PI * 0.5; // 45°-135° downward
+    } else {
+      // from left edge
+      sx = -10;
+      sy = Math.random() * H * 0.7;
+      angle = -Math.PI * 0.1 + Math.random() * Math.PI * 0.35; // mostly rightward-down
+    }
+    const speed = 8 + Math.random() * 14;
+    const len   = 120 + Math.random() * 220;
+    const hue   = Math.random() < 0.5 ? [200,180,255] : [255,220,255];
+    shooters.push({ x:sx, y:sy, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed,
+                    len, alpha:0, fadeIn:true, dead:false, color:hue,
+                    trail:[] });
+  }
+
+  function updateShooters() {
+    // spawn occasionally
+    if (shooters.length < MAX_SHOOTERS && Math.random() < 0.012) spawnShooter();
+
+    shooters.forEach(s => {
+      if (s.dead) return;
+      s.trail.push({ x:s.x, y:s.y });
+      if (s.trail.length > 60) s.trail.shift();
+
+      s.x += s.vx;
+      s.y += s.vy;
+
+      if (s.fadeIn) {
+        s.alpha = Math.min(1, s.alpha + 0.06);
+        if (s.alpha >= 1) s.fadeIn = false;
+      } else {
+        s.alpha = Math.max(0, s.alpha - 0.025);
+        if (s.alpha <= 0) s.dead = true;
+      }
+      // kill if far off screen
+      if (s.x > W + 200 || s.y > H + 200) s.dead = true;
+    });
+    shooters = shooters.filter(s => !s.dead);
+  }
+
+  function drawShooters() {
+    shooters.forEach(s => {
+      if (!s.trail.length) return;
+      const [r,g,b] = s.color;
+      // draw tail
+      for (let i = 1; i < s.trail.length; i++) {
+        const frac = i / s.trail.length;
+        const alpha = frac * frac * s.alpha * 0.7;
+        const width = frac * 1.8;
+        ctx.beginPath();
+        ctx.moveTo(s.trail[i-1].x, s.trail[i-1].y);
+        ctx.lineTo(s.trail[i].x,   s.trail[i].y);
+        ctx.strokeStyle = `rgba(${r},${g},${b},${alpha})`;
+        ctx.lineWidth = width;
+        ctx.stroke();
+      }
+      // glowing head
+      const hx = s.x, hy = s.y;
+      const grd = ctx.createRadialGradient(hx, hy, 0, hx, hy, 12);
+      grd.addColorStop(0,   `rgba(255,255,255,${s.alpha * 0.95})`);
+      grd.addColorStop(0.3, `rgba(${r},${g},${b},${s.alpha * 0.6})`);
+      grd.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+      ctx.beginPath();
+      ctx.arc(hx, hy, 12, 0, Math.PI*2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(hx, hy, 2, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+      ctx.fill();
+    });
+  }
+
+  function initStars() {
+    LAYERS.forEach(layer => {
+      layer.stars = [];
+      for (let i = 0; i < layer.count; i++) {
+        layer.stars.push({
+          bx: Math.random(),
+          by: Math.random(),
+          s:  rand(layer.minS, layer.maxS),
+          a:  rand(layer.minA, layer.maxA),
+          twinkleOffset: Math.random() * Math.PI * 2,
+          twinkleSpeed:  rand(0.3, 1.8),
+        });
+      }
+    });
+  }
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  let t = 0;
+
+  function drawNebulae(mx, my) {
+    NEBULAE.forEach(n => {
+      const px = (mx - 0.5) * n.speed * W;
+      const py = (my - 0.5) * n.speed * H;
+      const cx = n.nx * W + px;
+      const cy = n.ny * H + py;
+      const rx = n.rx * W;
+      const ry = n.ry * H;
+
+      const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(rx, ry));
+      grd.addColorStop(0,   `rgba(${n.c2[0]},${n.c2[1]},${n.c2[2]},${n.a})`);
+      grd.addColorStop(0.4, `rgba(${n.c1[0]},${n.c1[1]},${n.c1[2]},${n.a * 0.5})`);
+      grd.addColorStop(1,   `rgba(${n.c1[0]},${n.c1[1]},${n.c1[2]},0)`);
+
+      ctx.save();
+      ctx.scale(1, ry / rx);
+      ctx.beginPath();
+      ctx.arc(cx, cy * (rx / ry), rx, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  function drawDust(mx, my) {
+    DUST.forEach(d => {
+      const px = (mx - 0.5) * d.speed * W;
+      const py = (my - 0.5) * d.speed * H;
+      const x0 = d.x  * W + px, y0 = d.y  * H + py;
+      const x1 = d.ex * W + px, y1 = d.ey * H + py;
+      const w  = d.w * H;
+
+      const grd = ctx.createLinearGradient(x0, y0, x1, y1);
+      grd.addColorStop(0,   `rgba(${d.c[0]},${d.c[1]},${d.c[2]},0)`);
+      grd.addColorStop(0.3, `rgba(${d.c[0]},${d.c[1]},${d.c[2]},${d.a})`);
+      grd.addColorStop(0.7, `rgba(${d.c[0]},${d.c[1]},${d.c[2]},${d.a})`);
+      grd.addColorStop(1,   `rgba(${d.c[0]},${d.c[1]},${d.c[2]},0)`);
+
+      const dx = x1 - x0, dy = y1 - y0;
+      const len = Math.hypot(dx, dy);
+      const nx = -dy / len * w * 0.5, ny = dx / len * w * 0.5;
+
+      ctx.beginPath();
+      ctx.moveTo(x0 + nx, y0 + ny);
+      ctx.lineTo(x1 + nx, y1 + ny);
+      ctx.lineTo(x1 - nx, y1 - ny);
+      ctx.lineTo(x0 - nx, y0 - ny);
+      ctx.closePath();
+      ctx.fillStyle = grd;
+      ctx.fill();
+    });
+  }
+
+  function drawConstellations(mx, my) {
+    CONSTELLATIONS.forEach((con, ci) => {
+      const px = (mx - 0.5) * con.speed * W;
+      const py = (my - 0.5) * con.speed * H;
+
+      // compute screen positions
+      const screenPts = con.pts.map(p => ({
+        x: p[0] * W + px,
+        y: p[1] * H + py,
+      }));
+
+      // mouse screen coords
+      const mouseX = mx * W;
+      const mouseY = my * H;
+
+      // distance from mouse to constellation center
+      const cx = screenPts.reduce((s,p) => s + p.x, 0) / screenPts.length;
+      const cy = screenPts.reduce((s,p) => s + p.y, 0) / screenPts.length;
+      const dist = Math.hypot(mouseX - cx, mouseY - cy);
+      const maxDist = Math.hypot(W, H) * 0.45;
+      // proximity: 0 = far, 1 = very close
+      const proximity = Math.max(0, 1 - dist / maxDist);
+      // boost: lines go from nearly invisible to bright on hover
+      const lineAlpha = 0.06 + proximity * 0.72;
+      const lineWidth = 0.5 + proximity * 1.8;
+
+      // draw edges
+      ctx.save();
+      con.edges.forEach(([a, b]) => {
+        const p1 = screenPts[a], p2 = screenPts[b];
+        const grd = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+        const r = Math.round(180 + proximity * 36);
+        const g2 = Math.round(160 + proximity * 30);
+        const bl = 255;
+        grd.addColorStop(0,   `rgba(${r},${g2},${bl},0.0)`);
+        grd.addColorStop(0.2, `rgba(${r},${g2},${bl},${lineAlpha * 0.7})`);
+        grd.addColorStop(0.5, `rgba(${r},${g2},${bl},${lineAlpha})`);
+        grd.addColorStop(0.8, `rgba(${r},${g2},${bl},${lineAlpha * 0.7})`);
+        grd.addColorStop(1,   `rgba(${r},${g2},${bl},0.0)`);
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.strokeStyle = grd;
+        ctx.lineWidth = lineWidth;
+        ctx.stroke();
+      });
+      ctx.restore();
+
+      // draw constellation star nodes — brighter near cursor
+      const starBoost = 0.4 + proximity * 0.6;
+      screenPts.forEach((p, i) => {
+        const twinkle = 0.6 + 0.4 * Math.sin(t * 1.2 + ci * 1.7 + i * 0.9);
+        const alpha = (0.35 + proximity * 0.55) * twinkle;
+        const size  = (1.0 + proximity * 0.8) * twinkle;
+
+        // glow halo
+        const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * (4 + proximity * 4));
+        grd.addColorStop(0,   `rgba(210,190,255,${alpha * starBoost * 0.6})`);
+        grd.addColorStop(1,   'rgba(180,150,255,0)');
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, size * (4 + proximity * 4), 0, Math.PI * 2);
+        ctx.fillStyle = grd;
+        ctx.fill();
+
+        // solid dot
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(230,215,255,${alpha})`;
+        ctx.fill();
+      });
+    });
+  }
+
+  function drawStars(mx, my) {
+    LAYERS.forEach(layer => {
+      const [r, g, b] = layer.color;
+      layer.stars.forEach(star => {
+        const px = (mx - 0.5) * layer.speed * W;
+        const py = (my - 0.5) * layer.speed * H;
+        const x = ((star.bx * W + px) % W + W) % W;
+        const y = ((star.by * H + py) % H + H) % H;
+
+        const twinkle = 0.5 + 0.5 * Math.sin(t * star.twinkleSpeed + star.twinkleOffset);
+        const alpha = star.a * (0.5 + 0.5 * twinkle);
+        const size  = star.s * (0.85 + 0.15 * twinkle);
+
+        if (star.s > 1.2) {
+          const grd = ctx.createRadialGradient(x, y, 0, x, y, size * 3.5);
+          grd.addColorStop(0,   `rgba(${r},${g},${b},${alpha * 0.6})`);
+          grd.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+          ctx.beginPath();
+          ctx.arc(x, y, size * 3.5, 0, Math.PI * 2);
+          ctx.fillStyle = grd;
+          ctx.fill();
+        }
+
+        ctx.beginPath();
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+        ctx.fill();
+      });
+    });
+  }
+
+  function frame() {
+    t += 0.016;
+    ctx.clearRect(0, 0, W, H);
+
+    ctx.fillStyle = '#0b0618';
+    ctx.fillRect(0, 0, W, H);
+
+    // vignette
+    const vig = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W, H) * 0.75);
+    vig.addColorStop(0,   'rgba(0,0,0,0)');
+    vig.addColorStop(0.6, 'rgba(0,0,0,0.1)');
+    vig.addColorStop(1,   'rgba(0,0,0,0.72)');
+    ctx.fillStyle = vig;
+    ctx.fillRect(0, 0, W, H);
+
+    const mx = mouse.x, my = mouse.y;
+
+    drawNebulae(mx, my);
+    drawDust(mx, my);
+    drawConstellations(mx, my);
+    drawStars(mx, my);
+    updateShooters();
+    drawShooters();
+
+    ctx.globalAlpha = 1;
+    animId = requestAnimationFrame(frame);
+  }
+
+  let targetX = 0.5, targetY = 0.5;
+  window.addEventListener('mousemove', e => {
+    targetX = e.clientX / W;
+    targetY = e.clientY / H;
+  });
+
+  function lerpMouse() {
+    mouse.x += (targetX - mouse.x) * 0.04;
+    mouse.y += (targetY - mouse.y) * 0.04;
+    requestAnimationFrame(lerpMouse);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  initStars();
+  lerpMouse();
+  frame();
+})();
+
+// Mobile menu toggle
+document.getElementById('hbToggle').addEventListener('click',()=>{
+  const nav=document.getElementById('hbNav');
+  const icon=document.getElementById('hbIcon');
+  nav.classList.toggle('open');
+  icon.textContent=nav.classList.contains('open')?'close':'menu';
+});
+
+</script>
+</body>
+</html>
+
+
+/*
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORYNTECH — Print Money Like A F*cking Machine</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,400,1,0" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg1: #0d0720;
   --bg2: #150c2e;
   --purple: #7c3aed;
   --violet: #6d28d9;
@@ -2074,3 +4260,4 @@ document.getElementById('hbToggle').addEventListener('click',()=>{
 </script>
 </body>
 </html>
+*/
